@@ -1,0 +1,502 @@
+---
+const productos = [
+    {
+        nombre: "BRUSCHETTA",
+        descripcion: "Pan francés - Tomate asado - Queso - Albahaca",
+        precio: 20,
+    },
+    { id: "pizza", nombre: "MADURO CON QUESO", descripcion: "", precio: 25 },
+    {
+        nombre: "CAMARÓN A LA DIABLA",
+        descripcion: "Camarones - Salsa cevichera sriracha - Chips de yuca",
+        precio: 35,
+    },
+    {
+        nombre: "Gaseosa",
+        descripcion: "Camarones - Salsa de queso - Chips de yuca",
+        precio: 35,
+    },
+];
+---
+
+<div class="flex justify-center items-center flex-col py-12">
+    <h2>Menú</h2>
+
+    <div>
+        {
+            productos.map((producto, i) => (
+                <div
+                    class="producto my-4 p-4 border border-gray-300 rounded flex gap-8 justify-between"
+                    data-index={i}
+                    data-nombre={producto.nombre}
+                    data-precio={producto.precio}
+                >
+                    <div class="flex flex-col">
+                        <strong>{producto.nombre}</strong>
+                        <p>{producto.descripcion}</p>
+                    </div>
+                    <div class="flex flex-col items-end shrink-0">
+                        <span>${producto.precio}</span>
+                        <div class="controles">
+                            <button class="remove" data-action="remove">
+                                −
+                            </button>
+                            <span class="cantidad">0</span>
+                            <button class="add" data-action="add">
+                                +
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            ))
+        }
+    </div>
+
+    <div
+        id="barra-pedido"
+        class="barra self-center border border-gray-300 rounded p-4 mt-8 flex gap-4 items-center ocultar"
+    >
+        <span id="barra-resumen"></span>
+        <button id="btn-ver-pedido">Ver pedido</button>
+    </div>
+
+    <!-- añadir cerrado -->
+    <div id="modal-pedido" class="border border-gray-300 rounded p-4">
+        <div class="contenido">
+            <button id="btn-cerrar-modal">✕ Cerrar modal</button>
+
+            <div id="lista-pedido"></div>
+
+            <div id="tipo-entrega" class="flex flex-col">
+                <span>¿Cómo quieres tu pedido?</span>
+                <label>
+                    <input type="radio" name="entrega" value="recoger" />
+                    Recoger
+                </label>
+                <label>
+                    <input type="radio" name="entrega" value="domicilio" checked />
+                    A domicilio
+                </label>
+            </div>
+            <div id="campo-direccion">
+                <input
+                    type="text"
+                    id="input-direccion"
+                    placeholder="Dirección de entrega"
+                />
+            </div>
+
+            <div id="total-pedido"></div>
+
+            <button id="btn-hacer-pedido">Hacer pedido</button>
+        </div>
+    </div>
+
+
+    <template id="item-pedido-template">
+        <div
+            class="item-pedido my-4 p-4 border border-gray-300 rounded flex gap-8 justify-between items-center"
+        >
+            <span class="nombre"></span>
+            <div class="controles flex items-center">
+                <button data-action="remove" class="remove">−</button>
+                <span class="cantidad mx-2"></span>
+                <button data-action="add" class="add">+</button>
+            </div>
+            <span class="precio"></span>
+        </div>
+    </template>
+</div>
+
+<script>
+    const state = {
+        items: {
+            // item: {
+            //   nombre,
+            //   precio,
+            //   cantidad
+            // }
+        },
+        tipoEntrega: null, // "domicilio" | "recoger"
+        direccion: "",
+    };
+
+    const cargarStateDesdeStorage = () => {
+        const stateStorage = localStorage.getItem("pedidoState");
+        if (stateStorage) {
+            const stateParseado = JSON.parse(stateStorage);
+            state.items = stateParseado.items || {};
+            state.tipoEntrega = stateParseado.tipoEntrega || null;
+            state.direccion = stateParseado.direccion || "";
+        }
+    };
+
+    const guardarStateEnStorage = () => {
+        localStorage.setItem("pedidoState", JSON.stringify(state));
+    };
+
+    const updateCantidad = (producto, delta) => {
+        const { nombre, precio } = producto;
+
+        // Si el producto no existe aún en el estado, lo inicializamos
+        if (!state.items[nombre]) {
+            state.items[nombre] = {
+                nombre,
+                precio,
+                cantidad: 0,
+            };
+        }
+
+        // Actualizamos la cantidad
+        const nuevaCantidad = state.items[nombre].cantidad + delta;
+
+        // Si llega a 0 o menos, eliminamos el producto del pedido
+        if (nuevaCantidad <= 0) {
+            delete state.items[nombre];
+        } else {
+            state.items[nombre].cantidad = nuevaCantidad;
+        }
+
+        // Persistimos
+        guardarStateEnStorage();
+
+        //Re-renderizar
+        renderTodo();
+    };
+
+    const bindEventosProductos = () => {
+        // Agregar listeners a los botones + y - de cada producto
+        document.addEventListener("click", (event) => {
+            // 1️⃣ Verificar si el click viene de un botón de producto
+            if (!event.target) return;
+            const boton = (event.target as Element).closest("[data-action]");
+            if (!boton) return;
+
+            // 2️⃣ Identificar acción
+            const accion = (boton as HTMLElement).dataset.action;
+            if (accion !== "add" && accion !== "remove") return;
+
+            // 3️⃣ Obtener contenedor del producto
+            const productoEl = boton.closest("[data-nombre]");
+            if (!productoEl) return;
+            // 4️⃣ Extraer información del producto
+            const producto = {
+                nombre: (productoEl as HTMLElement).dataset.nombre,
+                precio: Number((productoEl as HTMLElement).dataset.precio),
+            };
+
+            // 5️⃣ Ejecutar acción
+            if (accion === "add") {
+                updateCantidad(producto, +1);
+            }
+
+            if (accion === "remove") {
+                updateCantidad(producto, -1);
+            }
+        });
+    };
+
+    const bindEventosBarra = () => {
+        const btnVerPedido = document.querySelector("#btn-ver-pedido");
+        const btnCerrarModal = document.querySelector("#btn-cerrar-modal");
+        const modal = document.querySelector("#modal-pedido");
+
+        if (!btnVerPedido || !modal) return;
+
+        // Abrir modal desde la barra
+        btnVerPedido.addEventListener("click", () => {
+            modal.classList.remove("cerrado");
+        });
+
+        // Cerrar modal (botón cerrar)
+        if (btnCerrarModal) {
+            btnCerrarModal.addEventListener("click", () => {
+                modal.classList.add("cerrado");
+            });
+        }
+
+        // Cerrar modal al tocar fuera del contenido
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.classList.add("cerrado");
+            }
+        });
+    };
+
+    const setTipoEntrega = (tipo) => {
+        if (tipo !== "domicilio" && tipo !== "recoger") return;
+
+        state.tipoEntrega = tipo;
+
+        // Si recoge, limpiamos dirección
+        if (tipo === "recoger") {
+            state.direccion = "";
+        }
+
+        guardarStateEnStorage();
+        renderTodo();
+    };
+
+    const generarMensaje = () => {
+        let mensaje = "*Nuevo pedido*\n";
+        let total = 0;
+
+        Object.values(state.items).forEach((item: any) => {
+            if (item.cantidad <= 0) return;
+
+            const subtotal = item.cantidad * item.precio;
+            total += subtotal;
+
+            mensaje += `• ${item.nombre} x${item.cantidad} — $${subtotal.toLocaleString()}\n`;
+        });
+
+        mensaje += `\n*Total:* $${total.toLocaleString()}\n\n`;
+
+        // Tipo de entrega
+        if (state.tipoEntrega === "domicilio") {
+            mensaje += "*Entrega:* A domicilio\n";
+            mensaje += `*Dirección:* ${state.direccion}\n`;
+        } else {
+            mensaje += "*Entrega:* Recoger en el local\n";
+        }
+
+        return mensaje;
+    };
+
+    const hacerPedido = () => {
+        // 1️⃣ Validar que haya productos
+        const items = Object.values(state.items).filter(
+            (item:any) => item.cantidad > 0,
+        );
+
+        if (items.length === 0) {
+            alert("No has agregado productos al pedido");
+            return;
+        }
+
+        // 2️⃣ Validar dirección si es domicilio
+        if (state.tipoEntrega === "domicilio" && !state.direccion.trim()) {
+            alert("Por favor ingresa la dirección de entrega");
+            return;
+        }
+
+        // 3️⃣ Generar mensaje
+        const mensaje = generarMensaje();
+
+        // 4️⃣ Enviar (WhatsApp)
+        const telefono = "573163896572"; // cambia por el real
+        const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+
+        window.open(url, "_blank");
+    };
+
+    const bindEventosModal = () => {
+        const modal = document.querySelector("#modal-pedido");
+        if (!modal) return;
+        // Delegación de eventos dentro del modal
+        modal.addEventListener("click", (e) => {
+            const target = e.target as HTMLElement;
+            // ➕ Agregar producto
+            // if (target.classList.contains("add")) {
+            //     const item = target.closest(".item-pedido");
+            //     if (!item) return;
+            //     const producto = {
+            //         nombre: (item as HTMLElement).dataset.nombre,
+            //         precio: Number((item as HTMLElement).dataset.precio),
+            //     };
+            //     updateCantidad(producto, +1);
+            // }
+            // ➖ Quitar producto
+            // if (target.classList.contains("remove")) {
+            //     const item = target.closest(".item-pedido");
+            //     if (!item) return;
+
+            //     const producto = {
+            //         nombre: (item as HTMLElement).dataset.nombre,
+            //         precio: Number((item as HTMLElement).dataset.precio),
+            //     };
+            //     updateCantidad(producto, -1);
+            // }
+            // 🟢 Hacer pedido
+            if (target.id === "btn-hacer-pedido") {
+                hacerPedido();
+            }
+        });
+
+        // Tipo de entrega
+        modal.addEventListener("change", (e) => {
+            const target = e.target as HTMLInputElement;
+            if (target.name === "entrega") {
+                setTipoEntrega(target.value);
+            }
+
+            if (target.id === "input-direccion") {
+                state.direccion = target.value;
+                guardarStateEnStorage();
+            }
+        });
+    };
+
+    const renderProductos = () => {
+        const productosDOM = document.querySelectorAll(".producto");
+
+        productosDOM.forEach((productoEl) => {
+            const nombre = (productoEl as HTMLElement).dataset.nombre;
+            const cantidadEl = productoEl.querySelector(".cantidad");
+            const cantidad = state.items[nombre]?.cantidad || 0;
+
+            // Pintar cantidad
+            cantidadEl.textContent = cantidad;
+
+            // Estado visual (opcional pero PRO)
+            if (cantidad > 0) {
+                productoEl.classList.add("activo");
+            } else {
+                productoEl.classList.remove("activo");
+            }
+        });
+    };
+
+    const renderBarra = () => {
+        const barra = document.querySelector("#barra-pedido");
+        const btn = document.querySelector("#btn-ver-pedido");
+        const resumen = document.querySelector("#barra-resumen");
+
+        if (!barra || !btn) return;
+
+        let totalItems = 0;
+        let totalPrecio = 0;
+
+        Object.values(state.items).forEach((item: any) => {
+            totalItems += item.cantidad;
+            totalPrecio += item.cantidad * item.precio;
+        });
+
+        // Si no hay productos, ocultamos barra
+        if (totalItems === 0) {
+            barra.classList.add("ocultar");
+            return;
+        }
+
+        // Mostrar barra
+        barra.classList.remove("ocultar");
+
+        // Texto del botón
+        resumen.textContent = `🛒 ${totalItems} producto${totalItems > 1 ? "s" : ""} \u2022 $${totalPrecio.toLocaleString()}`;
+    };
+
+    const renderModal = () => {
+        const lista = document.querySelector("#lista-pedido");
+        const totalEl = document.querySelector("#total-pedido");
+
+        if (!lista || !totalEl) return;
+
+        lista.replaceChildren(); // mejor que innerHTML = ""
+
+        let total = 0;
+        const template = document.querySelector<HTMLTemplateElement>(
+            "#item-pedido-template",
+        );
+
+        if (!template) return;
+
+        const modal = document.querySelector("#modal-pedido");
+        console.log("state items", state.items);
+        if (state.items === null || Object.keys(state.items).length === 0) {
+            modal.classList.add("cerrado");
+            return;
+        }
+        Object.values(state.items).forEach((item: any) => {
+            if (item.cantidad <= 0) return;
+
+            total += item.cantidad * item.precio;
+
+            const row = template.content.firstElementChild!.cloneNode(
+                true,
+            ) as HTMLElement;
+            row.dataset.nombre = item.nombre;
+            row.dataset.precio = item.precio;
+
+            row.querySelector(".nombre")!.textContent = item.nombre;
+            row.querySelector(".cantidad")!.textContent = String(item.cantidad);
+            row.querySelector(".precio")!.textContent =
+                `$${(item.precio * item.cantidad).toLocaleString()}`;
+
+            lista.appendChild(row);
+        });
+
+        totalEl.textContent = `Total: $${total.toLocaleString()}`;
+    };
+
+    const renderEntrega = () => {
+        const radios = document.querySelectorAll('input[name="entrega"]');
+        const campoDireccion = document.querySelector("#campo-direccion");
+        const inputDireccion = document.querySelector("#input-direccion");
+
+        if (!radios.length || !campoDireccion || !inputDireccion) return;
+
+        // Marcar radio activo según estado
+        radios.forEach((radio) => {
+            const inputRadio = radio as HTMLInputElement;
+        });
+
+        // Mostrar / ocultar dirección
+        const campoDireccionEl = campoDireccion as HTMLElement;
+        const inputDireccionEl = inputDireccion as HTMLInputElement;
+        if (state.tipoEntrega === "domicilio") {
+            campoDireccionEl.style.display = "block";
+            inputDireccionEl.value = state.direccion;
+        } else {
+            campoDireccionEl.style.display = "none";
+            inputDireccionEl.value = "";
+        }
+    };
+
+    const renderTodo = () => {
+        renderProductos();
+        renderBarra();
+        renderModal();
+        renderEntrega();
+    };
+
+    function init() {
+        cargarStateDesdeStorage();
+        bindEventosProductos();
+        bindEventosBarra();
+        bindEventosModal();
+        renderTodo();
+    }
+
+    init();
+    
+</script>
+
+<style>
+    input {
+        padding: 8px;
+        width: 250px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        padding: 8px 16px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #218838;
+        cursor: pointer;
+    }
+
+    .cerrado {
+        display: none !important;
+    }
+    .ocultar {
+        visibility: hidden;
+    }
+</style>
