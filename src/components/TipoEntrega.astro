@@ -1,0 +1,32 @@
+---
+
+---
+
+<div id="tipo-entrega" class="flex flex-col gap-3">
+    <span>¿Cómo quieres tu pedido?</span>
+    <div class="flex justify-center gap-4">
+        <label>
+            <input type="radio" name="entrega" value="recoger" checked hidden />
+            Recoger
+        </label>
+        <label>
+            <input type="radio" name="entrega" value="domicilio" hidden />
+            A domicilio
+        </label>
+    </div>
+    <div id="campo-direccion" class="w-full">
+        <input
+            type="text"
+            id="input-direccion"
+            placeholder="Dirección de entrega"
+            class="w-full!"
+        />
+    </div>
+</div>
+
+<style>
+    @import "tailwindcss";
+    label {
+        @apply flex w-full border p-2 rounded has-checked:bg-blue-400 justify-center cursor-pointer;
+    }
+</style>

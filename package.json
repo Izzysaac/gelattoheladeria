@@ -9,8 +9,10 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@cloudinary/url-gen": "^1.22.0",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "5.16.15",
+    "astro-cloudinary": "^1.3.5",
     "tailwindcss": "^4.1.18"
   }
 }

@@ -1,0 +1,47 @@
+---
+import { formatFromThousands, cloudinaryUrl } from "../scripts/utils.js";
+const { menuPorCategoria } = Astro.props;
+---
+
+<section class="menu">
+    {
+        Object.entries(menuPorCategoria).map(([categoria, items]) => (
+            <div class="grupo">
+                <h2 class="text-3xl">{categoria}</h2>
+                <ul>
+                    {(items as any)
+                        .filter((item) => item.activo)
+                        .map((item: any ) => (
+
+                        <li
+                            class="producto my-4 p-4 border border-gray-300 rounded flex gap-8 justify-between"
+                            data-nombre={item.nombre}
+                            data-precio={item.precio}
+                        >
+                            <div class="flex flex-col">
+                                <strong>{item.nombre}</strong>
+                                <p>{item.descripcion}</p>
+                                <img
+                                    src={cloudinaryUrl(item.imagen)}
+                                    alt={item.nombre}
+                                />
+                            </div>
+                            <div class="flex flex-col items-end shrink-0">
+                                <span>${formatFromThousands(item.precio)}</span>
+                                <div class="controles">
+                                    <button class="remove" data-action="remove">
+                                        −
+                                    </button>
+                                    <span class="cantidad">0</span>
+                                    <button class="add" data-action="add">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        ))
+    }
+</section>
