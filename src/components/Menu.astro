@@ -11,35 +11,46 @@ const { menuPorCategoria } = Astro.props;
                 <ul>
                     {(items as any)
                         .filter((item) => item.activo)
-                        .map((item: any ) => (
-
-                        <li
-                            class="producto my-4 p-4 border border-gray-300 rounded flex gap-8 justify-between"
-                            data-nombre={item.nombre}
-                            data-precio={item.precio}
-                        >
-                            <div class="flex flex-col">
-                                <strong>{item.nombre}</strong>
-                                <p>{item.descripcion}</p>
-                                <img
-                                    src={cloudinaryUrl(item.imagen)}
-                                    alt={item.nombre}
-                                />
-                            </div>
-                            <div class="flex flex-col items-end shrink-0">
-                                <span>${formatFromThousands(item.precio)}</span>
-                                <div class="controles">
-                                    <button class="remove" data-action="remove">
-                                        −
-                                    </button>
-                                    <span class="cantidad">0</span>
-                                    <button class="add" data-action="add">
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-                        </li>
-                    ))}
+                        .map((item: any) => (
+                            <li
+                                class="producto"
+                                data-nombre={item.nombre}
+                                data-precio={item.precio}
+                            >
+                                <article class="flex justify-start gap-2.5 py-4 border-b border-white/30">
+                                    <div class="informacion w-full flex flex-col self-stretch">
+                                        <div class="flex">
+                                            <h3 class="w-full">{item.nombre}</h3>
+                                            <p class="w-fit">${formatFromThousands(item.precio)}</p>
+                                        </div>
+                                        <p class="text-sm">{item.descripcion}</p>
+                                        <div class="controles bg-[#323232] rounded-2xl flex w-fit gap-4 py-1 px-3.5 mt-2 self-end mt-auto">
+                                            <button
+                                                class="remove"
+                                                data-action="remove"
+                                            >
+                                                −
+                                            </button>
+                                            <output class="cantidad">0</output>
+                                            <button
+                                                class="add"
+                                                data-action="add"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <figure class="order-first w-[30%] max-w-40 aspect-square shrink-0 ">
+                                        <img
+                                            src={cloudinaryUrl(item.imagen)}
+                                            alt={item.nombre}
+                                            class="w-full h-full object-cover rounded-xl"
+                                        />
+                                    </figure>
+                                    
+                                </article>
+                            </li>
+                        ))}
                 </ul>
             </div>
         ))
