@@ -25,7 +25,7 @@ const fetchAndGroupMenu = async () => {
 const menuPorCategoria = await fetchAndGroupMenu();
 ---
 
-<div class="flex justify-center items-center flex-col py-12 px-2.5">
+<div class="flex justify-center items-center flex-col py-12">
     <h1 class="text-5xl">Menú</h1>
     <MenuList menuPorCategoria={menuPorCategoria} />
     <StickyBar />
@@ -41,21 +41,6 @@ const menuPorCategoria = await fetchAndGroupMenu();
         border: 1px solid #ccc;
         border-radius: 4px;
     }
-
-    /* button {
-        padding: 8px 16px;
-        background-color: #28a745;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background-color: #218838;
-        cursor: pointer;
-    } */
-
     .cerrado {
         display: none !important;
     }

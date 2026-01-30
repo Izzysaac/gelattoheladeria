@@ -90,15 +90,24 @@ const renderProductos = () => {
         const nombre = productoEl.dataset.nombre;
         const cantidadEl = productoEl.querySelector(".cantidad");
         const cantidad = state.items[nombre]?.cantidad || 0;
-
+        
+        const addBtn = productoEl.querySelector(".add");
+        const removeBtn = productoEl.querySelector(".remove");
+        const addProductBtn = productoEl.querySelector(".add-product");
         // Pintar cantidad
         cantidadEl.textContent = cantidad;
 
         // Estado visual (opcional pero PRO)
         if (cantidad > 0) {
-            productoEl.classList.add("activo");
+            addBtn.classList.remove("cerrado");
+            removeBtn.classList.remove("cerrado");
+            cantidadEl.classList.remove("cerrado");
+            addProductBtn.classList.add("cerrado");
         } else {
-            productoEl.classList.remove("activo");
+            addBtn.classList.add("cerrado");
+            removeBtn.classList.add("cerrado");
+            cantidadEl.classList.add("cerrado");
+            addProductBtn.classList.remove("cerrado");  
         }
     });
 };
@@ -162,7 +171,9 @@ const renderBarra = () => {
     barra.classList.remove("ocultar");
 
     // Texto del botón
-    resumen.textContent = `🛒 ${totalItems} producto${totalItems > 1 ? "s" : ""} \u2022 $${totalPrecio.toLocaleString()}`;
+    console.log(resumen);
+    resumen.querySelector("#barra-resumen-total").textContent = `$ ${totalPrecio.toLocaleString()}`;
+    resumen.querySelector("#barra-resumen-cantidad").textContent = `${totalItems} producto${totalItems > 1 ? "s" : ""}`;
 };
 
 // Modal

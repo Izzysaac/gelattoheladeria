@@ -1,13 +1,19 @@
 ---
 import { formatFromThousands, cloudinaryUrl } from "../scripts/utils.js";
+import CategoryNav from "./CategoryNav.astro";
+
 const { menuPorCategoria } = Astro.props;
+const categorias = Object.keys(menuPorCategoria);
 ---
 
-<section class="menu">
+<CategoryNav categorias={categorias} />
+<section class="menu max-w-200 px-2.5">
     {
         Object.entries(menuPorCategoria).map(([categoria, items]) => (
-            <div class="grupo">
-                <h2 class="text-3xl">{categoria}</h2>
+            <div class="grupo" id={categoria}>
+                <h2 class="text-2xl mt-6 font-bold">
+                    {categoria}
+                </h2>
                 <ul>
                     {(items as any)
                         .filter((item) => item.activo)
@@ -19,21 +25,38 @@ const { menuPorCategoria } = Astro.props;
                             >
                                 <article class="flex justify-start gap-2.5 py-4 border-b border-white/30">
                                     <div class="informacion w-full flex flex-col self-stretch">
-                                        <div class="flex">
-                                            <h3 class="w-full">{item.nombre}</h3>
-                                            <p class="w-fit">${formatFromThousands(item.precio)}</p>
+                                        <div class="flex justify-between gap-2">
+                                            <h3 class="">
+                                                {item.nombre}
+                                            </h3>
+                                            <p class="text-nowrap mr-2">
+                                                $
+                                                {formatFromThousands(
+                                                    item.precio,
+                                                )}
+                                            </p>
                                         </div>
-                                        <p class="text-sm">{item.descripcion}</p>
-                                        <div class="controles bg-[#323232] rounded-2xl flex w-fit gap-4 py-1 px-3.5 mt-2 self-end mt-auto">
+                                        <p class="text-sm pr-8 text-pretty opacity-90">
+                                            {item.descripcion}
+                                        </p>
+                                        <div class="controles bg-[#323232] rounded-2xl flex w-fit gap-4 py-1 px-3.5 self-end mt-auto">
                                             <button
-                                                class="remove"
+                                                class="add-product"
+                                                data-action="add"
+                                            >
+                                                Añadir
+                                            </button>
+                                            <button
+                                                class="remove cerrado"
                                                 data-action="remove"
                                             >
                                                 −
                                             </button>
-                                            <output class="cantidad">0</output>
+                                            <output class="cantidad cerrado">
+                                                0
+                                            </output>
                                             <button
-                                                class="add"
+                                                class="add cerrado"
                                                 data-action="add"
                                             >
                                                 +
@@ -44,10 +67,9 @@ const { menuPorCategoria } = Astro.props;
                                         <img
                                             src={cloudinaryUrl(item.imagen)}
                                             alt={item.nombre}
-                                            class="w-full h-full object-cover rounded-xl"
+                                            class="w-full object-cover rounded-xl"
                                         />
                                     </figure>
-                                    
                                 </article>
                             </li>
                         ))}
@@ -56,3 +78,9 @@ const { menuPorCategoria } = Astro.props;
         ))
     }
 </section>
+
+<style>
+    .grupo {
+        scroll-margin-top: 4rem; /* altura del nav */
+    }
+</style>

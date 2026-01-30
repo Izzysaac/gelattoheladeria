@@ -20,13 +20,22 @@ import Pedidos from "../components/Pedidos.astro";
 
 <style is:global>
 	@import "tailwindcss";
+
+	:root {
+		--color-background: #131313;
+		--color-primary: rgb(11, 205, 170);
+	}
 	html,
 	body {
 		margin: 0;
 		width: 100%;
 		height: 100%;
-		background-color: rgb(10, 10, 10);
+		background-color: var(--color-background);
 		color: white;
+	}
+
+	html {
+		scroll-behavior: smooth;
 	}
 </style>
 

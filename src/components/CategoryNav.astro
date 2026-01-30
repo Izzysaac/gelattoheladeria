@@ -1,0 +1,123 @@
+---
+const { categorias } = Astro.props;
+---
+
+<nav class="category-nav max-w-200" aria-label="Categorías del menú">
+    <ul class="flex gap-0 m-0">
+        {
+            categorias.map((categoria: string) => (
+                <li class="">
+                    <a
+                        data-category={categoria}
+                        href={`#${categoria}`}
+                        class=""
+                    >
+                        {categoria}
+                    </a>
+                    <div class="linea" />
+                </li>
+            ))
+        }
+    </ul>
+</nav>
+
+<style>
+    .category-nav {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        width: 100vw;
+        background-color: var(--color-background);
+    }
+
+    .category-nav ul {
+        overflow: scroll;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        padding: 0.5rem 1rem;
+        list-style: none;
+    }
+    .category-nav ul::-webkit-scrollbar {
+        display: none;
+    }
+
+    .category-nav a {
+        display: block;
+        padding: 0.5rem 0.75rem;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+    .category-nav a:focus-visible {
+        outline: 2px solid #2563eb;
+        outline-offset: 2px;
+    }
+    .category-nav a.active {
+        font-weight: 800;
+    }
+
+    .linea {
+        position: relative;
+        height: 3px;
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .linea-activa:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 3px;
+        background-color: white;
+        border-radius: 999px;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const sections = document.querySelectorAll(".grupo[id]");
+        const navLinks = document.querySelectorAll(".category-nav a");
+
+        const linkById = {};
+        navLinks.forEach((link) => {
+            linkById[(link as HTMLElement).dataset.category] = link;
+        });
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const id = entry.target.id;
+                    const activeLink = linkById[id];
+
+                    if (!activeLink) return;
+
+                    // limpiar estados previos
+                    navLinks.forEach((l) => {
+                        l.classList.remove("active");
+                        l.nextElementSibling?.classList.remove("linea-activa");
+                    });
+
+                    // marcar activo
+                    activeLink.classList.add("active");
+                    activeLink.nextElementSibling?.classList.add(
+                        "linea-activa",
+                    );
+                    // centrar en el nav
+                    activeLink.scrollIntoView({
+                        behavior: "smooth",
+                        inline: "center",
+                        block: "nearest",
+                    });
+                });
+            },
+            {
+                rootMargin: "-30% 0px -50% 0px", // zona “activa revisar bugs”
+                threshold: 0,
+            },
+        );
+
+        sections.forEach((section) => observer.observe(section));
+    });
+</script>

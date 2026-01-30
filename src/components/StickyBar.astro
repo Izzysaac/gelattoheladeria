@@ -1,24 +1,33 @@
+<!-- //añadir ocultar  -->
 <div
     id="barra-pedido"
-    class="barra ocultar flex justify-center w-f text-xl w-auto"
+    class="barra flex justify-between border-t border-t-white/30 items-center gap-8 pt-2 px-4 max-w-200"
 >
-    <span id="barra-resumen" class="p-4 grow"></span>
-    <button id="btn-ver-pedido" class="grow">Ver pedido</button>
+    <p id="barra-resumen" class="flex gap-1 leading-tight text-nowrap">
+        <span id="barra-resumen-total" class="font-semibold"></span>
+        &bull;
+        <span id="barra-resumen-cantidad" class="text-white/90 text-ellipsis overflow-hidden"></span>
+    </p>
+    <button id="btn-ver-pedido" class="px-8 py-2 text-nowrap">Ver pedido</button
+    >
 </div>
-
 
 <style>
     #barra-pedido {
         position: sticky;
         bottom: 0;
-        background-color: white;
-        color: black;
+        background-color: var(--color-background);
+        color: white;
         z-index: 1000;
         width: 100%;
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
     }
-    button
-    {
-        background-color: #333333;
-        border-radius: 0;
+    #btn-ver-pedido {
+        background-color: var(--color-primary);
+        color: var(--color-background);
+        font-weight: bold;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
     }
 </style>
