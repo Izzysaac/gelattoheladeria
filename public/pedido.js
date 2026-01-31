@@ -22,7 +22,7 @@ const guardarStateEnStorage = () => {
 
 // Actualizar cantidad de un producto en el estado
 const updateCantidad = (producto, delta) => {
-    const { nombre, precio, imagen } = producto;
+    const { nombre, precio, imagen, descripcion } = producto;
 
     // Si el producto no existe aún en el estado, lo inicializamos
     if (!state.items[nombre]) {
@@ -30,7 +30,8 @@ const updateCantidad = (producto, delta) => {
             nombre,
             precio,
             cantidad: 0,
-            imagen
+            imagen,
+            descripcion
         };
     }
 
@@ -98,7 +99,8 @@ const bindEventosProductos = () => {
         const producto = {
             nombre: productoEl.dataset.nombre,
             precio: Number(productoEl.dataset.precio),
-            imagen: productoEl.dataset.imagen
+            imagen: productoEl.dataset.imagen,
+            descripcion: productoEl.dataset.descripcion,
         };
 
         // 5️⃣ Ejecutar acción
@@ -282,12 +284,14 @@ const renderModal = () => {
         row.dataset.nombre = item.nombre;
         row.dataset.precio = item.precio;
         row.dataset.imagen = item.imagen;
+        row.dataset.descripcion = item.descripcion
 
         const nombreEl = row.querySelector(".nombre");
         if (nombreEl) nombreEl.textContent = item.nombre;
         const cantidadEl = row.querySelector(".cantidad");
         if (cantidadEl) cantidadEl.textContent = String(item.cantidad);
-        // if (item.image == undefined) row.getElementsByTagName("figure")[0].remove() && console.log("entro y borro"); 
+        const descripcionEl = row.querySelector(".descripcion");
+        if (descripcionEl) descripcionEl.textContent = item.descripcion;
         const imgEL = row.querySelector(".imagen-producto");
         if (imgEL){
             if (item.imagen) {
