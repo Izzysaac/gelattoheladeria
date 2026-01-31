@@ -61,6 +61,15 @@ const borrarPedido = () => {
     renderTodo();
 }
 
+const dialogLightbox = document.getElementById('lightbox');
+const dialogImg = document.getElementById('lightbox-img');
+const closeBtn = dialogLightbox.querySelector('.close');
+
+closeBtn.addEventListener('click', () => dialogLightbox.close());
+dialogLightbox.addEventListener('click', (e) => {
+  if (e.target === dialogLightbox) dialogLightbox.close();
+});
+
 // Productos del menú y modal
 const bindEventosProductos = () => {
     // Agregar listeners a los botones + y - de cada producto
@@ -68,6 +77,14 @@ const bindEventosProductos = () => {
         // 1️⃣ Verificar si el click viene de un botón de producto
         if (!event.target) return;
         const boton = event.target.closest("[data-action]");
+
+        if (event.target.tagName == 'IMG'){
+            const imageUrl = event.target.dataset.full || event.target.src;
+            dialogImg.src = imageUrl;
+            dialogImg.alt = event.target.alt || '';
+            dialogLightbox.showModal();
+        }
+
         if (!boton) return;
 
         // 2️⃣ Identificar acción
@@ -93,6 +110,13 @@ const bindEventosProductos = () => {
             updateCantidad(producto, -1);
         }
     });
+
+    // const menu = document.querySelector("#menu");
+
+    // menu.addEventListener('click', (e) => {
+    //     if (e.target.tagName !== 'IMG') return;
+
+    // })
 };
 
 const renderProductos = () => {
@@ -252,7 +276,6 @@ const renderModal = () => {
     Object.values(state.items).forEach((item) => {
 
         if (item.cantidad <= 0) return;
-
         total += item.cantidad * item.precio;
 
         const row = template.content.firstElementChild.cloneNode(true);
@@ -264,10 +287,16 @@ const renderModal = () => {
         if (nombreEl) nombreEl.textContent = item.nombre;
         const cantidadEl = row.querySelector(".cantidad");
         if (cantidadEl) cantidadEl.textContent = String(item.cantidad);
+        // if (item.image == undefined) row.getElementsByTagName("figure")[0].remove() && console.log("entro y borro"); 
         const imgEL = row.querySelector(".imagen-producto");
-        if (imgEL) {
-            imgEL.src = cloudinaryUrl(item.imagen);
-            imgEL.alt = item.nombre;
+        if (imgEL){
+            if (item.imagen) {
+                imgEL.src = cloudinaryUrl(item.imagen);
+                imgEL.alt = item.nombre;
+            }  else {
+                row.getElementsByTagName("figure")[0].remove()
+            }
+
         }
         const precioEl = row.querySelector(".precio");
         if (precioEl) precioEl.textContent = `$${(item.precio * item.cantidad).toLocaleString()}`;

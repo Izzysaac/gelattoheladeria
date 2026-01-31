@@ -1,0 +1,44 @@
+---
+
+---
+
+<dialog id="lightbox">
+  <button class="close" aria-label="Cerrar">✕</button>
+  <img id="lightbox-img" alt="" />
+</dialog>
+
+
+<style>
+    dialog#lightbox {
+    border: none;
+    padding: 0;
+    background: transparent;
+    max-width: 90vw;
+    max-height: 90vh;
+    margin: auto;
+}
+
+dialog::backdrop {
+  background: rgba(0,0,0,0.7);
+}
+#lightbox-img {
+  width: 100%;
+  height: auto;
+  max-height: 90vh;
+  border-radius: 12px;
+}
+
+.close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  cursor: pointer;
+}
+</style>
