@@ -1,6 +1,9 @@
 ---
 import { formatFromThousands, cloudinaryUrl } from "../scripts/utils.js";
 import CategoryNav from "./CategoryNav.astro";
+import Plus from "../assets/plus-svgrepo-com.svg"
+import Minus from "../assets/minus-svgrepo-com.svg"
+
 
 const { menuPorCategoria } = Astro.props;
 const categorias = Object.keys(menuPorCategoria);
@@ -22,6 +25,7 @@ const categorias = Object.keys(menuPorCategoria);
                                 class="producto"
                                 data-nombre={item.nombre}
                                 data-precio={item.precio}
+                                data-imagen={item.imagen}
                             >
                                 <article class="flex justify-start gap-2.5 py-4 border-b border-white/30">
                                     <div class="informacion w-full flex flex-col self-stretch">
@@ -39,27 +43,27 @@ const categorias = Object.keys(menuPorCategoria);
                                         <p class="text-sm pr-8 text-pretty opacity-90">
                                             {item.descripcion}
                                         </p>
-                                        <div class="controles bg-[#323232] rounded-2xl flex w-fit gap-4 py-1 px-3.5 self-end mt-auto">
+                                        <div class="controles bg-(--color-secondary) rounded-full flex w-fit self-end mt-auto items-center">
                                             <button
                                                 class="add-product"
                                                 data-action="add"
                                             >
-                                                Añadir
+                                                <Plus width={25} height={25}/>
                                             </button>
                                             <button
                                                 class="remove cerrado"
                                                 data-action="remove"
                                             >
-                                                −
+                                                <Minus width={25} height={25}/>
                                             </button>
-                                            <output class="cantidad cerrado">
+                                            <output class="cantidad cerrado mx-1">
                                                 0
                                             </output>
                                             <button
                                                 class="add cerrado"
                                                 data-action="add"
                                             >
-                                                +
+                                                <Plus width={25} height={25}/>
                                             </button>
                                         </div>
                                     </div>
@@ -80,7 +84,11 @@ const categorias = Object.keys(menuPorCategoria);
 </section>
 
 <style>
+    @import "tailwindcss";
     .grupo {
         scroll-margin-top: 4rem; /* altura del nav */
+    }
+    button {
+        @apply py-1.5 px-1.5
     }
 </style>

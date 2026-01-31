@@ -22,7 +22,7 @@ const guardarStateEnStorage = () => {
 
 // Actualizar cantidad de un producto en el estado
 const updateCantidad = (producto, delta) => {
-    const { nombre, precio } = producto;
+    const { nombre, precio, imagen } = producto;
 
     // Si el producto no existe aún en el estado, lo inicializamos
     if (!state.items[nombre]) {
@@ -30,6 +30,7 @@ const updateCantidad = (producto, delta) => {
             nombre,
             precio,
             cantidad: 0,
+            imagen
         };
     }
 
@@ -49,6 +50,16 @@ const updateCantidad = (producto, delta) => {
     //Re-renderizar
     renderTodo();
 };
+
+const borrarPedido = () => {
+    // Vaciamos items
+    state.items = {};
+    // Persistimos
+    guardarStateEnStorage();
+
+    //Re-renderizar
+    renderTodo();
+}
 
 // Productos del menú y modal
 const bindEventosProductos = () => {
@@ -70,6 +81,7 @@ const bindEventosProductos = () => {
         const producto = {
             nombre: productoEl.dataset.nombre,
             precio: Number(productoEl.dataset.precio),
+            imagen: productoEl.dataset.imagen
         };
 
         // 5️⃣ Ejecutar acción
@@ -115,42 +127,24 @@ const renderProductos = () => {
 // Sticky bar 
 const bindEventosBarra = () => {
     const btnVerPedido = document.querySelector("#btn-ver-pedido");
-    const btnCerrarModal = document.querySelector("#btn-cerrar-modal");
-    const btnModificarPedido = document.querySelector("#btn-modificar-pedido");
     const modal = document.querySelector("#modal-pedido");
 
-    if (!btnVerPedido || !modal) return;
+    if (!btnVerPedido) return;
 
     // Abrir modal desde la barra
     btnVerPedido.addEventListener("click", () => {
-        modal.classList.remove("cerrado");
+        // modal.classList.remove("cerrado");
+        modal.showModal();
+        document.body.classList.add('no-scroll');
     });
 
-    // Cerrar modal (botón cerrar)
-    if (btnCerrarModal ) {
-        btnCerrarModal.addEventListener("click", () => {
-            modal.classList.add("cerrado");
-        });
-    }
-    if (btnModificarPedido ) {
-        btnModificarPedido.addEventListener("click", () => {
-            modal.classList.add("cerrado");
-        });
-    }
-
-    // Cerrar modal al tocar fuera del contenido
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            modal.classList.add("cerrado");
-        }
-    });
 };
 
 const renderBarra = () => {
     const barra = document.querySelector("#barra-pedido");
     const btn = document.querySelector("#btn-ver-pedido");
-    const resumen = document.querySelector("#barra-resumen");
-
+    const resumenes = document.querySelectorAll("#barra-resumen");
+    
     if (!barra || !btn) return;
 
     let totalItems = 0;
@@ -171,44 +165,49 @@ const renderBarra = () => {
     barra.classList.remove("ocultar");
 
     // Texto del botón
-    console.log(resumen);
-    resumen.querySelector("#barra-resumen-total").textContent = `$ ${totalPrecio.toLocaleString()}`;
-    resumen.querySelector("#barra-resumen-cantidad").textContent = `${totalItems} producto${totalItems > 1 ? "s" : ""}`;
+    resumenes.forEach((resumen) => {
+        resumen.querySelector("#barra-resumen-total").textContent = `$ ${totalPrecio.toLocaleString()}`;
+        resumen.querySelector("#barra-resumen-cantidad").textContent = `${totalItems} producto${totalItems > 1 ? "s" : ""}`;
+    });
 };
 
 // Modal
 const bindEventosModal = () => {
     const modal = document.querySelector("#modal-pedido");
+    const modalBorrar = document.querySelector("#modal-borrar-pedido")
     if (!modal) return;
+
     // Delegación de eventos dentro del modal
     modal.addEventListener("click", (e) => {
+        
         const target = e.target;
-        // ➕ Agregar producto
-        // if (target.classList.contains("add")) {
-        //     const item = target.closest(".item-pedido");
-        //     if (!item) return;
-        //     const producto = {
-        //         nombre: (item as HTMLElement).dataset.nombre,
-        //         precio: Number((item as HTMLElement).dataset.precio),
-        //     };
-        //     updateCantidad(producto, +1);
-        // }
-        // ➖ Quitar producto
-        // if (target.classList.contains("remove")) {
-        //     const item = target.closest(".item-pedido");
-        //     if (!item) return;
-
-        //     const producto = {
-        //         nombre: (item as HTMLElement).dataset.nombre,
-        //         precio: Number((item as HTMLElement).dataset.precio),
-        //     };
-        //     updateCantidad(producto, -1);
-        // }
-        // 🟢 Hacer pedido
+        // Cerrar modal
+        if (target.id === "btn-modificar-pedido" || target.id === "btn-cerrar-modal" || target == modal) {
+            modal.close();
+            document.body.classList.remove('no-scroll');
+        }
+        // Abrir eliminar pedido
+        if (target.id === "btn-borrar-modal" ) {
+            modalBorrar.showModal();
+        }
+        // Hacer pedido
         if (target.id === "btn-hacer-pedido") {
             hacerPedido();
         }
     });
+
+    // Delegación de eventos dentro del modal borrar
+    modalBorrar.addEventListener("click", (e) => {
+        const target = e.target;
+        if (target.id === "btn-borrar-pedido" || target.id === "btn-conservar-pedido" || target == modalBorrar) {
+            modalBorrar.close();
+            console.log("cierro-modal")
+        }
+        if (target.id === "btn-borrar-pedido") {
+            document.body.classList.remove('no-scroll');
+            borrarPedido();
+        }
+    })
 
     // Tipo de entrega
     modal.addEventListener("change", (e) => {
@@ -224,12 +223,16 @@ const bindEventosModal = () => {
     });
 };
 
+function cloudinaryUrl(id) {
+  return `https://res.cloudinary.com/dc8vxeapd/image/upload/w_400,q_auto,f_auto/${id}.jpg`;
+}
+
+
 const renderModal = () => {
 
     const lista = document.querySelector("#lista-pedido");
-    const totalEl = document.querySelector("#total-pedido");
 
-    if (!lista || !totalEl) return;
+    if (!lista ) return;
 
     lista.replaceChildren();
 
@@ -240,7 +243,9 @@ const renderModal = () => {
 
     const modal = document.querySelector("#modal-pedido");
     if (state.items === null || Object.keys(state.items).length === 0) {
-        modal.classList.add("cerrado");
+
+        modal.close();
+        document.body.classList.remove('no-scroll');
         return;
     }
 
@@ -253,18 +258,22 @@ const renderModal = () => {
         const row = template.content.firstElementChild.cloneNode(true);
         row.dataset.nombre = item.nombre;
         row.dataset.precio = item.precio;
+        row.dataset.imagen = item.imagen;
 
         const nombreEl = row.querySelector(".nombre");
         if (nombreEl) nombreEl.textContent = item.nombre;
         const cantidadEl = row.querySelector(".cantidad");
         if (cantidadEl) cantidadEl.textContent = String(item.cantidad);
+        const imgEL = row.querySelector(".imagen-producto");
+        if (imgEL) {
+            imgEL.src = cloudinaryUrl(item.imagen);
+            imgEL.alt = item.nombre;
+        }
         const precioEl = row.querySelector(".precio");
         if (precioEl) precioEl.textContent = `$${(item.precio * item.cantidad).toLocaleString()}`;
 
         lista.appendChild(row);
     });
-
-    totalEl.textContent = `Total: $${total.toLocaleString()}`;
 };
 
 // Tipo de entrega
@@ -301,9 +310,13 @@ const renderEntrega = () => {
     if (state.tipoEntrega === "domicilio") {
         campoDireccionEl.style.display = "block";
         inputDireccionEl.value = state.direccion;
+        inputDireccionEl.classList.remove("invalid");
+        inputDireccionEl.disabled = false;
     } else {
-        campoDireccionEl.style.display = "none";
-        inputDireccionEl.value = "";
+        // campoDireccionEl.style.display = "none";
+        inputDireccionEl.value = "Dirección: Cra. 2 & Calle 17, Pitalito, Huila";
+        inputDireccionEl.classList.remove("invalid");
+        inputDireccionEl.disabled = true;
     }
 };
 
@@ -348,6 +361,7 @@ const hacerPedido = () => {
     // 2️⃣ Validar dirección si es domicilio
     if (state.tipoEntrega === "domicilio" && !state.direccion.trim()) {
         alert("Por favor ingresa la dirección de entrega");
+        document.querySelector("#input-direccion").classList.add("invalid");
         return;
     }
 

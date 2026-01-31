@@ -1,4 +1,5 @@
 ---
+import BorrarPedido from "./BorrarPedido.astro";
 import MenuList from "./Menu.astro";
 import Modal from "./Modal.astro";
 import StickyBar from "./StickyBar.astro";
@@ -28,19 +29,13 @@ const menuPorCategoria = await fetchAndGroupMenu();
 <div class="flex justify-center items-center flex-col py-12">
     <h1 class="text-5xl">Menú</h1>
     <MenuList menuPorCategoria={menuPorCategoria} />
-    <StickyBar />
+    <StickyBar tipoAccion="ver" />
     <Modal />
 </div>
 
 <script is:inline src="/pedido.js" defer></script>
 
 <style is:global>
-    input {
-        padding: 8px;
-        width: 250px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
     .cerrado {
         display: none !important;
     }

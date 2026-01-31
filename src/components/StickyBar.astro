@@ -1,28 +1,75 @@
-<!-- //añadir ocultar  -->
-<div
-    id="barra-pedido"
-    class="barra flex justify-between border-t border-t-white/30 items-center gap-8 pt-2 px-4 max-w-200"
->
-    <p id="barra-resumen" class="flex gap-1 leading-tight text-nowrap">
-        <span id="barra-resumen-total" class="font-semibold"></span>
-        &bull;
-        <span id="barra-resumen-cantidad" class="text-white/90 text-ellipsis overflow-hidden"></span>
-    </p>
-    <button id="btn-ver-pedido" class="px-8 py-2 text-nowrap">Ver pedido</button
-    >
-</div>
+---
+import TipoEntrega from "./TipoEntrega.astro";
 
-<style>
-    #barra-pedido {
+const { tipoAccion } = Astro.props;
+---
+
+{
+    tipoAccion === "ver" && (
+        <div
+            id="barra-pedido"
+            class="barra-pedido-ver flex justify-between border-t border-t-white/30 gap-4 pt-2 px-4 max-w-200 items-stretch w-full"
+        >
+            <p
+                id="barra-resumen"
+                class="flex flex-col gap-0.5 leading-tight text-nowrap"
+            >
+                <span class="font-semibold">
+                    Total:
+                    <span id="barra-resumen-total" />
+                </span>
+
+                <span
+                    id="barra-resumen-cantidad"
+                    class="text-white/90 text-ellipsis overflow-hidden"
+                />
+            </p>
+            <button id="btn-ver-pedido" class="px-8 py-2 text-nowrap">
+                Ver pedido
+            </button>
+        </div>
+    )
+}
+{
+    tipoAccion === "hacer" && (
+        <div
+            id="barra-pedido"
+            class="barra-pedido-hacer flex flex-col items-center gap-2 pt-2 max-w-125 w-full"
+        >
+            <TipoEntrega />
+            <div class="flex w-full justify-between items-center gap-4 border-t border-t-white/30 py-3">
+                <p
+                id="barra-resumen"
+                class="flex flex-col gap-0.5 leading-tight text-nowrap"
+            >
+                <span class="font-semibold">
+                    Total:
+                    <span id="barra-resumen-total" class="" />
+                </span>
+
+                <span
+                    id="barra-resumen-cantidad"
+                    class="text-white/90 text-ellipsis overflow-hidden"
+                />
+            </p>
+                <button id="btn-hacer-pedido" class="px-8 py-2 text-nowrap">
+                    Hacer pedido
+                </button>
+            </div>
+        </div>
+    )
+}
+
+<style is:global>
+    .barra-pedido-ver {
         position: sticky;
         bottom: 0;
         background-color: var(--color-background);
-        color: white;
-        z-index: 1000;
-        width: 100%;
-        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+        z-index: 9000;
+        padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
     }
-    #btn-ver-pedido {
+    #btn-ver-pedido,
+    #btn-hacer-pedido {
         background-color: var(--color-primary);
         color: var(--color-background);
         font-weight: bold;

@@ -1,0 +1,39 @@
+---
+import Plus from "../assets/plus-svgrepo-com.svg"
+import Minus from "../assets/minus-svgrepo-com.svg"
+
+---
+<template id="item-pedido-template">
+    <article
+        class="item-pedido p-2 flex gap-4 justify-between items-center border-b border-white/30"
+    >
+        <div class="informacion w-full flex flex-col self-stretch">
+            <div class="flex justify-between gap-2">
+                <span class="nombre"></span>
+                <span class="precio"></span>
+            </div>
+            <div
+                class="controles bg-(--color-secondary) rounded-full flex w-fit self-end mt-auto items-center"
+            >
+                <button data-action="remove" class="remove"><Minus width={25} height={25}/></button>
+                <span class="cantidad mx-1"></span>
+                <button data-action="add" class="add"><Plus width={25} height={25}/></button>
+            </div>
+        </div>
+        <figure class="order-first w-[25%] max-w-40 aspect-square shrink-0">
+            <img
+                src=""
+                alt=""
+                class="imagen-producto w-full object-cover rounded-xl"
+            />
+        </figure>
+    </article>
+</template>
+
+
+<style>
+    @import "tailwindcss";
+    button {
+        @apply py-1.5 px-1.5
+    }
+</style>

@@ -24,7 +24,12 @@ import Pedidos from "../components/Pedidos.astro";
 	:root {
 		--color-background: #131313;
 		--color-primary: rgb(11, 205, 170);
+		--color-secondary: #323232;
 	}
+	.no-scroll {
+		overflow: hidden;
+	}
+
 	html,
 	body {
 		margin: 0;
@@ -32,6 +37,7 @@ import Pedidos from "../components/Pedidos.astro";
 		height: 100%;
 		background-color: var(--color-background);
 		color: white;
+		font-family:  Verdana, Geneva, Tahoma, sans-serif;
 	}
 
 	html {
