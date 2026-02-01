@@ -1,0 +1,89 @@
+---
+import Icon from '../icons/Icon.astro'
+
+const fetchAndGroup = async () => {
+    const url =
+        "https://opensheet.elk.sh/1NbSsEokxqqUM_zXYzQLpL12BiAyTw22HbWR7q30xRGM/informacion";
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const grouped = data.reduce((acc, item) => {
+        if (!acc[item.clave]) {
+            acc[item.clave] = [];
+        }
+        acc[item.clave].push(item);
+        return acc;
+    }, {});
+
+    return {
+        titulo: grouped.titulo?.[0]?.valor ?? "",
+        descripcion: grouped.descripcion?.[0]?.valor ?? "",
+        logo: grouped.logo?.[0]?.valor ?? "",
+        botones: grouped.boton ?? [],
+        socials: grouped.social ?? [],
+    };
+};
+
+const grouped = await fetchAndGroup();
+
+const { titulo, descripcion, logo, botones, socials } = grouped;
+---
+
+<!-- <div id="tonalidad"></div> -->
+<header class="flex flex-col max-w-100 items-center py-20 px-8 m-auto gap-4 rounded-lg">
+    <img
+        src="logo.webp"
+        alt={titulo}
+        class="rounded-full max-w-25"
+        width="30%"
+    />
+    <h1 class="text-xl font-semibold">{titulo}</h1>
+    <nav class="w-full">
+        <ul class="flex flex-col justify-center gap-2">
+            {
+                botones.map((boton) => (
+                    <li class="">
+                        <a
+                            href={boton.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="rounded-lg bg-black px-3 py-4 w-full block text-center"
+                        >
+                            {boton.valor}
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </nav>
+    <div class="social flex gap-2">
+        {
+            socials.map((social) => (
+                <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.valor}
+                    class="text-neutral-400"
+                >
+                    {<Icon name={social.valor} height="40" width="40"  />}
+                </a>
+            ))
+        }
+    </div>
+</header>
+
+<style>
+    @import "tailwindcss";
+    /* header {
+        background: #505050;
+        background: radial-gradient(circle,rgba(80, 80, 80, 1) 1%, rgba(64, 64, 64, 1) 62%, rgba(32, 32, 32, 1) 100%);
+    } */
+    /* #tonalidad{
+        background-image: url(logo.webp) ;
+        background-color: color-mix(in srgb, #000000 88%, rgb(186, 186, 186) 12%);
+        @apply fixed left-[-5vw] top-[-5vh] h-[110dvh] w-[110vw] bg-cover bg-center bg-no-repeat opacity-25 blur-[50px]
+        /* @apply fixed left-[-5vw] top-[-5vh] h-[110dvh] w-[110vw] bg-cover bg-center bg-no-repeat opacity-25 blur-[50px]
+    } */
+</style>

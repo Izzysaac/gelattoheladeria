@@ -316,9 +316,9 @@ const setTipoEntrega = (tipo) => {
     state.tipoEntrega = tipo;
 
     // Si recoge, limpiamos dirección
-    if (tipo === "recoger") {
-        state.direccion = "";
-    }
+    // if (tipo === "recoger") {
+    //     state.direccion = "";
+    // }
 
     guardarStateEnStorage();
     renderTodo();

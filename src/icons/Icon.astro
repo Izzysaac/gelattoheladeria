@@ -1,0 +1,9 @@
+---
+import Instagram from "./instagram.svg"
+import Facebook from "./facebook.svg"
+
+const {name, width = 25, height = 25, fill = "#FFF", stroke = "none"} = Astro.props
+---
+
+{name == "instagram" && <Instagram width={width} height={height} fill={fill} stroke={stroke}/>}
+{name == "facebook" && <Facebook width={width} height={height} fill={fill} stroke={stroke}/>}

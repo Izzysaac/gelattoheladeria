@@ -1,6 +1,17 @@
 ---
+import Hero from "../layouts/Hero.astro";
 import Layout from "../layouts/Layout.astro";
----
 
+---
+<Layout class:list={"gradient"}>
+    <Hero/>
 <Layout />
 
+
+<style is:global>
+    .gradient{
+        /* background-color: color-mix(in srgb, #000000 88%, rgb(186, 186, 186) 12%); */
+        background: #505050;
+        background: radial-gradient(circle,rgba(80, 80, 80, 1) 1%, rgba(64, 64, 64, 1) 62%, rgba(32, 32, 32, 1) 100%);
+    }
+</style>

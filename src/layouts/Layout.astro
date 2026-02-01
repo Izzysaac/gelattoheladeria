@@ -1,5 +1,5 @@
 ---
-import Pedidos from "../components/Pedidos.astro";
+const { class: className } = Astro.props; 
 ---
 
 <!doctype html>
@@ -12,9 +12,8 @@ import Pedidos from "../components/Pedidos.astro";
 		<meta name="generator" content={Astro.generator} />
 		<title>Excel CMS</title>
 	</head>
-	<body>
+	<body class:list={className}>
 		<slot />
-		<Pedidos />
 	</body>
 </html>
 
