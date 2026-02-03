@@ -1,19 +1,17 @@
 ---
-import Icon from '../icons/Icon.astro'
+import Icon from "../icons/Icon.astro";
+import Logo from "../icons/Logo.astro";
 
-const {grouped} = Astro.props
+const { grouped } = Astro.props;
 
-const { titulo, descripcion, logo, botones, socials } = grouped;
+const { titulo, descripcion, logo, botones, socials } = await grouped;
 ---
 
-<header class="flex flex-col max-w-100 items-center py-20 px-8 m-auto gap-4 rounded-lg text-(--index-text)">
-    <img
-        src={logo}
-        alt={titulo}
-        class="rounded-full max-w-25"
-        width="30%"
-        loading="eager"
-    />
+<header
+    class="flex flex-col max-w-100 items-center py-20 px-8 m-auto gap-4 rounded-lg text-(--index-text)"
+>
+    <Logo titulo={titulo} logo={logo} />
+
     <h1 class="text-xl font-semibold">{titulo}</h1>
     <nav class="w-full">
         <ul class="flex flex-col justify-center gap-2">
@@ -22,7 +20,6 @@ const { titulo, descripcion, logo, botones, socials } = grouped;
                     <li>
                         <a
                             href={boton.url}
-                            target="_blank"
                             rel="noopener noreferrer"
                             class="rounded-lg bg-(--index-buttons) px-3 py-4 w-full block text-center text-(--index-buttons-text)"
                         >
@@ -43,7 +40,7 @@ const { titulo, descripcion, logo, botones, socials } = grouped;
                     aria-label={social.valor}
                     class="text-(--index-text)/60"
                 >
-                    {<Icon name={social.valor} height="40" width="40"  />}
+                    {<Icon name={social.valor} height="40" width="40" />}
                 </a>
             ))
         }

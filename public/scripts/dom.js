@@ -1,0 +1,27 @@
+export const dom = {
+    /* Productos del menu (en build) */
+    productos: document.querySelectorAll(".producto"),
+
+    /* Sticky bar */
+    stickyBar: document.getElementById("barra-pedido"),
+    btnVerPedido: document.getElementById("btn-ver-pedido"),
+    btnHacerPedido: document.getElementById("btn-hacer-pedido"),
+    btnPaginaPedido: document.getElementById("btn-pagina-pedido"),
+    resumenesPedido: document.querySelectorAll("#barra-resumen"),
+
+    /* Modal ver pedido */
+    modalVerPedido: document.getElementById("modal-pedido"),
+    modalBorrarPedido: document.getElementById("modal-borrar-pedido"),
+    listaPedido: document.getElementById("lista-pedido"),
+    templatePedidoProducto: document.getElementById("item-pedido-template"),
+
+    /* Seleccion de tipo de entrega*/
+    radios: document.querySelectorAll('input[name="entrega"]'),
+    divInputDireccion: document.querySelector("#campo-direccion"),
+    inputDireccion: document.getElementById("input-direccion"),
+
+    /* Image Viewer */
+    dialogImageViewer: document.getElementById("dialogImageViewer"),
+    dialogImageViewerImg: document.getElementById("imageViewerImg"),
+    dialogImageViwerCloseBtn: document.getElementById("dialogImageViewerClose"),
+};

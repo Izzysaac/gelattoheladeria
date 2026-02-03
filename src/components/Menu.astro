@@ -6,7 +6,7 @@ import Minus from "../assets/minus-svgrepo-com.svg"
 import ViewImage from "./ViewImage.astro";
 
 
-const { menuPorCategoria } = Astro.props;
+const { menuPorCategoria, modo } = Astro.props;
 const categorias = Object.keys(menuPorCategoria);
 ---
 
@@ -45,6 +45,7 @@ const categorias = Object.keys(menuPorCategoria);
                                         <p class="text-sm pr-8 text-pretty opacity-90">
                                             {item.descripcion}
                                         </p>
+                                        { modo != "menu" &&
                                         <div class="controles bg-(--color-secondary) rounded-full flex w-fit self-end mt-auto items-center">
                                             <button
                                                 class="add-product"
@@ -68,6 +69,7 @@ const categorias = Object.keys(menuPorCategoria);
                                                 <Plus width={25} height={25}/>
                                             </button>
                                         </div>
+                                        }
                                     </div>
                                     {item.imagen && 
                                         <figure class="order-first w-[30%] max-w-40 aspect-square shrink-0 ">

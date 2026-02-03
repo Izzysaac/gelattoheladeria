@@ -27,17 +27,19 @@ const fetchAndGroup = async () => {
         socials: grouped.social ?? [],
     };
 };
-
 const grouped = await fetchAndGroup();
+const titulo = grouped.titulo
+const descripcion = grouped.descripcion
+const logo = grouped.logo
+
 
 ---
-<Layout class:list={"gradient"}>
+<Layout titulo={titulo} descripcion={descripcion} logo={logo} class:list={"gradient"}>
     <Hero grouped={grouped}/>
 <Layout />
 
 
-<style is:global>
-    .gradient{
+<style is:global>    .gradient{
         background: #ffffff;
     }
 </style>

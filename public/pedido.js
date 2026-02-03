@@ -31,9 +31,9 @@ const updateCantidad = (producto, delta) => {
         state.items[nombre] = {
             nombre,
             precio,
-            cantidad: 0,
             imagen,
-            descripcion
+            descripcion,
+            cantidad: 0
         };
     }
 
@@ -64,10 +64,24 @@ const borrarPedido = () => {
     renderTodo();
 }
 
+// Tipo de entrega
+const setTipoEntrega = (tipo) => {
+    if (tipo !== "domicilio" && tipo !== "recoger") return;
+
+    state.tipoEntrega = tipo;
+    guardarStateEnStorage();
+    renderTodo();
+};
+
+const setDireccion = (dir) => {state.direccion = dir};
+
+
+
 const dialogLightbox = document.getElementById('lightbox');
 const dialogImg = document.getElementById('lightbox-img');
 const closeBtn = dialogLightbox.querySelector('.close');
 
+// !IMPORTANT METER EN EVENTOS
 closeBtn.addEventListener('click', () => dialogLightbox.close());
 dialogLightbox.addEventListener('click', (e) => {
   if (e.target === dialogLightbox) dialogLightbox.close();
@@ -199,6 +213,7 @@ const renderBarra = () => {
     });
 };
 
+
 // Modal
 const bindEventosModal = () => {
     const modal = document.querySelector("#modal-pedido");
@@ -229,7 +244,6 @@ const bindEventosModal = () => {
         const target = e.target;
         if (target.id === "btn-borrar-pedido" || target.id === "btn-conservar-pedido" || target == modalBorrar) {
             modalBorrar.close();
-            console.log("cierro-modal")
         }
         if (target.id === "btn-borrar-pedido") {
             document.body.classList.remove('no-scroll');
@@ -245,7 +259,7 @@ const bindEventosModal = () => {
         }
 
         if (target.id === "input-direccion") {
-            state.direccion = target.value;
+            setDireccion(target.value)
             guardarStateEnStorage();
         }
     });
@@ -311,21 +325,8 @@ const renderModal = () => {
     });
 };
 
-// Tipo de entrega
-const setTipoEntrega = (tipo) => {
-    if (tipo !== "domicilio" && tipo !== "recoger") return;
 
-    state.tipoEntrega = tipo;
-
-    // Si recoge, limpiamos dirección
-    // if (tipo === "recoger") {
-    //     state.direccion = "";
-    // }
-
-    guardarStateEnStorage();
-    renderTodo();
-};
-
+//! REVISAR DIV DEL TEXTAREAN DISPLAY BLOCK
 const renderEntrega = (direccionlocal = direccionLocal) => {
     const radios = document.querySelectorAll('input[name="entrega"]');
     const campoDireccion = document.querySelector("#campo-direccion");
@@ -338,7 +339,6 @@ const renderEntrega = (direccionlocal = direccionLocal) => {
         const inputRadio = radio;
         inputRadio.checked = inputRadio.value === state.tipoEntrega;
     });
-    console.log(direccionlocal);
     // Mostrar / ocultar dirección
     const campoDireccionEl = campoDireccion;
     const inputDireccionEl = inputDireccion;

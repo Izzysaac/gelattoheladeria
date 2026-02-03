@@ -1,18 +1,46 @@
 ---
-import MenuList from "./Menu.astro";
+import Logo from "../icons/Logo.astro";
+import Menu from "./Menu.astro";
 import Modal from "./Modal.astro";
 import StickyBar from "./StickyBar.astro";
 
-const {menuPorCategoria} = Astro.props
+
+const {menuPorCategoria, titulo, logo, modo} = Astro.props
 ---
 
 <div class="flex justify-center items-center flex-col py-12">
-    <h1 class="text-5xl">Menú</h1>
-    <MenuList menuPorCategoria={menuPorCategoria} />
-    <StickyBar tipoAccion="ver"/>
-    <Modal />
+    <Logo titulo={titulo} logo={logo} />
+    <h1 class="invisible">Menú</h1>
+    <Menu menuPorCategoria={menuPorCategoria} modo={modo}/>
+
+    { modo != "menu" && 
+        <StickyBar tipoAccion="ver" />
+        <Modal />
+    }
+
 </div>
-<script is:inline src="/pedido.js" defer></script>
+
+
+<!-- <script is:inline src="/pedido.js" defer></script> -->
+
+{ modo == "menu" && 
+<div
+            id="barra-pedido-ver"
+            class="barra-pedido-ver flex justify-center border-t border-t-(--color-separacion) gap-4 pt-2 px-4 max-w-200 items-stretch w-full"
+        >
+            <a href="/granpollo/pedido" class="px-8 py-2 text-nowrap bg-(--color-primary) text-(--color-background) font-bold border-0 rounded-3xl cursor-pointer">Hacer pedido</a>
+        </div>
+
+<script is:inline src="/viewimg.js" defer 
+/>}
+
+{ modo != "menu" && 
+
+    <script type="module">
+        import { init } from "/scripts/init.js";
+        init();
+    </script>
+}
 
 <style is:global>
     .cerrado {

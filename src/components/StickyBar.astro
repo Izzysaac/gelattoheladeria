@@ -24,12 +24,13 @@ const { tipoAccion, direccion} = Astro.props;
                     class="text-(--color-text)/90 text-ellipsis overflow-hidden"
                 />
             </p>
-            <button id="btn-ver-pedido" class="px-8 py-2 text-nowrap">
+            <button id="btn-ver-pedido" class="px-8 py-2 text-nowrap" data-action="ver-pedido">
                 Ver pedido
             </button>
         </div>
     )
 }
+
 {
     tipoAccion === "hacer" && (
         <div
@@ -69,7 +70,7 @@ const { tipoAccion, direccion} = Astro.props;
         padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
     }
     #btn-ver-pedido,
-    #btn-hacer-pedido {
+    #btn-hacer-pedido{
         background-color: var(--color-primary);
         color: var(--color-background);
         font-weight: bold;

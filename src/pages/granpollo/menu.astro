@@ -2,11 +2,11 @@
 import Pedidos from "../../components/Pedidos.astro";
 import Layout from "../../layouts/Layout.astro";
 
-import "../../styles/themes/granpollo.css"
+import "../../styles/themes/granpollo.css";
 
 const fetchAndGroupMenu = async () => {
     const url =
-        "https://opensheet.elk.sh/1NbSsEokxqqUM_zXYzQLpL12BiAyTw22HbWR7q30xRGM/mandioka-menu";
+        "https://opensheet.elk.sh/1NbSsEokxqqUM_zXYzQLpL12BiAyTw22HbWR7q30xRGM/granpollo-menu";
 
     // Fetch JSON desde Google Sheets
     const res = await fetch(url);
@@ -23,10 +23,41 @@ const fetchAndGroupMenu = async () => {
     return grouped;
 };
 
-const menuPorCategoria = await fetchAndGroupMenu();
+const fetchDatos = async () => {
+    const url =
+        "https://opensheet.elk.sh/1NbSsEokxqqUM_zXYzQLpL12BiAyTw22HbWR7q30xRGM/granpollo-info";
 
+    // Fetch JSON desde Google Sheets
+    const res = await fetch(url);
+    const data = await res.json();
+
+    // Agrupar por categoría
+    let logo = "";
+    let direccion = "";
+    let telefono = "";
+    let titulo = "";
+    data.forEach((item: any) => {
+        const clave = item.clave || "Sin categoría";
+        if (clave == "logo") logo = item.valor;
+        if (clave == "titulo") titulo = item.valor;
+        if (clave == "direccion") direccion = item.valor;
+        if (clave == "telefono") telefono = item.valor;
+    });
+
+    return { direccion, telefono, logo, titulo };
+};
+
+const menuPorCategoria = await fetchAndGroupMenu();
+const { direccion, telefono, logo, titulo } = await fetchDatos();
 ---
+
 <Layout>
-    Igual que pedido pero solo mostrando la carta si poder elegir
-    <a href="/granpollo/pedido">Pagina de pedido</a>
+    <div
+        id="datos"
+        data-direccionlocal={direccion}
+        data-telefono={telefono}
+        hidden
+    >
+    </div>
+    <Pedidos menuPorCategoria={menuPorCategoria} titulo={titulo} logo={logo} modo="menu" />
 <Layout />

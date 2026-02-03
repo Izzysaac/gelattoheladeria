@@ -1,17 +1,15 @@
 ---
-const { class: className } = Astro.props; 
+
+import Head from "./Head.astro";
+
+const { titulo, descripcion, logo,  class: className } = Astro.props; 
 ---
 
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Isaac Gasca</title>
-	</head>
+<html lang="es">
+
+	<Head titulo={titulo} descripcion={descripcion} logo={logo}/>
+
 	<body class:list={className}>
 		<slot />
 	</body>

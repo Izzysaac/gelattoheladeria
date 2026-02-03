@@ -1,0 +1,28 @@
+---
+
+const { titulo, descripcion, logo } = Astro.props;
+
+---
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+
+    <title> {titulo} </title>
+    <!-- <link rel="canonical" href={canonicalURL} /> -->
+    <link rel="preload" as="image" href={logo}>
+    <link rel="icon" href={logo}>
+
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="description" content={descripcion} />
+
+    <meta name="og:image" content={logo} />
+    <meta name="og:title" content={titulo} />
+    <meta name="og:description" content={descripcion} />
+    <meta name="og:url" content={Astro.url} />
+    <meta name="og:site_name" content={titulo} />
+    <meta name="og:type" content="website" />
+    <meta name="og:locale" content="es_CO" />
+    <!-- <Analytics />
+	<SpeedInsights /> -->
+</head>

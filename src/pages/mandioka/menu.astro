@@ -2,7 +2,7 @@
 import Pedidos from "../../components/Pedidos.astro";
 import Layout from "../../layouts/Layout.astro";
 
-import "../../styles/themes/mandioka.css"
+import "../../styles/themes/mandioka.css";
 
 const fetchAndGroupMenu = async () => {
     const url =
@@ -32,21 +32,33 @@ const fetchDatos = async () => {
     const data = await res.json();
 
     // Agrupar por categoría
+    let logo = "";
     let direccion = "";
-    let telefono = ""
+    let telefono = "";
+    let titulo = "";
     data.forEach((item: any) => {
         const clave = item.clave || "Sin categoría";
+        if (clave == "logo") logo = item.valor;
+        if (clave == "titulo") titulo = item.valor;
         if (clave == "direccion") direccion = item.valor;
         if (clave == "telefono") telefono = item.valor;
     });
 
-    return {direccion,telefono};
+    return { direccion, telefono, logo, titulo };
 };
 
 const menuPorCategoria = await fetchAndGroupMenu();
-const {direccion,telefono} = await fetchDatos();
+const { direccion, telefono, titulo, logo } = await fetchDatos();
 ---
+
 <Layout>
-    <div id="datos" data-direccionlocal={direccion} data-telefono={telefono} hidden></div>
-    <Pedidos menuPorCategoria={menuPorCategoria} direccion={direccion} telefono/>
-<Layout />
+    <div
+        id="datos"
+        data-direccionlocal={direccion}
+        data-telefono={telefono}
+        hidden
+    >
+    </div>
+    <Pedidos menuPorCategoria={menuPorCategoria} titulo={titulo} logo={logo} />
+    <Layout /></Layout
+>
