@@ -1,5 +1,5 @@
 ---
-
+const {direccion} = Astro.props
 ---
 
 <div id="tipo-entrega" class="flex flex-col gap-3 w-full">
@@ -19,14 +19,14 @@
             id="input-direccion"
             placeholder="Dirección de entrega*"
             rows="1"
-            class="w-full p-2 rounded border border-gray-300 bg-(--color-secondary) disabled:border-gray-500 disabled:bg-(--color-background) disabled:text-white/70 field-sizing-content"></textarea>
+            class="w-full p-2 rounded border border-gray-300 bg-(--color-secondary) disabled:border-gray-500 disabled:bg-(--color-background) disabled:text-(--color-text)/70 field-sizing-content"></textarea>
     </div>
 </div>
 
 <style>
     @import "tailwindcss";
     label {
-        @apply flex w-full p-2 rounded-4xl has-checked:bg-white/30 justify-center cursor-pointer;
+        @apply flex w-full p-2 rounded-4xl has-checked:bg-(--color-text)/30 justify-center cursor-pointer;
     }
     .invalid {
         @apply border-red-600;

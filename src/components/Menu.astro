@@ -11,7 +11,7 @@ const categorias = Object.keys(menuPorCategoria);
 ---
 
 <CategoryNav categorias={categorias} />
-<section id="menu" class="menu max-w-200 px-2.5">
+<section id="menu" class="menu max-w-200 px-2.5 w-full">
     {
         Object.entries(menuPorCategoria).map(([categoria, items]) => (
             <div class="grupo" id={categoria}>
@@ -29,7 +29,7 @@ const categorias = Object.keys(menuPorCategoria);
                                 data-imagen={item.imagen}
                                 data-descripcion={item.descripcion}
                             >
-                                <article class="flex justify-start gap-2.5 py-4 border-b border-white/30 min-h-25">
+                                <article class="flex justify-start gap-2.5 py-4 border-b border-(--color-separacion) min-h-25">
                                     <div class="informacion w-full flex flex-col self-stretch">
                                         <div class="flex justify-between gap-2">
                                             <h3 class="">
@@ -50,7 +50,7 @@ const categorias = Object.keys(menuPorCategoria);
                                                 class="add-product"
                                                 data-action="add"
                                             >
-                                                <Plus width={25} height={25}/>
+                                                <Plus width={25} height={25} fill="inherit"/>
                                             </button>
                                             <button
                                                 class="remove cerrado"
@@ -75,7 +75,7 @@ const categorias = Object.keys(menuPorCategoria);
                                                 src={cloudinaryUrl(item.imagen)}
                                                 alt={item.nombre}
                                                 data-full={cloudinaryUrl(item.imagen)}
-                                                class="w-full object-cover rounded-xl"
+                                                class="w-full h-full object-cover rounded-xl"
                                             />
                                         </figure>
                                     }

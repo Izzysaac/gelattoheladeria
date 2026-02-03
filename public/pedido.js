@@ -1,11 +1,13 @@
 const state = {
     items: {},
-    tipoEntrega: null, // "domicilio" | "recoger"
+    tipoEntrega: "domicilio", // "domicilio" | "recoger"
     direccion: "",
 };
 
+// Asigar direccion del local
+const direccionLocal = document.querySelector("#datos").dataset.direccionlocal;
+const telefono = document.querySelector("#datos").dataset.telefono;
 // Cargar estado desde localStorage
-
 const cargarStateDesdeStorage = () => {
     const stateStorage = localStorage.getItem("pedidoState");
     if (stateStorage) {
@@ -324,7 +326,7 @@ const setTipoEntrega = (tipo) => {
     renderTodo();
 };
 
-const renderEntrega = () => {
+const renderEntrega = (direccionlocal = direccionLocal) => {
     const radios = document.querySelectorAll('input[name="entrega"]');
     const campoDireccion = document.querySelector("#campo-direccion");
     const inputDireccion = document.querySelector("#input-direccion");
@@ -336,26 +338,26 @@ const renderEntrega = () => {
         const inputRadio = radio;
         inputRadio.checked = inputRadio.value === state.tipoEntrega;
     });
-
+    console.log(direccionlocal);
     // Mostrar / ocultar dirección
     const campoDireccionEl = campoDireccion;
     const inputDireccionEl = inputDireccion;
-    if (state.tipoEntrega === "domicilio") {
+
+    if(state.tipoEntrega === "recoger"){
+        inputDireccionEl.value = direccionlocal;
+        inputDireccionEl.classList.remove("invalid");
+        inputDireccionEl.disabled = true;
+    } else {
         campoDireccionEl.style.display = "block";
         inputDireccionEl.value = state.direccion;
         inputDireccionEl.classList.remove("invalid");
         inputDireccionEl.disabled = false;
-    } else {
-        // campoDireccionEl.style.display = "none";
-        inputDireccionEl.value = "Dirección: Cra. 2 & Calle 17, Pitalito, Huila";
-        inputDireccionEl.classList.remove("invalid");
-        inputDireccionEl.disabled = true;
     }
 };
 
 // Generar mensaje de pedido WhatsApp
 const generarMensaje = () => {
-    let mensaje = "*Nuevo pedido*\n";
+    let mensaje = "Hola, quiero realizar un pedido por favor:\n";
     let total = 0;
 
     Object.values(state.items).forEach((item) => {
@@ -380,7 +382,7 @@ const generarMensaje = () => {
     return mensaje;
 };
 
-const hacerPedido = () => {
+const hacerPedido = (tel = telefono) => {
     // 1️⃣ Validar que haya productos
     const items = Object.values(state.items).filter(
         (item) => item.cantidad > 0,
@@ -402,7 +404,6 @@ const hacerPedido = () => {
     const mensaje = generarMensaje();
 
     // 4️⃣ Enviar (WhatsApp)
-    const telefono = "573163896572"; // cambia por el real
     const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
 
     window.open(url, "_blank");
@@ -421,6 +422,7 @@ const init = () => {
     bindEventosProductos();
     bindEventosBarra();
     bindEventosModal();
+    setTipoEntrega("domicilio");
     renderTodo();
 }
 

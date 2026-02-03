@@ -1,0 +1,52 @@
+---
+import Pedidos from "../../components/Pedidos.astro";
+import Layout from "../../layouts/Layout.astro";
+
+import "../../styles/themes/granpollo.css"
+
+const fetchAndGroupMenu = async () => {
+    const url =
+        "https://opensheet.elk.sh/1NbSsEokxqqUM_zXYzQLpL12BiAyTw22HbWR7q30xRGM/granpollo-menu";
+
+    // Fetch JSON desde Google Sheets
+    const res = await fetch(url);
+    const data = await res.json();
+
+    // Agrupar por categoría
+    const grouped = {};
+    data.forEach((item: any) => {
+        const cat = item.categoria || "Sin categoría";
+        if (!grouped[cat]) grouped[cat] = [];
+        grouped[cat].push(item);
+    });
+
+    return grouped;
+};
+
+const fetchDatos = async () => {
+    const url =
+        "https://opensheet.elk.sh/1NbSsEokxqqUM_zXYzQLpL12BiAyTw22HbWR7q30xRGM/granpollo-info";
+
+    // Fetch JSON desde Google Sheets
+    const res = await fetch(url);
+    const data = await res.json();
+
+    // Agrupar por categoría
+    let direccion = "";
+    let telefono = ""
+    data.forEach((item: any) => {
+        const clave = item.clave || "Sin categoría";
+        if (clave == "direccion") direccion = item.valor;
+        if (clave == "telefono") telefono = item.valor;
+    });
+
+    return {direccion,telefono};
+};
+
+const menuPorCategoria = await fetchAndGroupMenu();
+const {direccion,telefono} = await fetchDatos();
+---
+<Layout>
+    <div id="datos" data-direccionlocal={direccion} data-telefono={telefono} hidden></div>
+    <Pedidos menuPorCategoria={menuPorCategoria} direccion={direccion} telefono/>
+<Layout />

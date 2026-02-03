@@ -1,14 +1,14 @@
 ---
 import TipoEntrega from "./TipoEntrega.astro";
 
-const { tipoAccion } = Astro.props;
+const { tipoAccion, direccion} = Astro.props;
 ---
 
 {
     tipoAccion === "ver" && (
         <div
             id="barra-pedido"
-            class="barra-pedido-ver flex justify-between border-t border-t-white/30 gap-4 pt-2 px-4 max-w-200 items-stretch w-full"
+            class="barra-pedido-ver flex justify-between border-t border-t-(--color-separacion) gap-4 pt-2 px-4 max-w-200 items-stretch w-full"
         >
             <p
                 id="barra-resumen"
@@ -21,7 +21,7 @@ const { tipoAccion } = Astro.props;
 
                 <span
                     id="barra-resumen-cantidad"
-                    class="text-white/90 text-ellipsis overflow-hidden"
+                    class="text-(--color-text)/90 text-ellipsis overflow-hidden"
                 />
             </p>
             <button id="btn-ver-pedido" class="px-8 py-2 text-nowrap">
@@ -36,8 +36,8 @@ const { tipoAccion } = Astro.props;
             id="barra-pedido"
             class="barra-pedido-hacer flex flex-col items-center gap-2 pt-2 max-w-125 w-full"
         >
-            <TipoEntrega />
-            <div class="flex w-full justify-between items-center gap-4 border-t border-t-white/30 py-3">
+            <TipoEntrega direccion={direccion}/>
+            <div class="flex w-full justify-between items-center gap-4 border-t border-t-(--color-separacion) py-3">
                 <p
                 id="barra-resumen"
                 class="flex flex-col gap-0.5 leading-tight text-nowrap"
@@ -49,7 +49,7 @@ const { tipoAccion } = Astro.props;
 
                 <span
                     id="barra-resumen-cantidad"
-                    class="text-white/90 text-ellipsis overflow-hidden"
+                    class="text-(--color-text)/90 text-ellipsis overflow-hidden"
                 />
             </p>
                 <button id="btn-hacer-pedido" class="px-8 py-2 text-nowrap">

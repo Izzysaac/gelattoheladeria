@@ -1,0 +1,16 @@
+:root {
+
+        /* index */
+        --index-bg : grey;
+        --index-text: white;
+        --index-buttons: black;
+        --index-buttons-text: white;
+
+        /* menu */
+        --color-background: #131313;
+        --color-text: white;
+		--color-primary: rgb(11, 205, 170);
+		--color-secondary: #323232;
+        --color-separacion: rgba(255, 255, 255, 0.3);
+
+}

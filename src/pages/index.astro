@@ -3,15 +3,26 @@ import Hero from "../layouts/Hero.astro";
 import Layout from "../layouts/Layout.astro";
 
 ---
-<Layout class:list={"gradient"}>
-    <Hero/>
+<Layout>
+    <div class="m-auto border-2 border-amber-50 flex flex-col gap-8 items-center max-w-125 pt-50">
+        <a href="/mandioka">Mandioka</a>
+
+        <a href="/granpollo">Gran Pollo</a>
+    </div>
 <Layout />
 
 
-<style is:global>
-    .gradient{
-        /* background-color: color-mix(in srgb, #000000 88%, rgb(186, 186, 186) 12%); */
-        background: #505050;
-        background: radial-gradient(circle,rgba(80, 80, 80, 1) 1%, rgba(64, 64, 64, 1) 62%, rgba(32, 32, 32, 1) 100%);
+<style>
+    @import "tailwindcss";
+
+    div{
+        width: 90vw;
+        height: 90vh;
+        margin: auto;
+        border: none;
+    }
+    a
+    {
+        @apply bg-gray-400 text-black px-3 py-2 rounded-2xl text-center text-xl w-full
     }
 </style>
