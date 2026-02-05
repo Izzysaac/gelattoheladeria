@@ -1,0 +1,31 @@
+---
+import { loadTenant } from "../lib/loadTenant";
+import { loadSheet } from "../lib/loadSheet";
+import ReservaPage from "../template/ReservaPage.astro";
+
+const tenant = await loadTenant();
+const content = await loadSheet("info");
+
+if (!tenant.pages.reserva) {
+  return Astro.redirect("/");
+}
+
+const titulo = content.titulo
+const descripcion = content.descripcion
+const logo = content.logo
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <ReservaPage titulo={titulo} descripcion={descripcion} logo={logo}/>
+</body>
+</html>
+
+
+

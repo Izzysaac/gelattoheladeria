@@ -1,0 +1,10 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../layouts/Hero.astro";
+
+const { grouped, info } = Astro.props;
+---
+
+<BaseLayout info={info}>
+    <Hero grouped={grouped}/>
+</BaseLayout>

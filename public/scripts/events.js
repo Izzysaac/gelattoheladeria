@@ -6,7 +6,7 @@ import {
 } from "./actions.js";
 import { dom } from "./dom.js";
 import { renderTodo, renderEntrega } from "./render.js";
-import { state } from "./state.js"
+import { state } from "./state.js";
 
 const telefono = document.querySelector("#datos").dataset.telefono;
 // Generar mensaje de pedido WhatsApp
@@ -32,7 +32,6 @@ const generarMensaje = () => {
     } else {
         mensaje += "*Entrega:* Recoger en el local\n";
     }
-
     return mensaje;
 };
 
@@ -63,84 +62,113 @@ const hacerPedido = (tel = telefono) => {
     window.open(url, "_blank");
 };
 
-export const bindEventosProductos = () => {
+const extraerProductoDesdeElemento = (el) => {
+    const productEl = el.closest("[data-nombre]");
+    if (!productEl) return null;
+    return {
+        nombre: productEl.dataset.nombre,
+        precio: Number(productEl.dataset.precio),
+        imagen: productEl.dataset.imagen,
+        descripcion: productEl.dataset.descripcion,
+    };
+};
 
-    dom.dialogImageViwerCloseBtn.addEventListener("click", () => dom.dialogImageViewer.close());
+export const bindEventosProductos = () => {
+    // * Cerrar visor de imagen
+    dom.dialogImageViwerCloseBtn.addEventListener("click", () =>
+        dom.dialogImageViewer.close(),
+    );
     dom.dialogImageViewer.addEventListener("click", (e) => {
         if (e.target === dom.dialogImageViewer) dom.dialogImageViewer.close();
     });
 
-    // dom.btnVerPedido.addEventListener("click", () => {
-    //     // modal.classList.remove("cerrado");
-    //     dom.modalVerPedido.showModal();
-    //     document.body.classList.add('no-scroll');
-    // });
+    //* Abrir modal de pedido
+    dom.btnVerPedido.addEventListener("click", () => {
+        dom.modalVerPedido.showModal();
+        document.body.classList.add("no-scroll");
+    });
 
-    document.addEventListener("click", (e) => {
-        if (!e.target) return;
-        const el = e.target.closest("[data-action]");
+    //* Acciones de producto
+    dom.menu.addEventListener("click", (e) => {
+        /* ! Flujo ideal: 
+        delegación menú
+        |--filtrar clicks irrevelantes
+        |--determinar intención (imagen/accion)
+        |--resolver producto/contexto
+        |--ejecutar acción negocio
+        |--actualizar UI necesaria
+        */
+        const actionEl = e.target.closest("[data-action]");
+        if (!actionEl) return;
 
-        if (e.target.tagName == "IMG") {
-            const imageUrl = e.target.dataset.full || e.target.src;
+        const action = actionEl.dataset.action;
+        // * Ver imagen
+        if (action == "view-image") {
+            const img = actionEl.closest("[data-nombre]")?.querySelector("img");
+            if (!img) return;
+            const imageUrl = img.dataset.image || img.src;
             dom.dialogImageViewerImg.src = imageUrl;
-            dom.dialogImageViewerImg.alt = e.target.alt || "";
+            dom.dialogImageViewerImg.alt = img.alt || "";
             dom.dialogImageViewer.showModal();
-        }
-
-        if (!el) return;
-        const action = el.dataset.action;
-
-        if (action == "ver-pedido"){
-            dom.modalVerPedido.showModal();
-            document.body.classList.add("no-scroll");
             return;
         }
-
-        const productoEl = el.closest("[data-nombre]");
-        if (!productoEl) return;
-        console.log("llego?")
-        const producto = {
-            nombre: productoEl.dataset.nombre,
-            precio: Number(productoEl.dataset.precio),
-            imagen: productoEl.dataset.imagen,
-            descripcion: productoEl.dataset.descripcion,
-        };
+        // * Acciones de negocio (producto)
+        const producto = extraerProductoDesdeElemento(actionEl);
+        if (!producto) return;
         switch (action) {
-            case "add":
+            case "add-product":
                 updateCantidad(producto, +1);
                 break;
 
-            case "remove":
+            case "remove-product":
                 updateCantidad(producto, -1);
                 break;
 
-            case "borrar":
-                borrarPedido();
-                break;
-
-            case "ver-pedido":
-                console.log("entro")
-                dom.modalVerPedido.showModal();
-                document.body.classList.add("no-scroll");
-                break;
+            default:
+                return;
         }
-
+        // ! REnder global siempre
         renderTodo();
     });
 
-    document.addEventListener("change", (e) => {
-        if (e.target.name === "tipo-entrega") {
-            setTipoEntrega(e.target.value);
-            renderEntrega();
-        }
+    dom.listaPedido.addEventListener("click" , (e) => {
+        const actionEl = e.target.closest("[data-action]");
+        if (!actionEl) return;
+        const action = actionEl.dataset.action;
+        const producto = extraerProductoDesdeElemento(actionEl);
+        if (!producto) return;
+        switch (action) {
+            case "add-product":
+                updateCantidad(producto, +1);
+                break;
 
-        if (e.target.name === "direccion") {
-            setDireccion(e.target.value);
+            case "remove-product":
+                updateCantidad(producto, -1);
+                break;
+
+            default:
+                return;
         }
-    });
+        // ! REnder global siempre
+        renderTodo();
+    })
+
 };
 
 export const bindEventosModal = () => {
+    // Tipo de entrega
+    dom.modalVerPedido.addEventListener("change", (e) => {
+        const target = e.target;
+        if (target.name === "entrega") {
+            setTipoEntrega(target.value);
+            renderEntrega();
+        }
+
+        if (target.id === "input-direccion") {
+            setDireccion(target.value);
+        }
+    });
+
     // Delegación de eventos dentro del modal
     dom.modalVerPedido.addEventListener("click", (e) => {
         const target = e.target;
@@ -179,20 +207,26 @@ export const bindEventosModal = () => {
             renderTodo();
         }
     });
+    // ! DE PRONTO ACTION ROUTER?? AUN ASI ME GUSTA EL CONTROL DE CLICKS INUTILES
+    // dom.modalBorrarPedido.addEventListener("click", (e) => {
+    //     const action = e.target.closest("[data-action]")?.dataset.action;
+    //     if (!action) return;
 
-    // Tipo de entrega
-    dom.modalVerPedido.addEventListener("change", (e) => {
-        const target = e.target;
-        if (target.name === "entrega") {
-            setTipoEntrega(target.value);
-            renderEntrega();
-        }
+    //     const actions = {
+    //         "close-modal": () => {
+    //             dom.modalBorrarPedido.close();
+    //         },
 
-        if (target.id === "input-direccion") {
-            setDireccion(target.value);
-            guardarStateEnStorage();
-        }
-    });
+    //         "delete-order": () => {
+    //             dom.modalBorrarPedido.close();
+    //             document.body.classList.remove("no-scroll");
+    //             borrarPedido();
+    //             renderTodo();
+    //         },
+    //     };
+
+    //     actions[action]?.();
+    // });
 };
 
 export const bindEventos = () => {

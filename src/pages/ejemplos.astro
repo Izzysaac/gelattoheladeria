@@ -1,0 +1,30 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+---
+<Layout>
+    <div class="m-auto border-2 border-amber-50 flex flex-col gap-8 items-center max-w-125 pt-50">
+        <a href="/mandioka">Mandioka</a>
+        <a href="/granpollo">Gran Pollo</a>
+
+        <a href="/menu">Menu</a>
+        <a href="/pedido">Pedido</a>
+        <a href="/reserva">Reserva</a>
+    </div>
+<Layout />
+
+
+<style>
+    @import "tailwindcss";
+
+    div{
+        width: 90vw;
+        height: 90vh;
+        margin: auto;
+        border: none;
+    }
+    a
+    {
+        @apply bg-gray-400 text-black px-3 py-2 rounded-2xl text-center text-xl w-full
+    }
+</style>

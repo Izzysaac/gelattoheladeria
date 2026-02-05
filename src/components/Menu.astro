@@ -28,6 +28,7 @@ const categorias = Object.keys(menuPorCategoria);
                                 data-precio={item.precio}
                                 data-imagen={item.imagen}
                                 data-descripcion={item.descripcion}
+                                data-image={cloudinaryUrl(item.imagen)}
                             >
                                 <article class="flex justify-start gap-2.5 py-4 border-b border-(--color-separacion) min-h-25">
                                     <div class="informacion w-full flex flex-col self-stretch">
@@ -48,14 +49,14 @@ const categorias = Object.keys(menuPorCategoria);
                                         { modo != "menu" &&
                                         <div class="controles bg-(--color-secondary) rounded-full flex w-fit self-end mt-auto items-center">
                                             <button
+                                                data-action="add-product"
                                                 class="add-product"
-                                                data-action="add"
                                             >
                                                 <Plus width={25} height={25} fill="inherit"/>
                                             </button>
                                             <button
+                                                data-action="remove-product"
                                                 class="remove cerrado"
-                                                data-action="remove"
                                             >
                                                 <Minus width={25} height={25}/>
                                             </button>
@@ -63,8 +64,8 @@ const categorias = Object.keys(menuPorCategoria);
                                                 0
                                             </output>
                                             <button
+                                                data-action="add-product"
                                                 class="add cerrado"
-                                                data-action="add"
                                             >
                                                 <Plus width={25} height={25}/>
                                             </button>
@@ -76,7 +77,7 @@ const categorias = Object.keys(menuPorCategoria);
                                             <img
                                                 src={cloudinaryUrl(item.imagen)}
                                                 alt={item.nombre}
-                                                data-full={cloudinaryUrl(item.imagen)}
+                                                data-action="view-image"
                                                 class="w-full h-full object-cover rounded-xl"
                                             />
                                         </figure>

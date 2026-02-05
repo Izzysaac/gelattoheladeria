@@ -1,15 +1,20 @@
 ---
+import "../styles/base.css";
+import "../styles/themes/default.css";
+import "../styles/themes/mandioka.css";
+import "../styles/themes/granpollo.css";
+
 import Head from "./Head.astro";
 
+const theme = import.meta.env.THEME || "default";
 const { titulo, descripcion, logo,  class: className } = Astro.props; 
+
 ---
 
 <!doctype html>
-<html lang="es">
-
+<html lang="es" data-theme={theme}>
 	<Head titulo={titulo} descripcion={descripcion} logo={logo}/>
-
-	<body class:list={className}>
+	<body>
 		<slot />
 	</body>
 </html>
@@ -28,10 +33,7 @@ const { titulo, descripcion, logo,  class: className } = Astro.props;
 		background-color: var(--color-background);
 		color: var(--color-text);
 		font-family:  Verdana, Geneva, Tahoma, sans-serif;
-	}
-
-	html {
-		scroll-behavior: smooth;
+        scroll-behavior: smooth;
 	}
 </style>
 

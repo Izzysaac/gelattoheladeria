@@ -2,7 +2,7 @@
 const {direccion} = Astro.props
 ---
 
-<div id="tipo-entrega" class="flex flex-col gap-3 w-full">
+<div id="entrega-producto" class="flex flex-col gap-3 w-full">
     <p>¿Cómo quieres tu pedido?</p>
     <div class="flex justify-center p-1 bg-(--color-secondary) rounded-4xl">
         <label>
@@ -14,7 +14,7 @@ const {direccion} = Astro.props
             Recoger
         </label>
     </div>
-    <div id="campo-direccion" class="">
+    <div id="campo-direccion">
         <textarea
             id="input-direccion"
             placeholder="Dirección de entrega*"

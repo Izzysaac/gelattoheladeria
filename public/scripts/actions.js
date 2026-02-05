@@ -14,7 +14,7 @@ export const cargarState = () => {
         state.direccion = stateParseado.direccion || "";
     }
     // Object.assign(state, JSON.parse(saved));
-};
+}; //! REVISAR SI SON EQUIVALENTES (basicamente llena variable state con datos de localsorage)
 
 export const updateCantidad = (producto, delta) => {
     const { nombre, precio, imagen, descripcion } = producto;
@@ -25,11 +25,10 @@ export const updateCantidad = (producto, delta) => {
             precio,
             imagen,
             descripcion,
-            cantidad: 0
+            cantidad: 0,
         };
     }
-
-     // Actualizamos la cantidad
+    // Actualizamos la cantidad
     const nuevaCantidad = state.items[nombre].cantidad + delta;
 
     // Si llega a 0 o menos, eliminamos el producto del pedido

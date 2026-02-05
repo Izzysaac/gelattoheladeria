@@ -1,6 +1,7 @@
 export const dom = {
     /* Productos del menu (en build) */
     productos: document.querySelectorAll(".producto"),
+    menu: document.getElementById("menu"),
 
     /* Sticky bar */
     stickyBar: document.getElementById("barra-pedido"),
@@ -16,6 +17,7 @@ export const dom = {
     templatePedidoProducto: document.getElementById("item-pedido-template"),
 
     /* Seleccion de tipo de entrega*/
+    entregaProducto: document.getElementById("entrega-producto"),
     radios: document.querySelectorAll('input[name="entrega"]'),
     divInputDireccion: document.querySelector("#campo-direccion"),
     inputDireccion: document.getElementById("input-direccion"),
