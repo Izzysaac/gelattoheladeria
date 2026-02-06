@@ -4,10 +4,10 @@ export const dom = {
     menu: document.getElementById("menu"),
 
     /* Sticky bar */
-    stickyBar: document.getElementById("barra-pedido"),
+    stickyBar: document.getElementById("stickybar"),
+    btnPaginaPedido: document.getElementById("btn-pagina-pedido"),
     btnVerPedido: document.getElementById("btn-ver-pedido"),
     btnHacerPedido: document.getElementById("btn-hacer-pedido"),
-    btnPaginaPedido: document.getElementById("btn-pagina-pedido"),
     resumenesPedido: document.querySelectorAll("#barra-resumen"),
 
     /* Modal ver pedido */

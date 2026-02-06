@@ -1,34 +1,10 @@
 ---
-import { loadTenant } from "../lib/loadTenant";
-import { loadSheet } from "../lib/loadSheet";
+import { buildTenantData } from "@lib/buildTenantData";
 
-import MainPage from "../template/MainPage.astro";
+import MainPage from "@template/MainPage.astro";
 
-const tenant = await loadTenant();
-const info = await loadSheet("info");
+const { tenant, data } = await buildTenantData("main");
 
-const getInfo = () => {
-    
-    const grouped = info.reduce((acc, item) => {
-        if (!acc[item.clave]) {
-            acc[item.clave] = [];
-        }
-        acc[item.clave].push(item);
-        return acc;
-    }, {});
-
-    return {
-        titulo: grouped.titulo?.[0]?.valor ?? "",
-        descripcion: grouped.descripcion?.[0]?.valor ?? "",
-        logo: grouped.logo?.[0]?.valor ?? "",
-        botones: grouped.boton ?? [],
-        socials: grouped.social ?? [],
-    };
-}
-
-const grouped = getInfo();
-
-const {titulo, descripcion, logo} = grouped
 ---
 
-<MainPage grouped={grouped} titulo={titulo} descripcion={descripcion} logo={logo}/>
+<MainPage {...data} tenant={tenant} />

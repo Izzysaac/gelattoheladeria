@@ -1,19 +1,38 @@
-import defaultConfig from "../tenants/default";
 import type { TenantConfig } from "./types";
 
-export async function loadTenant(): Promise<TenantConfig> {
-    // base desde default
-    const base = structuredClone(defaultConfig);
+export function loadTenant(): TenantConfig {
 
-    // paginas desde ENV
-    const pagesEnv = (import.meta.env.PAGES || "").split(",");
-    base.pages.reserva = pagesEnv.includes("reserva");
+    const pagesEnv = (import.meta.env.PAGES || "")
+        .split(",")
+        .map((p: string) => p.trim());
 
-    // features desde ENV
-    const featuresEnv = (import.meta.env.FEATURES || "").split(",");
-    base.features.whatsapp = featuresEnv.includes("whatsapp");
-    base.features.promo = featuresEnv.includes("promo");
-    base.features.reserva = featuresEnv.includes("reservas");
+    const featuresEnv = (import.meta.env.FEATURES || "")
+        .split(",")
+        .map((f: string) => f.trim());
 
-    return base;
+    return {
+        nameId: import.meta.env.NAME_ID,
+
+        sheetId: import.meta.env.GOOGLE_SHEET_ID,
+
+        theme: import.meta.env.THEME || "default",
+
+        pages: {
+            menu: true, // asumimos siempre
+            pedido: true,
+            reserva: pagesEnv.includes("reserva"),
+        },
+
+        features: {
+            whatsapp: featuresEnv.includes("whatsapp"),
+            promo: featuresEnv.includes("promo"),
+            reserva: featuresEnv.includes("reserva"),
+        },
+
+        layout: {
+            heroVariant: "default",
+        },
+
+        cloudinaryCloudName : import.meta.env.CLOUDINARY_CLOUD_NAME
+    };
 }

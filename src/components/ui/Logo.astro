@@ -2,13 +2,12 @@
 const { titulo, logo } = Astro.props;
 ---
 
-<a href="/" class="w-full h-full flex justify-center">
+<a href="/" class="w-fit h-full flex justify-center">
     <img
         id="logo"
         src={logo}
         alt={titulo}
-        class="rounded-full max-w-25 pointer-events-none"
-        width="30%"
+        class="rounded-full max-w-25 pointer-events-none w-[30vw]"
         fetchpriority="high"
         loading="eager"
     />

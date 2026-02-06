@@ -1,0 +1,14 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+import Header from "@layoutsHeader.astro";
+import Footer from "@layoutsFooter.astro";
+
+const { head, header, footer, tendant } = Astro.props;
+---
+
+<BaseLayout head={head}>
+    <Header {...header}/>
+    <slot />
+    <Footer {...footer}/>
+</BaseLayout>

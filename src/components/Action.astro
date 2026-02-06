@@ -1,0 +1,37 @@
+---
+import OrderSummary from "./ui/OrderSummary.astro";
+
+const { action } = Astro.props;
+---
+
+{
+    action == "order" && (
+        <a href="/pedido" class="stickybarBtn text-nowrap ms-auto">
+            Hacer pedido
+        </a>
+    )
+}
+{
+    action == "review" && (
+        <div class="flex justify-between gap-4 w-full">
+            <OrderSummary />
+            <button
+                id="btn-ver-pedido"
+                class="stickybarBtn text-nowrap"
+                data-action="ver-pedido"
+            >
+                Ver pedido
+            </button>
+        </div>
+    )
+}
+{
+    action == "submit" && (
+        <div class="flex justify-between gap-4 w-full">
+            <OrderSummary />
+            <button id="btn-hacer-pedido" class="stickybarBtn text-nowrap">
+                Hacer pedido
+            </button>
+        </div>
+    )
+}

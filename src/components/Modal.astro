@@ -1,12 +1,12 @@
 ---
 import ArrowLeftIcon from "../assets/arrow-left-bold-svgrepo-com.svg";
 import Trash from "../assets/trash-svgrepo-com.svg";
-import StickyBar from "./StickyBar.astro";
 import ProductoTemplate from "./ProductoTemplate.astro";
 import BorrarPedido from "./BorrarPedido.astro";
+import StickyBar from "./StickyBar.astro";
 ---
 
-<dialog id="modal-pedido" class="bg-(--color-background) text-(--color-text) h-fit">
+<dialog id="modal-pedido" class="bg-(--color-background) text-(--color-text) h-fit pb-24">
     <div class="contenido flex flex-col gap-4 p-4 h-fit min-h-full">
         <div class="flex justify-between items-center">
             <button
@@ -30,9 +30,9 @@ import BorrarPedido from "./BorrarPedido.astro";
             class="bg-(--color-secondary) w-fit rounded-full py-1.5 px-3 self-end font-semibold"
             >Añadir productos</button
         >
-
-        <StickyBar tipoAccion="hacer" />
+        <slot />
     </div>
+    <StickyBar modo="details" />
 </dialog>
 
 <ProductoTemplate />

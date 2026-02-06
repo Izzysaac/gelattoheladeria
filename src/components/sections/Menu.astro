@@ -1,19 +1,17 @@
 ---
-import { formatFromThousands, cloudinaryUrl } from "../scripts/utils.js";
-import CategoryNav from "./CategoryNav.astro";
-import Plus from "../assets/plus-svgrepo-com.svg"
-import Minus from "../assets/minus-svgrepo-com.svg"
-import ViewImage from "./ViewImage.astro";
-
+import { formatFromThousands, cloudinaryUrl } from "@scripts/utils.js";
+import Plus from "@assets/plus-svgrepo-com.svg"
+import Minus from "@assets/minus-svgrepo-com.svg"
 
 const { menuPorCategoria, modo } = Astro.props;
-const categorias = Object.keys(menuPorCategoria);
+
 ---
 
-<CategoryNav categorias={categorias} />
+<!-- <CategoryNav categorias={categorias} /> -->
 <section id="menu" class="menu max-w-200 px-2.5 w-full">
     {
         Object.entries(menuPorCategoria).map(([categoria, items]) => (
+
             <div class="grupo" id={categoria}>
                 <h2 class="text-2xl mt-6 font-bold">
                     {categoria}
@@ -90,7 +88,6 @@ const categorias = Object.keys(menuPorCategoria);
         ))
     }
 </section>
-<ViewImage/>
 
 <style>
     @import "tailwindcss";

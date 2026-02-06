@@ -2,15 +2,15 @@
 import Icon from "@components/ui/Icon.astro";
 import Logo from "@components/ui/Logo.astro";
 
-
 const { titulo, descripcion, logo, botones, socials } = Astro.props;
+
 ---
 
 <header
     class="flex flex-col max-w-100 items-center py-20 px-8 m-auto gap-4 rounded-lg text-(--index-text)"
 >
-    <Logo titulo={titulo} logo={logo} />
 
+    <Logo {...logo} />
     <h1 class="text-xl font-semibold">{titulo}</h1>
     <nav class="w-full">
         <ul class="flex flex-col justify-center gap-2">

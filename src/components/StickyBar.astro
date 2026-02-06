@@ -1,81 +1,39 @@
 ---
-import TipoEntrega from "./TipoEntrega.astro";
+import Action from "./Action.astro";
 
-const { tipoAccion, direccion} = Astro.props;
+const { modo } = Astro.props;
+/* Menu → Order → Review → Fulfillment → Submit (por ahora serian 2*/
 ---
 
-{
-    tipoAccion === "ver" && (
-        <div
-            id="barra-pedido"
-            class="barra-pedido-ver flex justify-between border-t border-t-(--color-separacion) gap-4 pt-2 px-4 max-w-200 items-stretch w-full"
-        >
-            <p
-                id="barra-resumen"
-                class="flex flex-col gap-0.5 leading-tight text-nowrap"
-            >
-                <span class="font-semibold">
-                    Total:
-                    <span id="barra-resumen-total" />
-                </span>
+<div id="stickybar" class="stickybar border-t flex">
 
-                <span
-                    id="barra-resumen-cantidad"
-                    class="text-(--color-text)/90 text-ellipsis overflow-hidden"
-                />
-            </p>
-            <button id="btn-ver-pedido" class="px-8 py-2 text-nowrap" data-action="ver-pedido">
-                Ver pedido
-            </button>
-        </div>
-    )
-}
+    { modo == "menu" && <Action action="order" /> }
 
-{
-    tipoAccion === "hacer" && (
-        <div
-            id="barra-pedido"
-            class="barra-pedido-hacer flex flex-col items-center gap-2 pt-2 max-w-125 w-full"
-        >
-            <TipoEntrega direccion={direccion}/>
-            <div class="flex w-full justify-between items-center gap-4 border-t border-t-(--color-separacion) py-3">
-                <p
-                id="barra-resumen"
-                class="flex flex-col gap-0.5 leading-tight text-nowrap"
-            >
-                <span class="font-semibold">
-                    Total:
-                    <span id="barra-resumen-total" class="" />
-                </span>
+    { modo == "pedido" && <Action action="review" /> }
 
-                <span
-                    id="barra-resumen-cantidad"
-                    class="text-(--color-text)/90 text-ellipsis overflow-hidden"
-                />
-            </p>
-                <button id="btn-hacer-pedido" class="px-8 py-2 text-nowrap">
-                    Hacer pedido
-                </button>
-            </div>
-        </div>
-    )
-}
+    { modo == "details" && <Action action="submit" /> }
+</div>
 
 <style is:global>
-    .barra-pedido-ver {
-        position: sticky;
+    .stickybar {
+        position: fixed;
         bottom: 0;
-        background-color: var(--color-background);
         z-index: 9000;
+        width: 100%;
+        max-width: 500px;
+        background-color: var(--color-background);
+        border-top-color: var(--color-separacion);
         padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+        padding: 8px 12px;
     }
-    #btn-ver-pedido,
-    #btn-hacer-pedido{
+
+    .stickybarBtn {
         background-color: var(--color-primary);
         color: var(--color-background);
         font-weight: bold;
         border: none;
         border-radius: 25px;
         cursor: pointer;
+        padding: 10px 30px;
     }
 </style>

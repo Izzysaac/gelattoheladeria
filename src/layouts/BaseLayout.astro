@@ -4,39 +4,51 @@ import "../styles/themes/default.css";
 import "../styles/themes/mandioka.css";
 import "../styles/themes/granpollo.css";
 
+import { loadTenant } from "@lib/loadTenant";
 import Head from "./Head.astro";
+import Header from "./Header.astro";
+import Footer from "./Footer.astro";
 
-const theme = import.meta.env.THEME || "default";
-const { titulo, descripcion, logo,  class: className } = Astro.props; 
-
+const theme = loadTenant().theme;
+const { head } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="es" data-theme={theme}>
-	<Head titulo={titulo} descripcion={descripcion} logo={logo}/>
-	<body>
-		<slot />
-	</body>
+    <Head {...head} />
+    <body>
+        <slot />
+    </body>
 </html>
 
 <style is:global>
-	@import "tailwindcss";	
-	.no-scroll {
-		overflow: hidden;
-	}
+    @import "tailwindcss";
+    .no-scroll {
+        overflow: hidden;
+    }
 
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-		background-color: var(--color-background);
-		color: var(--color-text);
-		font-family:  Verdana, Geneva, Tahoma, sans-serif;
+    html,
+    body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--color-background);
+        color: var(--color-text);
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
         scroll-behavior: smooth;
-	}
+    }
+    dialog[open] {
+        animation: fadeIn 200ms ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
-
-
-
-

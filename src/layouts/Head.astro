@@ -9,12 +9,13 @@ const { titulo, descripcion, logo } = Astro.props;
 
     <title> {titulo} </title>
     <!-- <link rel="canonical" href={canonicalURL} /> -->
+    <link rel="preconnect" href="">
+    <link rel="dns-prefetch" href="">
     <link rel="preload" as="image" href={logo}>
     <link rel="icon" href={logo}>
-
+    <meta name="description" content={descripcion} />
     <meta name="robots" content="index, follow" />
     <meta name="googlebot" content="index, follow" />
-    <meta name="description" content={descripcion} />
 
     <meta name="og:image" content={logo} />
     <meta name="og:title" content={titulo} />
@@ -23,6 +24,4 @@ const { titulo, descripcion, logo } = Astro.props;
     <meta name="og:site_name" content={titulo} />
     <meta name="og:type" content="website" />
     <meta name="og:locale" content="es_CO" />
-    <!-- <Analytics />
-	<SpeedInsights /> -->
 </head>

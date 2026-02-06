@@ -3,6 +3,17 @@
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"],
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*" : ["./src/components/*"],
+      "@template/*" : ["./src/components/template/*"],
+      "@layouts*": ["./src/layouts/*"],
+      "@lib/*" : ["./src/lib/*"],
+      "@assets/*" : ["./src/assets/*"],
+      "@styles/*" : ["./src/styles/*"],
+      "@scripts/*" : ["src/scripts/*"],
+      "@pages/*": ["./src/pages/*"]
+    },
     "strict": false,
     "noImplicitAny": false
   }

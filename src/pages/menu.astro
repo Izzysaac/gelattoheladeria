@@ -1,51 +1,11 @@
 ---
-import { loadTenant } from "../lib/loadTenant";
-import { loadSheet } from "../lib/loadSheet";
-import MenuPage from "../template/MenuPage.astro";
+import { buildTenantData } from "@lib/buildTenantData";
 
-const tenant = await loadTenant();
-const info = await loadSheet("info");
-const menu = await loadSheet("menu");
+import MenuPage from "@template/MenuPage.astro";
 
-if (!tenant.pages.reserva) {
-    return Astro.redirect("/");
-}
+const { tenant, data } = await buildTenantData("menu");
 
-const datosInfo = () => {
-    let data = {
-        titulo: "",
-        direccion: "",
-        telefono: "",
-        logo: "",
-    };
-    info.forEach((item: any) => {
-        const clave = item.clave || "Sin categoría";
-        if (clave == "logo") data.logo = item.valor;
-        if (clave == "titulo") data.titulo = item.valor;
-        if (clave == "direccion") data.direccion = item.valor;
-        if (clave == "telefono") data.telefono = item.valor;
-    });
-    return data;
-};
-
-const groupMenu = () => {
-    const grouped = {};
-    menu.forEach((item: any) => {
-        const cat = item.categoria || "Sin categoría";
-        if (!grouped[cat]) grouped[cat] = [];
-        grouped[cat].push(item);
-    });
-    return grouped;
-};
-
-const menuPorCategoria = groupMenu();
-const { titulo, direccion, telefono, logo } = datosInfo();
+if (!tenant.pages.menu) return Astro.redirect("/");
 ---
 
-<MenuPage
-    menuPorCategoria={menuPorCategoria}
-    titulo={titulo}
-    direccion={direccion}
-    telefono={telefono}
-    logo={logo}
-/>
+<MenuPage {...data} />

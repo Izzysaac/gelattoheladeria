@@ -1,0 +1,43 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Footer from "@layoutsFooter.astro";
+
+import Logo from "@components/ui/Logo.astro";
+import Menu from "@components/sections/Menu.astro";
+import CategoryNav from "@components/sections/CategoryNav.astro";
+import ViewImage from "@components/sections/ViewImage.astro";
+import StickyBar from "@components/StickyBar.astro";
+
+const { head, contact, logo, menu, categorias, footer } = Astro.props;
+const modo = "menu";
+---
+
+<BaseLayout head={head}>
+    <div
+        id="datos"
+        data-direccionlocal={contact.direccion}
+        data-telefono={contact.telefono}
+        hidden
+    >
+    </div>
+    <div class="flex justify-center items-center flex-col py-12">
+        <Logo {...logo} />
+        <h1 class="invisible">Menú</h1>
+        <CategoryNav categorias={categorias} />
+        <Menu menuPorCategoria={menu} modo={modo} />
+        <ViewImage />
+        <StickyBar modo={modo} />
+    </div>
+    <Footer {...footer} />
+</BaseLayout>
+
+<script is:inline src="/viewimg.js" defer></script>
+
+<style is:global>
+    .cerrado {
+        display: none !important;
+    }
+    .ocultar {
+        visibility: hidden;
+    }
+</style>

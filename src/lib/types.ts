@@ -2,7 +2,7 @@ export type Pages = {
     menu: boolean;
     pedido: boolean;
     reserva: boolean;
-}
+};
 
 export type Features = {
     whatsapp: boolean;
@@ -11,7 +11,9 @@ export type Features = {
 };
 
 export type TenantConfig = {
-    name: string;
+    nameId: string;
+    sheetId: string;
+    cloudinaryCloudName: string;
     theme: string;
     pages: Pages;
     layout: {
