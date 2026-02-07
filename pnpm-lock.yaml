@@ -20,6 +20,9 @@ dependencies:
   astro-icon:
     specifier: ^1.1.5
     version: 1.1.5
+  sharp:
+    specifier: ^0.34.5
+    version: 0.34.5
   tailwindcss:
     specifier: ^4.1.18
     version: 4.1.18
@@ -682,7 +685,6 @@ packages:
     engines: {node: '>=18'}
     requiresBuild: true
     dev: false
-    optional: true
 
   /@img/sharp-darwin-arm64@0.34.5:
     resolution: {integrity: sha512-imtQ3WMJXbMY4fxb/Ndp6HBTNVtWCUI0WdobyheGf5+ad6xX8VIDO8u2xE4qc/fr08CKG/7dDseFtn6M6g/r3w==}
@@ -3533,7 +3535,6 @@ packages:
       '@img/sharp-win32-ia32': 0.34.5
       '@img/sharp-win32-x64': 0.34.5
     dev: false
-    optional: true
 
   /shiki@3.21.0:
     resolution: {integrity: sha512-N65B/3bqL/TI2crrXr+4UivctrAGEjmsib5rPMMPpFp1xAx/w03v8WZ9RDDFYteXoEgY7qZ4HGgl5KBIu1153w==}

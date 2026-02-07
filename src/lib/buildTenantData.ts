@@ -1,7 +1,16 @@
 import { loadTenant } from "./loadTenant";
 import { loadCMS } from "./loadCMS";
-import { mapInfo, mapMenu } from "./mappers";
+import { mapCMS } from "./mappers";
 import { buildMenuPageData, buildMainPageData } from "./builders";
+
+import type { PageType } from "./types";
+
+// relaciona nombre de pagina con funcion constructora
+const PAGE_BUILDERS: Record<PageType, (params: any) => any> = {
+    main: ({ tenant, info, reviews }) => buildMainPageData({ tenant, info, reviews }),
+    menu: ({ tenant, info, menu }) => buildMenuPageData({ tenant, info, menu }),
+    pedido: ({ tenant, info, menu }) => buildMenuPageData({ tenant, info, menu }),
+}
 
 export async function buildTenantData(page: string) {
 
@@ -9,38 +18,19 @@ export async function buildTenantData(page: string) {
 
     const cms = await loadCMS(tenant);
 
-    // 🧠 mappers aquí (una sola vez)
-    const info = mapInfo(cms.info);
-    const menu = mapMenu(cms.menu);
+    const mappedCMS = mapCMS(cms);
 
+    const builderStrategy = PAGE_BUILDERS[page];
 
-    // 🧠 registry de builders
-    const builders = {
-        main: () =>
-            buildMainPageData({
-                tenant,
-                info,
-            }),
+    if (!builderStrategy) {
+        console.warn(`No existe builder para la pagina ${page}`)
+        return { tenant, data: {}};
+    }
 
-        menu: () =>
-            buildMenuPageData({
-                tenant,
-                info,
-                menu,
-            }),
-
-        pedido: () =>
-            buildMenuPageData({
-                tenant,
-                info,
-                menu,
-            }),
-    };
-
-    const builder = builders[page];
+    const pageData = builderStrategy({tenant, ...mappedCMS});
 
     return {
         tenant,
-        data: builder ? builder() : {},
+        data: pageData
     };
 }

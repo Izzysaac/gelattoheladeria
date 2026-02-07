@@ -5,7 +5,7 @@ import PedidoPage from "@template/PedidoPage.astro";
 
 const { tenant, data } = await buildTenantData("menu");
 
-if (!tenant.pages.menu) return Astro.redirect("/");
+if (!tenant.pages.pedido) return Astro.redirect("/");
 ---
 
 <PedidoPage {...data} />

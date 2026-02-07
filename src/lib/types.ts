@@ -1,3 +1,5 @@
+export type PageType = "main" | "menu" | "pedido" ;
+
 export type Pages = {
     menu: boolean;
     pedido: boolean;
@@ -6,7 +8,7 @@ export type Pages = {
 
 export type Features = {
     whatsapp: boolean;
-    promo: boolean;
+    reviews: boolean;
     reserva: boolean;
 };
 

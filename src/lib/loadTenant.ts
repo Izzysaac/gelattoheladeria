@@ -17,15 +17,17 @@ export function loadTenant(): TenantConfig {
 
         theme: import.meta.env.THEME || "default",
 
+        cloudinaryCloudName : import.meta.env.CLOUDINARY_CLOUD_NAME,
+
         pages: {
-            menu: true, // asumimos siempre
+            menu: true,
             pedido: true,
             reserva: pagesEnv.includes("reserva"),
         },
 
         features: {
             whatsapp: featuresEnv.includes("whatsapp"),
-            promo: featuresEnv.includes("promo"),
+            reviews: featuresEnv.includes("reviews"),
             reserva: featuresEnv.includes("reserva"),
         },
 
@@ -33,6 +35,5 @@ export function loadTenant(): TenantConfig {
             heroVariant: "default",
         },
 
-        cloudinaryCloudName : import.meta.env.CLOUDINARY_CLOUD_NAME
     };
 }

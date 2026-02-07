@@ -3,12 +3,15 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 
 import Header from "@layoutsHeader.astro";
 import Footer from "@layoutsFooter.astro";
+import Reviews from "@components/features/Reviews.astro";
 
-const { head, header, footer, tendant } = Astro.props;
+const { head, header, footer, reviews, tenant } = Astro.props;
+
 ---
 
 <BaseLayout head={head}>
-    <Header {...header}/>
+    <Header {...header} />
+    {tenant.features.reviews && <Reviews {...reviews} />}
     <slot />
-    <Footer {...footer}/>
+    <Footer {...footer} />
 </BaseLayout>

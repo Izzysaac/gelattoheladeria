@@ -2,15 +2,16 @@
 // PAGE BUILDERS
 // ==========================
 
-export function buildMainPageData({ tenant, info }) {
+export const buildMainPageData = ({ tenant, info, reviews }) => {
     return {
         head: buildHead(info),
-        header: buildHeader(info, tenant),
+        header: buildHeader(info),
         footer: buildFooter(info),
+        reviews: buildReviews(reviews)
     };
 }
 
-export function buildMenuPageData({ tenant, info, menu }) {
+export const buildMenuPageData =({ tenant, info, menu }) => {
     return {
         head: buildHead(info),
         contact: buildContact(info),
@@ -33,7 +34,7 @@ const buildHead = (info) => {
     };
 };
 
-const buildHeader = (info, tenant) => {
+const buildHeader = (info) => {
     return {
         titulo: info.titulo,
         descripcion: info.descripcion,
@@ -92,3 +93,24 @@ const buildCategorias = (menu) => {
 
     return Array.from(categorias);
 };
+
+const buildReviews = (reviews) => {
+
+
+    if (!reviews) {
+        return {
+            userRatingCount: 0,
+            rating: 0,
+            reviewsUrl: "",
+            reviews: [],
+        };
+    }
+
+    return {
+        userRatingCount: Number(reviews.meta?.userRatingCount) || 0,
+        rating: Number(reviews.meta?.rating) || 0,
+        reviewsUrl: reviews.meta?.reviewsUrl || "",
+        reviews: reviews.reviews || [],
+    };
+
+}

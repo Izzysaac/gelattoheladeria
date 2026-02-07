@@ -8,29 +8,27 @@ export async function loadCMS(tenant: TenantConfig) {
         return CMS_CACHE.get(tenant.nameId);
     }
 
-    async function loadSheet(sheetId: string, nameId: string, hoja: string) {
-        const url = `https://opensheet.elk.sh/${sheetId}/${nameId}-${hoja}`;
+    const hojas = ["info", "menu"];
+    if (tenant.features.reviews) hojas.push("reviews");
 
-        const res = await fetch(url);
+    const sheets = await Promise.all(
+        hojas.map((hoja) => loadSheet(tenant.sheetId, tenant.nameId, hoja)),
+    );
 
-        if (!res.ok) {
-            throw new Error(`Sheet fetch failed: ${url}`);
-        }
+    const cms = Object.fromEntries(hojas.map((hoja, i) => [hoja, sheets[i]]));
 
-        return await res.json();
-    }
+    CMS_CACHE.set(tenant.nameId, cms);
 
-    const [infoRaw, menuRaw] = await Promise.all([
-        loadSheet(tenant.sheetId, tenant.nameId,"info"),
-        loadSheet(tenant.sheetId, tenant.nameId,"menu"),
-    ]);
+    return cms;
+}
 
-    const data = {
-        info: infoRaw,
-        menu: menuRaw,
-    };
+async function loadSheet(sheetId: string, nameId: string, hoja: string) {
 
-    CMS_CACHE.set(tenant.nameId, data);
+    const url = `https://opensheet.elk.sh/${sheetId}/${nameId}-${hoja}`;
 
-    return data;
+    const res = await fetch(url);
+
+    if (!res.ok) throw new Error(`Sheet fetch failed: ${url}`);
+
+    return await res.json();
 }

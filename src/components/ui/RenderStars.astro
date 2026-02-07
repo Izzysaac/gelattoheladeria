@@ -1,0 +1,10 @@
+---
+import StarIcon from "@components/ui/StarIcon.astro";
+
+const { rating = 0 , width, height } = Astro.props;
+
+const num = Math.round(Number(rating));
+const stars = Array.from({ length: num });
+---
+
+{stars.map((_, i) => <StarIcon width={width} height={height} />)}

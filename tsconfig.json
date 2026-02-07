@@ -5,6 +5,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@public/*" : ["./public/*"],
       "@components/*" : ["./src/components/*"],
       "@template/*" : ["./src/components/template/*"],
       "@layouts*": ["./src/layouts/*"],

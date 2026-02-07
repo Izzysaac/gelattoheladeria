@@ -4,18 +4,23 @@ const {titulo, direccion, telefono} = Astro.props
 
 ---
 
-<footer class="text-center p-5 text-sm text-(---color-text)/50">
+<footer class="footer p-5 text-(---color-text)/50 mt-25">
     <p>
-        &copy; <span id="year"></span> <strong>{titulo}</strong>. 
+        &copy; <span id="year">2026</span> <strong>{titulo}</strong>. 
         Todos los derechos reservados.
     </p>
-    <p class="text-xs mt-1.5 ">
-        <a href="wa.me/573163896572">Powered by <span class="font-bold">Isaac</span></a>
-        
-        <!-- <a href="https://tusitio.com" style="color: #007bff; text-decoration: none;"></a> -->
+    <p class="mt-1.5">
+        <a href="https://wa.me/573163896572">Powered by <span class="font-bold">Isaac</span></a>
     </p>
 </footer>
 
-<script >
+<style>
+    .footer{
+        font-size: xx-small;
+        text-align: center;
+    }
+</style>
+
+<!-- <script >
     document.getElementById("year").textContent = String(new Date().getFullYear())
-</script>
+</script> -->
