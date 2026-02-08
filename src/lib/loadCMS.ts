@@ -1,9 +1,9 @@
 import type { TenantConfig } from "./types";
 
-const CMS_CACHE = new Map<string, any>();
+import { CMS_CACHE } from "@lib/cmsCache";
 
 export async function loadCMS(tenant: TenantConfig) {
-
+    // CMS_CACHE.clear();
     if (CMS_CACHE.has(tenant.nameId)) {
         return CMS_CACHE.get(tenant.nameId);
     }
@@ -23,7 +23,6 @@ export async function loadCMS(tenant: TenantConfig) {
 }
 
 async function loadSheet(sheetId: string, nameId: string, hoja: string) {
-
     const url = `https://opensheet.elk.sh/${sheetId}/${nameId}-${hoja}`;
 
     const res = await fetch(url);

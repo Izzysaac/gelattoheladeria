@@ -1,0 +1,41 @@
+---
+
+---
+
+<div id="entrega-producto" class="flex w-full flex-col gap-3">
+    <p>¿Cómo quieres tu pedido?</p>
+    <div class="flex justify-center rounded-4xl bg-(--color-secondary) p-1">
+        <label>
+            <input
+                type="radio"
+                name="entrega"
+                value="domicilio"
+                checked
+                hidden
+            />
+            A domicilio
+        </label>
+        <label>
+            <input type="radio" name="entrega" value="recoger" hidden />
+            Recoger
+        </label>
+    </div>
+    <div id="campo-direccion">
+        <textarea
+            id="input-direccion"
+            placeholder="Dirección de entrega*"
+            rows="1"
+            class="field-sizing-content w-full rounded border border-gray-300 bg-(--color-secondary) p-2 disabled:border-gray-500 disabled:bg-(--color-background) disabled:text-(--color-text)/70"
+        ></textarea>
+    </div>
+</div>
+
+<style>
+    @import "tailwindcss";
+    label {
+        @apply flex w-full cursor-pointer justify-center rounded-4xl p-2 has-checked:bg-(--color-text)/30;
+    }
+    .invalid {
+        @apply border-red-600;
+    }
+</style>

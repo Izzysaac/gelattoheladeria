@@ -1,0 +1,71 @@
+---
+import ArrowLeftIcon from "@assets/arrow-left-bold-svgrepo-com.svg";
+import Trash from "@assets/trash-svgrepo-com.svg";
+import ProductoTemplate from "@components/ui/ProductoTemplate.astro";
+import BorrarPedido from "@components/sections/BorrarPedido.astro";
+import StickyBar from "@components/sections/StickyBar.astro";
+import TipoEntrega from "@components/ui/TipoEntrega.astro";
+---
+
+<dialog
+    id="modal-pedido"
+    class="h-fit bg-(--color-background) pb-24 text-(--color-text)"
+>
+    <div class="contenido flex h-fit min-h-full flex-col gap-4 px-4">
+        <div
+            class="sticky top-0 flex items-center justify-between bg-(--color-background) py-4"
+        >
+            <button
+                id="btn-cerrar-modal"
+                class="w-fit self-end rounded-full bg-(--color-secondary) p-2"
+            >
+                <ArrowLeftIcon
+                    width={20}
+                    height={20}
+                    class:list={"pointer-events-none"}
+                />
+            </button>
+            <p>Mi pedido</p>
+            <button
+                id="btn-borrar-modal"
+                class="w-fit self-end rounded-full bg-(--color-secondary) p-2"
+            >
+                <Trash
+                    width={20}
+                    height={20}
+                    class:list={"pointer-events-none"}
+                />
+            </button>
+        </div>
+
+        <div id="lista-pedido"></div>
+        <button
+            id="btn-modificar-pedido"
+            class="w-fit self-end rounded-full bg-(--color-secondary) px-3 py-1.5 font-semibold"
+            >Añadir productos</button
+        >
+        <TipoEntrega />
+    </div>
+    <StickyBar modo="details" />
+</dialog>
+
+<ProductoTemplate />
+<BorrarPedido />
+
+<style>
+    #modal-pedido {
+        width: 100vw;
+        height: 100dvh;
+        max-width: 500px;
+        max-height: 100vh;
+        margin: 0;
+        box-sizing: border-box;
+        margin-left: auto;
+    }
+    dialog::backdrop {
+        background: rgba(0, 0, 0, 0.7);
+    }
+    .contenido {
+        padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    }
+</style>

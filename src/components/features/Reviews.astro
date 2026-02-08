@@ -3,25 +3,28 @@ import { cloudinaryReviews } from "@scripts/utils";
 import Image from "astro/components/Image.astro";
 import GoogleReviewImg from "@assets/google-review2.png";
 import RenderStars from "@components/ui/RenderStars.astro";
-import StarIcon from "@components/ui/StarIcon.astro";
 
 const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
 
-//nombre, fecha, rating, texto, perfil, referencia
+//authorName, publishTime, rating, text, authorPhoto, reference
 ---
 
-<section class="flex flex-col items-center max-w-125 m-auto px-8 gap-2 text-xs">
-    <header class="flex items-center gap-2 mb-2">
-        <Image src={GoogleReviewImg} width={150} alt="google reviews" />
-        <h2 class="flex flex-col items-center justify-between gap-0.5">
-            <span class=" flex items-center text-xl">{rating}</span>
-            <span class="flex gap-0.5"> <RenderStars rating={rating} width="10" height="10"/> </span>
-            <span class="opacity-90"> {userRatingCount} reseñas</span>
-        </h2>
-    </header>
+<section class="m-auto flex max-w-125 flex-col items-center gap-2 text-sm">
+    <a href={reviewsUrl} target="_blank">
+        <header id="google-reviews" class="pointer-events-auto mb-2 flex gap-2">
+            <Image src={GoogleReviewImg} width={150} alt="google reviews" />
+            <h2 class="flex flex-col items-center justify-center gap-0.5">
+                <span class="flex items-center text-xl">{rating}</span>
+                <span class="flex gap-0.5">
+                    <RenderStars rating={rating} width="10" height="10" />
+                </span>
+                <span class="opacity-90"> {userRatingCount} reseñas</span>
+            </h2>
+        </header>
+    </a>
     {
         reviews.map((review: any, i) => (
-            <article class="flex flex-col gap-2 w-full border-b border-b-(--color-separacion) py-2">
+            <article class="flex w-full flex-col gap-2 border-b border-b-(--color-separacion) px-3 py-4">
                 <header class="flex gap-2">
                     <img
                         src={cloudinaryReviews(review.authorPhoto)}
@@ -35,26 +38,26 @@ const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
                         <time
                             datetime={review.publishTime}
                             data-time={review.publishTime}
-                            class="opacity-80"
+                            class="text-xs opacity-80"
                         >
                             {review.publishTime}
                         </time>
                     </p>
                     <div
                         aria-label={`${review.rating} estrellas`}
-                        class="stars flex ms-auto gap-0.5"
+                        class="stars ms-auto flex gap-0.5"
                     >
                         <RenderStars rating={review.rating} />
                     </div>
                 </header>
- 
+
                 <p class="line-clamp-3 leading-relaxed text-pretty" data-clamp>
                     {review.text}
                 </p>
 
                 <button
                     type="button"
-                    class="font-medium opacity-80 w-fit self-center"
+                    class="w-fit self-end font-medium opacity-80"
                     data-toggle
                     hidden
                     aria-expanded="false"
@@ -64,7 +67,13 @@ const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
             </article>
         ))
     }
-    <a href={reviewsUrl} target="_blank" class="bg-(--color-secondary) px-3 py-2 rounded-full"> Ver todas las reseñas</a>
+    <a
+        href={reviewsUrl}
+        target="_blank"
+        class="mt-5 rounded-full bg-(--color-secondary) px-4 py-3"
+    >
+        Ver todas las reseñas</a
+    >
 </section>
 
 <script type="module">
@@ -90,21 +99,4 @@ const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
             boton.setAttribute("aria-expanded", expandido);
         });
     });
-
-    //     const boton = el.nextElementSibling;
-    //     if (!boton) return;
-
-    //     // Espera a layout real (fuentes, mobile)
-    //     requestAnimationFrame(() => {
-    //         if (el.scrollHeight > el.clientHeight) {
-    //             boton.hidden = false;
-    //         }
-    //     });
-
-    //     boton.addEventListener("click", () => {
-    //         const expandido = el.classList.toggle("expandido");
-    //         boton.textContent = expandido ? "Ver menos" : "Ver más";
-    //         boton.setAttribute("aria-expanded", expandido);
-    //     });
-    // });
 </script>

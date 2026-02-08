@@ -1,0 +1,35 @@
+---
+
+---
+
+<dialog
+    id="modal-borrar-pedido"
+    class="fixed m-auto flex max-w-125 flex-col items-center gap-3 rounded-2xl bg-(--color-background) px-4 py-8 font-semibold text-(--color-text)"
+>
+    <p>¿Borrar pedido?</p>
+    <p class="mb-4 text-sm font-normal">
+        Se borrarán todos los productos del pedido.
+    </p>
+    <button
+        id="btn-borrar-pedido"
+        data-action="close-modal"
+        class="w-full bg-red-400 text-black">Eliminar</button
+    >
+    <button
+        id="btn-conservar-pedido"
+        data-action="delelte.order"
+        class="w-full bg-(--color-secondary)">Conservar</button
+    >
+</dialog>
+
+<style>
+    @import "tailwindcss";
+
+    button {
+        @apply rounded-full px-3 py-1.5;
+    }
+
+    dialog::backdrop {
+        background: rgba(0, 0, 0, 0.6);
+    }
+</style>

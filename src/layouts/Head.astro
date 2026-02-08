@@ -1,26 +1,27 @@
 ---
-
 const { titulo, descripcion, logo } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 ---
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
 
-    <title> {titulo} </title>
-    <!-- <link rel="canonical" href={canonicalURL} /> -->
-    <link rel="preconnect" href="">
-    <link rel="dns-prefetch" href="">
-    <link rel="preload" as="image" href={logo}>
-    <link rel="icon" href={logo}>
+    <title>{titulo}</title>
+    <link rel="canonical" href={canonicalURL.href} />
+    <link rel="preconnect" href="//res.cloudinary.com" />
+    <link rel="dns-prefetch" href="//res.cloudinary.com">
+    <!-- <link rel="preload" href="/fonts/main.woff2" as="font" type="font/woff2" crossorigin> -->
+    
+    <link rel="preload" as="image" href={logo} />
+    <link rel="icon" href={logo} />
     <meta name="description" content={descripcion} />
     <meta name="robots" content="index, follow" />
-    <meta name="googlebot" content="index, follow" />
-
     <meta name="og:image" content={logo} />
     <meta name="og:title" content={titulo} />
     <meta name="og:description" content={descripcion} />
-    <meta name="og:url" content={Astro.url} />
+    <meta name="og:url" content={canonicalURL.href} />
     <meta name="og:site_name" content={titulo} />
     <meta name="og:type" content="website" />
     <meta name="og:locale" content="es_CO" />

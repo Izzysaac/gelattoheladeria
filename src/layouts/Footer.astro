@@ -1,21 +1,21 @@
 ---
-
-const {titulo, direccion, telefono} = Astro.props
-
+const { titulo, direccion, telefono } = Astro.props;
 ---
 
-<footer class="footer p-5 text-(---color-text)/50 mt-25">
+<footer class="footer mt-25 p-5 text-(---color-text)/50">
     <p>
-        &copy; <span id="year">2026</span> <strong>{titulo}</strong>. 
-        Todos los derechos reservados.
+        &copy; <span id="year">2026</span>
+        <strong>{titulo}</strong>. Todos los derechos reservados.
     </p>
     <p class="mt-1.5">
-        <a href="https://wa.me/573163896572">Powered by <span class="font-bold">Isaac</span></a>
+        <a href="https://wa.me/573163896572"
+            >Powered by <span class="font-bold">Isaac</span></a
+        >
     </p>
 </footer>
 
 <style>
-    .footer{
+    .footer {
         font-size: xx-small;
         text-align: center;
     }

@@ -3,7 +3,7 @@ import { bindEventos } from "./events.js";
 import { renderTodo } from "./render.js";
 
 export const init = () => {
-    cargarState();
-    bindEventos();
-    renderTodo();
+  cargarState();
+  bindEventos();
+  renderTodo();
 };

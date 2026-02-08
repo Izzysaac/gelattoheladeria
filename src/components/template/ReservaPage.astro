@@ -1,12 +1,12 @@
 ---
-import BaseLayout from "@layouts/BaseLayout.astro"
+import BaseLayout from "@layouts/BaseLayout.astro";
 
-const {titulo, descripcion, logo } = Astro.props
+const { titulo, descripcion, logo } = Astro.props;
 ---
 
 <BaseLayout>
     <h1>Página de reserva</h1>
     <h2>{titulo}</h2>
     <h3>{descripcion}</h3>
-    <img src={logo} alt="">
+    <img src={logo} alt="" />
 </BaseLayout>

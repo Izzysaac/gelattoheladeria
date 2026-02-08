@@ -7,13 +7,14 @@ import type { PageType } from "./types";
 
 // relaciona nombre de pagina con funcion constructora
 const PAGE_BUILDERS: Record<PageType, (params: any) => any> = {
-    main: ({ tenant, info, reviews }) => buildMainPageData({ tenant, info, reviews }),
+    main: ({ tenant, info, reviews }) =>
+        buildMainPageData({ tenant, info, reviews }),
     menu: ({ tenant, info, menu }) => buildMenuPageData({ tenant, info, menu }),
-    pedido: ({ tenant, info, menu }) => buildMenuPageData({ tenant, info, menu }),
-}
+    pedido: ({ tenant, info, menu }) =>
+        buildMenuPageData({ tenant, info, menu }),
+};
 
 export async function buildTenantData(page: string) {
-
     const tenant = loadTenant();
 
     const cms = await loadCMS(tenant);
@@ -23,14 +24,14 @@ export async function buildTenantData(page: string) {
     const builderStrategy = PAGE_BUILDERS[page];
 
     if (!builderStrategy) {
-        console.warn(`No existe builder para la pagina ${page}`)
-        return { tenant, data: {}};
+        console.warn(`No existe builder para la pagina ${page}`);
+        return { tenant, data: {} };
     }
 
-    const pageData = builderStrategy({tenant, ...mappedCMS});
+    const pageData = builderStrategy({ tenant, ...mappedCMS });
 
     return {
         tenant,
-        data: pageData
+        data: pageData,
     };
 }

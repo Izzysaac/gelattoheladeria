@@ -1,7 +1,6 @@
 import type { TenantConfig } from "./types";
 
 export function loadTenant(): TenantConfig {
-
     const pagesEnv = (import.meta.env.PAGES || "")
         .split(",")
         .map((p: string) => p.trim());
@@ -17,7 +16,7 @@ export function loadTenant(): TenantConfig {
 
         theme: import.meta.env.THEME || "default",
 
-        cloudinaryCloudName : import.meta.env.CLOUDINARY_CLOUD_NAME,
+        cloudinaryCloudName: import.meta.env.CLOUDINARY_CLOUD_NAME,
 
         pages: {
             menu: true,
@@ -34,6 +33,5 @@ export function loadTenant(): TenantConfig {
         layout: {
             heroVariant: "default",
         },
-
     };
 }

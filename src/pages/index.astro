@@ -4,7 +4,6 @@ import { buildTenantData } from "@lib/buildTenantData";
 import MainPage from "@template/MainPage.astro";
 
 const { tenant, data } = await buildTenantData("main");
-
 ---
 
 <MainPage {...data} tenant={tenant} />

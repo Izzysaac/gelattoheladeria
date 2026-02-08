@@ -3,7 +3,7 @@ const { categorias } = Astro.props;
 ---
 
 <nav class="category-nav max-w-200" aria-label="Categorías del menú">
-    <ul class="flex gap-0 m-0">
+    <ul class="m-0 flex gap-0">
         {
             categorias.map((categoria: string) => (
                 <li class="">
@@ -34,7 +34,7 @@ const { categorias } = Astro.props;
         overflow: scroll;
         scroll-snap-type: x mandatory;
         scroll-behavior: smooth;
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 0rem;
         list-style: none;
     }
     .category-nav ul::-webkit-scrollbar {

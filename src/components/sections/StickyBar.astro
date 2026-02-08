@@ -1,17 +1,16 @@
 ---
-import Action from "./Action.astro";
+import Action from "@components/ui/Action.astro";
 
 const { modo } = Astro.props;
 /* Menu → Order → Review → Fulfillment → Submit (por ahora serian 2*/
 ---
 
-<div id="stickybar" class="stickybar border-t flex">
+<div id="stickybar" class="stickybar flex border-t">
+    {modo == "menu" && <Action action="order" />}
 
-    { modo == "menu" && <Action action="order" /> }
+    {modo == "pedido" && <Action action="review" />}
 
-    { modo == "pedido" && <Action action="review" /> }
-
-    { modo == "details" && <Action action="submit" /> }
+    {modo == "details" && <Action action="submit" />}
 </div>
 
 <style is:global>

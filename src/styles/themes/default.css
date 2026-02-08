@@ -1,15 +1,14 @@
 html[data-theme="default"] {
-          /* index */
-        --index-bg : #f7f7f7;
-        --index-text: var(--color-text);
-        --index-buttons: #24b93a;
-        --index-buttons-text: white;
+  /* index */
+  --index-bg: #f7f7f7;
+  --index-text: var(--color-text);
+  --index-buttons: #24b93a;
+  --index-buttons-text: white;
 
-
-        /* menu */
-		--color-background: #fcfcfc;
-        --color-text: #111111;
-		--color-primary: #24b93a;
-		--color-secondary: rgba(0, 0, 0, 0.1);
-        --color-separacion: rgba(0, 0, 0, 0.3);
+  /* menu */
+  --color-background: #fcfcfc;
+  --color-text: #111111;
+  --color-primary: #24b93a;
+  --color-secondary: rgba(0, 0, 0, 0.1);
+  --color-separacion: rgba(0, 0, 0, 0.3);
 }

@@ -1,4 +1,4 @@
-export type PageType = "main" | "menu" | "pedido" ;
+export type PageType = "main" | "menu" | "pedido";
 
 export type Pages = {
     menu: boolean;

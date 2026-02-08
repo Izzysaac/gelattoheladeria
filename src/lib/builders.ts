@@ -7,11 +7,11 @@ export const buildMainPageData = ({ tenant, info, reviews }) => {
         head: buildHead(info),
         header: buildHeader(info),
         footer: buildFooter(info),
-        reviews: buildReviews(reviews)
+        reviews: buildReviews(reviews),
     };
-}
+};
 
-export const buildMenuPageData =({ tenant, info, menu }) => {
+export const buildMenuPageData = ({ tenant, info, menu }) => {
     return {
         head: buildHead(info),
         contact: buildContact(info),
@@ -20,7 +20,7 @@ export const buildMenuPageData =({ tenant, info, menu }) => {
         categorias: buildCategorias(menu),
         footer: buildFooter(info),
     };
-}
+};
 
 // ==========================
 // COMPONENT BUILDERS
@@ -54,7 +54,6 @@ const buildFooter = (info) => {
 };
 
 const buildContact = (info) => {
-
     return {
         direccion: info.direccion,
         telefono: info.telefono,
@@ -95,8 +94,6 @@ const buildCategorias = (menu) => {
 };
 
 const buildReviews = (reviews) => {
-
-
     if (!reviews) {
         return {
             userRatingCount: 0,
@@ -112,5 +109,4 @@ const buildReviews = (reviews) => {
         reviewsUrl: reviews.meta?.reviewsUrl || "",
         reviews: reviews.reviews || [],
     };
-
-}
+};
