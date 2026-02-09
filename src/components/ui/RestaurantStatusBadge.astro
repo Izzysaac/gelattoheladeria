@@ -1,0 +1,320 @@
+---
+import { calculateRestaurantStatus, getStatusDisplayText, getStatusColor } from '@lib/restaurantStatus';
+import type { RestaurantSchedule, StatusThresholds, RestaurantStatusInfo } from '@lib/types';
+
+interface Props {
+    schedule: RestaurantSchedule;
+    thresholds?: StatusThresholds;
+    address?: string;
+    showFullInfo?: boolean;
+}
+
+const { 
+    schedule, 
+    thresholds = { closingSoon: 60, openingSoon: 60 },
+    address,
+    showFullInfo = false 
+} = Astro.props;
+
+// Calculate status on server for SSR
+let statusInfo: RestaurantStatusInfo;
+
+try {
+    statusInfo = calculateRestaurantStatus(schedule, thresholds);
+} catch (error) {
+    // Fallback status if calculation fails
+    statusInfo = {
+        status: 'closed',
+        nextChange: null,
+        todaySchedule: null,
+        weeklySchedule: schedule.weekly
+    };
+}
+
+const statusText = getStatusDisplayText(statusInfo.status, statusInfo.nextChange);
+const statusColorClass = getStatusColor(statusInfo.status);
+
+// Generate unique ID for accessibility
+const badgeId = `restaurant-status-${Math.random().toString(36).substr(2, 9)}`;
+const modalId = `status-modal-${badgeId}`;
+---
+
+<div class="restaurant-status-container">
+    <!-- Status Badge -->
+    <button
+        id={badgeId}
+        class="status-badge inline-flex items-center gap-2 px-3 py-2 rounded-full border text-sm font-medium transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 {statusColorClass}"
+        aria-label={`Estado del restaurante: ${statusText}. Click para ver horario completo`}
+        aria-expanded="false"
+        aria-controls={modalId}
+        data-status={statusInfo.status}
+        data-schedule={JSON.stringify(schedule)}
+        data-thresholds={JSON.stringify(thresholds)}
+    >
+        <!-- Status Icon -->
+        <span class="status-icon" aria-hidden="true">
+            {
+                statusInfo.status === 'open' && (
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                )
+            }
+            {
+                statusInfo.status === 'closed' && (
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                )
+            }
+            {
+                (statusInfo.status === 'closingSoon' || statusInfo.status === 'openingSoon') && (
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                    </svg>
+                )
+            }
+        </span>
+
+        <!-- Status Text -->
+        <span class="status-text">{statusText}</span>
+
+        <!-- Expand Icon -->
+        <svg class="w-3 h-3 opacity-60" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+        </svg>
+    </button>
+
+    <!-- Full Status Modal (hidden by default, shown with JavaScript) -->
+    <div
+        id={modalId}
+        class="status-modal fixed inset-0 z-50 hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={`${modalId}-title`}
+    >
+        <!-- Backdrop -->
+        <div class="modal-backdrop absolute inset-0 bg-black/50 backdrop-blur-sm" data-close-modal></div>
+
+        <!-- Modal Content -->
+        <div class="modal-content absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto bg-white rounded-t-2xl shadow-xl md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-md md:rounded-2xl md:max-h-[90vh]">
+            <!-- Modal Header -->
+            <div class="sticky top-0 z-10 bg-white border-b border-gray-200 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <h2 id={`${modalId}-title`} class="text-lg font-semibold text-gray-900">
+                        Horario del restaurante
+                    </h2>
+                    <button
+                        class="modal-close p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                        aria-label="Cerrar"
+                        data-close-modal
+                    >
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Current Status Summary -->
+                <div class={`status-summary inline-flex items-center gap-2 px-3 py-2 rounded-full border text-sm font-medium ${statusColorClass}`}>
+                    <span class="status-icon" aria-hidden="true">
+                        {
+                            statusInfo.status === 'open' && (
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            )
+                        }
+                        {
+                            statusInfo.status === 'closed' && (
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                </svg>
+                            )
+                        }
+                        {
+                            (statusInfo.status === 'closingSoon' || statusInfo.status === 'openingSoon') && (
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                </svg>
+                            )
+                        }
+                    </span>
+                    <span>{statusText}</span>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="px-6 py-4">
+                <!-- Weekly Schedule -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-medium text-gray-900 mb-3">Horario semanal</h3>
+                    
+                    {
+                        statusInfo.weeklySchedule.map((day) => {
+                            const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                            const isToday = new Date().getDay() === day.day;
+                            
+                            return (
+                                <div class={`flex items-center justify-between py-2 border-b border-gray-100 last:border-0 ${isToday ? 'font-medium' : ''}`}>
+                                    <span class={`text-sm ${isToday ? 'text-gray-900' : 'text-gray-600'}`}>
+                                        {dayNames[day.day]}
+                                        {isToday && <span class="ml-2 text-xs text-blue-600 font-normal">(Hoy)</span>}
+                                    </span>
+                                    <div class="text-right">
+                                        {day.ranges.length > 0 ? (
+                                            <div class="text-sm text-gray-900">
+                                                {day.ranges.map((range, index) => (
+                                                    <span>
+                                                        {range.open} - {range.close}
+                                                        {index < day.ranges.length - 1 && <span class="mx-1 text-gray-400">/</span>}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <span class="text-sm text-gray-500">Cerrado</span>
+                                        )}
+                                        {day.special && (
+                                            <div class="text-xs text-orange-600 mt-1">{day.special}</div>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })
+                    }
+                </div>
+
+                <!-- Address Section -->
+                {
+                    address && (
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <h3 class="text-sm font-medium text-gray-900 mb-2">Dirección</h3>
+                            <p class="text-sm text-gray-600 mb-3">{address}</p>
+                            <a
+                                href={`https://maps.google.com/?q=${encodeURIComponent(address)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 transition-colors"
+                            >
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                </svg>
+                                Cómo llegar
+                            </a>
+                        </div>
+                    )
+                }
+
+                <!-- Timezone Info -->
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <p class="text-xs text-gray-500">
+                        Horario mostrado en zona horaria: {schedule.timezone}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .status-badge {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .status-modal {
+        animation: fadeIn 0.2s ease-out;
+    }
+
+    .modal-content {
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        from { 
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to { 
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .modal-content {
+            animation: scaleIn 0.2s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from { 
+                transform: translate(-50%, -50%) scale(0.9);
+                opacity: 0;
+            }
+            to { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+    }
+</style>
+
+<script>
+    // Client-side interactivity for modal
+    document.addEventListener('astro:page-load', () => {
+        const statusButtons = document.querySelectorAll('.status-badge');
+        
+        statusButtons.forEach(button => {
+            const modalId = button.getAttribute('aria-controls');
+            const modal = document.getElementById(modalId);
+            
+            if (!modal) return;
+
+            // Open modal
+            button.addEventListener('click', () => {
+                modal.classList.remove('hidden');
+                button.setAttribute('aria-expanded', 'true');
+                
+                // Focus management
+                const firstFocusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])') as HTMLElement;
+                if (firstFocusable) {
+                    setTimeout(() => firstFocusable.focus(), 100);
+                }
+            });
+
+            // Close modal handlers
+            const closeButtons = modal.querySelectorAll('[data-close-modal]');
+            closeButtons.forEach(closeBtn => {
+                closeBtn.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                    button.setAttribute('aria-expanded', 'false');
+                    (button as HTMLElement).focus();
+                });
+            });
+
+            // Close on backdrop click
+            modal.addEventListener('click', (e) => {
+                const target = e.target as HTMLElement;
+                if (target === modal || target.classList.contains('modal-backdrop')) {
+                    modal.classList.add('hidden');
+                    button.setAttribute('aria-expanded', 'false');
+                    (button as HTMLElement).focus();
+                }
+            });
+
+            // Close on Escape key
+            modal.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    modal.classList.add('hidden');
+                    button.setAttribute('aria-expanded', 'false');
+                    (button as HTMLElement).focus();
+                }
+            });
+        });
+    });
+</script>

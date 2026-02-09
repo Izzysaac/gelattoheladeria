@@ -1,13 +1,11 @@
 ---
-import "../styles/base.css";
-import "../styles/themes/default.css";
-import "../styles/themes/mandioka.css";
-import "../styles/themes/granpollo.css";
+import "@styles/base.css";
+import "@styles/themes/default.css";
+import "@styles/themes/mandioka.css";
+import "@styles/themes/granpollo.css";
 
 import { loadTenant } from "@lib/loadTenant";
 import Head from "./Head.astro";
-import Header from "./Header.astro";
-import Footer from "./Footer.astro";
 
 const theme = loadTenant().theme;
 const { head } = Astro.props;

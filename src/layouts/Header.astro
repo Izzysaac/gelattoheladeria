@@ -1,45 +1,102 @@
 ---
 import Icon from "@components/ui/Icon.astro";
 import Logo from "@components/ui/Logo.astro";
+import Status from "@components/sections/Status.astro";
+import RestaurantStatusBadge from "@components/ui/RestaurantStatusBadge.astro";
 
-const { titulo, descripcion, logo, botones, socials } = Astro.props;
+const {
+    titulo,
+    descripcion,
+    logo,
+    banner,
+    horario,
+    restaurantSchedule,
+    restaurantAddress,
+    statusThresholds,
+    tiempoEntrega,
+    valorEntrega,
+    userRatingCount,
+    rating,
+} = Astro.props;
+
+import {exampleRestaurantSchedule} from "@lib/exampleData";
 ---
 
 <header
-    class="m-auto flex max-w-100 flex-col items-center gap-4 rounded-lg pt-20 text-(--index-text)"
+    class="m-auto flex max-w-125 flex-col items-center text-(--index-text)"
 >
-    <Logo {...logo} />
-    <h1 class="text-xl font-semibold mb-5">{titulo}</h1>
-    <nav class="w-full max-w-[90vw]">
-        <ul class="flex flex-col justify-center gap-4">
-            {
-                botones.map((boton) => (
-                    <li>
-                        <a
-                            href={boton.url}
-                            rel="noopener noreferrer"
-                            class="block w-full rounded-lg bg-(--index-buttons) px-3 py-4 text-center text-(--index-buttons-text)"
-                        >
-                            {boton.valor}
-                        </a>
-                    </li>
-                ))
-            }
-        </ul>
-    </nav>
-    <div class="social flex gap-2">
+    <div class="hero">
+        <img src={banner} />
+        <svg
+            viewBox="0 0 1440 120"
+            class="wave"
+            fill="var(--color-background)"
+        >
+            <path
+                d="M0,40 C200,120 400,0 720,40 C1040,80 1240,0 1440,60 L1440,120 L0,120 Z"
+            ></path>
+        </svg>
+        <Logo {...logo} class:list={["absolute", "bottom-5", "left-5"]} />
+    </div>
+    
+    <Status horario={exampleRestaurantSchedule}/>
+    <div>
+        <h1 class="text-xl font-semibold mb-5">{titulo}</h1>
+        <p>{descripcion}</p>
+    </div>
+
+    <button id="statusBtn2">Información</button>
+
+    <RestaurantStatusBadge schedule={horario} />
+
+    <dialog id="informacion">
         {
-            socials.map((social) => (
-                <a
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.valor}
-                    class="text-(--index-text)/60"
-                >
-                    {<Icon name={social.valor} height="40" width="40" />}
-                </a>
+            horario.weekly.map((dia) => (
+                <div>
+                    <p>{dia.day}</p>
+                    {
+                        dia.ranges.map((rango) => (
+                            <p>{rango.open}-{rango.close}</p>
+                        ))
+                    }
+                </div>
             ))
         }
-    </div>
+    </dialog>
+    <!-- {
+        restaurantSchedule && (
+            <div class="mb-2">
+                <RestaurantStatusBadge 
+                    schedule={restaurantSchedule}
+                    thresholds={statusThresholds}
+                    address={restaurantAddress}
+                />
+            </div>
+        )
+    } -->
+
 </header>
+
+<script is:inline>
+    const info = document.getElementById("informacion");
+    const statusBtn2 = document.getElementById("statusBtn2");
+
+    statusBtn2.addEventListener("click", () => info.showModal());
+
+    info.addEventListener("click", (e) => (e.target === info) ? info.close() : null);
+
+
+
+</script>
+
+<style>
+    .hero {
+        position: relative;
+    }
+
+    .wave {
+        position: absolute;
+        bottom: -1px;
+        width: 100%;
+    }
+</style>

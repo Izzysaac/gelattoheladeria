@@ -1,14 +1,37 @@
 ---
 import Icon from "@components/ui/Icon.astro";
 import Logo from "@components/ui/Logo.astro";
+import RestaurantStatusBadge from "@components/ui/RestaurantStatusBadge.astro";
 
-const { titulo, descripcion, logo, botones, socials } = Astro.props;
+const { 
+    titulo, 
+    descripcion, 
+    logo, 
+    botones, 
+    socials, 
+    restaurantSchedule,
+    restaurantAddress,
+    statusThresholds 
+} = Astro.props;
 ---
 
 <header
     class="m-auto flex max-w-100 flex-col items-center gap-4 rounded-lg px-8 py-20 text-(--index-text)"
 >
     <Logo titulo={titulo} logo={logo} />
+
+    <!-- Restaurant Status Badge -->
+    {
+        restaurantSchedule && (
+            <div class="mb-2">
+                <RestaurantStatusBadge 
+                    schedule={restaurantSchedule}
+                    thresholds={statusThresholds}
+                    address={restaurantAddress}
+                />
+            </div>
+        )
+    }
 
     <h1 class="text-xl font-semibold">{titulo}</h1>
     <nav class="w-full">

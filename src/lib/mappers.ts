@@ -6,7 +6,8 @@ export const mapCMS = (cms) => {
     };
 };
 
-//* titulo, descripcion, logo, telefono, contacto, [botones{valor, url}], socials[{valor, url}]
+//** titulo, descripcion, logo, banner, telefono, tiempoEntrega, valorEntrega
+//** [direccion{valor, url}], [horario{valor, horario}],[botones{valor, url}], socials[{valor, url}]
 const mapInfo = (infoRaw: any[]) => {
     // 🔵 agrupar por clave
     const grouped = infoRaw.reduce((acc: Record<string, any[]>, row) => {
@@ -18,7 +19,8 @@ const mapInfo = (infoRaw: any[]) => {
 
         acc[row.clave].push({
             valor: row.valor ?? "",
-            url: row.url ?? "",
+            ...(row.clave == "horario" && { horario: row.horario ?? null }),
+            ...(row.clave !== "horario" && { url: row.url ?? null }),
         });
 
         return acc;
@@ -33,10 +35,15 @@ const mapInfo = (infoRaw: any[]) => {
     return {
         titulo: getSingle("titulo"),
         descripcion: getSingle("descripcion"),
+        banner: getSingle("banner"),
         logo: getSingle("logo"),
-        direccion: getSingle("direccion"),
         telefono: getSingle("telefono"),
+        correo: getSingle("correo"),
+        tiempoEntrega: getSingle("tiempo-entrega"),
+        valorEntrega: getSingle("valor-entrega"),
 
+        direccion: getList("direccion"),
+        horario: getList("horario"),
         botones: getList("boton"),
         socials: getList("social"),
     };
@@ -88,4 +95,17 @@ const mapReviews = (reviewsRaw: any[]) => {
         },
         { meta: {}, reviews: [] },
     );
+};
+
+
+export const mapMenuDescription = (menuRaw: any[]) => {
+    return menuRaw
+        .filter((row) => row.nombre) // evita filas vacías
+        .map((row) => ({
+            categoria: row.categoria?.trim() || "Sin categoría",
+
+            nombre: row.nombre?.trim() || "",
+
+            descripcion: row.descripcion?.trim() || "",
+        }));
 };

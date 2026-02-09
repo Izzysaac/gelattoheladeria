@@ -1,0 +1,23 @@
+---
+
+const { direccion, telefono, correo, botones, socials } = Astro.props;
+
+---
+
+<nav class="w-full max-w-125 m-auto">
+    <ul class="flex flex-col justify-center gap-4">
+        {
+            botones.map((boton) => (
+                <li>
+                    <a
+                        href={boton.url}
+                        rel="noopener noreferrer"
+                        class="block w-full rounded-lg bg-(--index-buttons) px-3 py-4 text-center text-(--index-buttons-text)"
+                    >
+                        {boton.valor}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</nav>
