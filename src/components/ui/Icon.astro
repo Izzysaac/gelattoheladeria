@@ -1,42 +1,63 @@
 ---
 import Instagram from "@assets/instagram.svg";
 import Facebook from "@assets/facebook.svg";
-import Whatapp from "@assets/whatapp.svg";
+import Whatsapp from "@assets/whatsapp.svg";
 import LocationIcon from "@assets/location.svg";
 import PhoneIcon from "@assets/phone.svg";
+import ClockIcon from "@assets/clock.svg"
+import MailIcon from "@assets/mail.svg"
+import ExternalIcon from "@assets/external.svg"
 
 
 const {
     name,
     width = 25,
     height = 25,
-    fill = "#FFF",
-    stroke = "none",
-} = Astro.props;
+    fill = "currentColor",
+    stroke = "currentColor",
+    class: className 
+    
+    } = Astro.props;
+    
 ---
 
 {
     name == "instagram" && (
-        <Instagram width={width} height={height} fill={fill} stroke={stroke} />
+        <Instagram width={width} height={height} fill={fill} stroke={stroke} class={className} />
     )
 }
 {
     name == "facebook" && (
-        <Facebook width={width} height={height} fill={fill} stroke={stroke} />
+        <Facebook width={width} height={height} fill={fill} stroke={stroke} class={className} />
     )
 }
 {
-    name == "whatapp" && (
-        <Whatapp width={width} height={height} fill={fill} stroke={stroke} />
+    name == "whatsapp" && (
+        <Whatsapp width={width} height={height} fill={fill} stroke={stroke} class={className} />
     )
 }
 {
     name == "location" && (
-        <LocationIcon width={width} height={height} fill={fill} stroke={stroke} />
+        <LocationIcon width={width} height={height} fill={fill} stroke={stroke} class={className} />
     )
 }
 {
     name == "phone" && (
-        <PhoneIcon width={width} height={height} fill={fill} stroke={stroke} />
+        <PhoneIcon width={width} height={height} fill={fill} stroke={stroke} class={className} />
+    )
+}
+{
+    name == "clock" && (
+        <ClockIcon width={width} height={height} fill={fill} stroke={stroke} class={className} />
+    )
+}
+{
+    name == "email" && (
+        <MailIcon width={width} height={height} fill={fill} stroke={stroke} class={className} />
+    )
+}
+{
+    name == "external" && (
+        <ExternalIcon width={width} height={height} stroke={stroke} class={className} />
     )
 }

@@ -44,10 +44,10 @@ const buildHeader = (info, reviews) => {
         logo: buildLogo(info),
         banner: info.banner,
         horario: buildHorario(info.horario),
-        tiempoEntrega: info.tiempoEntrega,
-        valorEntrega: info.valorEntrega,
-        userRatingCount: Number(reviews.meta?.userRatingCount) || 0,
-        rating: Number(reviews.meta?.rating) || 0,
+        direccion: info.direccion,
+        telefono: info.telefono,
+        correo: info.correo,
+        socials: info.socials,
     };
 };
 

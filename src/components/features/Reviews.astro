@@ -3,6 +3,7 @@ import { cloudinaryReviews } from "@scripts/utils";
 import Image from "astro/components/Image.astro";
 import GoogleReviewImg from "@assets/google-review2.png";
 import RenderStars from "@components/ui/RenderStars.astro";
+import Icon from "@components/ui/Icon.astro";
 
 const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
 
@@ -70,9 +71,11 @@ const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
     <a
         href={reviewsUrl}
         target="_blank"
-        class="mt-5 rounded-full bg-(--color-secondary) px-4 py-3"
+        class="mt-5 rounded-full bg-(--color-secondary) px-4 py-3 flex items-center"
     >
-        Ver todas las reseñas</a
+        Ver todas las reseñas
+        <Icon name="external" width={15} height={15} class:list={"inline opacity-80"}/>
+    </a
     >
 </section>
 

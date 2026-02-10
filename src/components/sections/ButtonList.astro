@@ -20,7 +20,7 @@ const { botones } = Astro.props;
             ))
         }
         <li>
-                    <button
+                    <button id="btnListInfo"
                         class="block w-full rounded-lg bg-(--index-buttons) px-3 py-4 text-center text-(--index-buttons-text)"
                     >
                         Información
@@ -28,3 +28,10 @@ const { botones } = Astro.props;
                 </li>
     </ul>
 </nav>
+
+
+<script>
+    document.getElementById("btnListInfo").addEventListener("click", () => {
+        (document.getElementById("informacion") as HTMLDialogElement).showModal();
+    });
+</script>

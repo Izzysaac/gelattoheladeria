@@ -1,4 +1,5 @@
 const statusMsg = document.getElementById("statusMsg");
+const sheduleMsg = document.getElementById("sheduleMsg");
 const statusLight = document.getElementById("statusLight");
 const shedule = JSON.parse(statusMsg.dataset.horario);
 
@@ -354,21 +355,21 @@ const getStatusDisplayText = (status, nextChange) => {
 	switch (status) {
 		case "open":
 			if (daysUntil === 0) {
-				return `Abierto • Cierra a las ${time12Hour}`;
+				return `Abierto · Cierra a las ${time12Hour}`;
 			} else if (daysUntil === 1) {
-				return `Abierto • Cierra mañana a las ${time12Hour}`;
+				return `Abierto · Cierra mañana a las ${time12Hour}`;
 			} else {
 				const dayName = getSpanishDayName(daysUntil);
-				return `Abierto • Cierra el ${dayName} a las ${time12Hour}`;
+				return `Abierto · Cierra el ${dayName} a las ${time12Hour}`;
 			}
 		case "closed":
 			if (daysUntil === 0) {
-				return `Cerrado • Abre a las ${time12Hour}`;
+				return `Cerrado · Abre a las ${time12Hour}`;
 			} else if (daysUntil === 1) {
-				return `Cerrado • Abre mañana a las ${time12Hour}`;
+				return `Cerrado · Abre mañana a las ${time12Hour}`;
 			} else {
 				const dayName = getSpanishDayName(daysUntil);
-				return `Cerrado • Abre el ${dayName} a las ${time12Hour}`;
+				return `Cerrado · Abre el ${dayName} a las ${time12Hour}`;
 			}
 		case "closingSoon":
 			return `Cierra en ${formatTimeRemaining(nextChange?.minutesUntil || 0)} (${time12Hour})`;
@@ -395,11 +396,21 @@ const getStatusColor = (status) => {
 	}
 };
 
+const hightlightCurrentDay = () => {
+    const today = new Date().getDay();
+    const todayElement = document.querySelector(`[data-day="${today}"]`);
+    if (todayElement) {
+        todayElement.classList.add("currentDayHightlight");
+    }
+};
+
 export const updateStatus = () => {
     const status = calculateRestaurantStatus(shedule);
     const mensaje = getStatusDisplayText(status.status, status.nextChange);
     const statusClass = getStatusColor(status.status);
     
     statusMsg.textContent = mensaje;
+	sheduleMsg.textContent = mensaje;
 	statusLight.classList.add(statusClass);
+	hightlightCurrentDay();
 }
