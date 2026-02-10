@@ -24,7 +24,8 @@ import { dom } from "./dom.js";
     dialogImageViewerImg: 
     dialogImageViwerCloseBtn: 
 */
-const direccionLocal = document.querySelector("#datos").dataset.direccionlocal;
+const direccionLocal = document.getElementById("datos").dataset.direccionlocal;
+const telefono = document.getElementById("datos").dataset.telefono;
 
 export const renderProductos = () => {
   dom.productos.forEach((productoEl) => {
@@ -142,10 +143,6 @@ export const renderModal = () => {
 
 //! REVISAR DIV DEL TEXTAREAN DISPLAY BLOCK
 export const renderEntrega = () => {
-  // dom.entrega.classList.toggle(
-  //     "mostrar-direccion",
-  //     state.tipoEntrega === "domicilio",
-  // );
   dom.radios.forEach((radio) => {
     const inputRadio = radio;
     inputRadio.checked = inputRadio.value === state.tipoEntrega;

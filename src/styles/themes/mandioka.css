@@ -1,8 +1,8 @@
 html[data-theme="mandioka"] {
   /* index */
-  --index-bg: grey;
+  /* --index-bg: grey; */
   --index-text: white;
-  --index-buttons: black;
+  --index-buttons: #004007;
   --index-buttons-text: white;
 
   /* menu */

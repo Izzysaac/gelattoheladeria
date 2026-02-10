@@ -47,7 +47,8 @@ const hacerPedido = (tel = telefono) => {
   // 2️⃣ Validar dirección si es domicilio
   if (state.tipoEntrega === "domicilio" && !state.direccion.trim()) {
     alert("Por favor ingresa la dirección de entrega");
-    document.querySelector("#input-direccion").classList.add("invalid");
+    dom.inputDireccion.scrollIntoView({ behavior: "smooth" });
+    dom.inputDireccion.classList.add("invalid");
     return;
   }
 

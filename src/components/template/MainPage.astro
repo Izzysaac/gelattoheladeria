@@ -14,5 +14,5 @@ const { head, header, buttonsList, footer, reviews, tenant } = Astro.props;
     <ButtonList {...buttonsList} />
     {tenant.features.reviews && <Reviews {...reviews} />}
     <slot />
-    <Footer {...footer} />
+    <Footer {...footer} class:list={"mt-26"}/>
 </BaseLayout>

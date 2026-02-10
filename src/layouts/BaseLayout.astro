@@ -40,6 +40,9 @@ const { head } = Astro.props;
         animation: fadeIn 200ms ease-out;
     }
 
+    button {
+        touch-action: manipulation;
+    }
     @keyframes fadeIn {
         from {
             opacity: 0;

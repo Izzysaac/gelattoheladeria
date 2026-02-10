@@ -8,9 +8,12 @@ import CategoryNav from "@components/sections/CategoryNav.astro";
 import ViewImage from "@components/sections/ViewImage.astro";
 import StickyBar from "@components/sections/StickyBar.astro";
 import Modal from "@components/sections/Modal.astro";
+import Header from "@layoutsHeader.astro";
+import Badges from "@components/ui/Badges.astro";
 
-const { head, contact, logo, menu, categorias, footer } = Astro.props;
+const { head, header, badges, contact, logo, menu, categorias, footer } = Astro.props;
 const modo = "pedido";
+
 ---
 
 <BaseLayout head={head}>
@@ -21,16 +24,17 @@ const modo = "pedido";
         hidden
     >
     </div>
-    <div class="flex flex-col items-center justify-center py-12">
-        <Logo {...logo} />
-        <h1 class="invisible">Menú</h1>
+    <Header {...header} />
+    <main class="flex flex-col items-center justify-center">
+        <Badges {...badges} />
+        <h1 class="invisible h-0">Menú</h1>
         <CategoryNav categorias={categorias} />
         <Menu menuPorCategoria={menu} modo={modo} />
         <ViewImage />
         <StickyBar modo={modo} />
         <Modal />
-    </div>
-    <Footer {...footer} />
+    </main>
+    <Footer {...footer} class:list={"pb-26"}/>
 </BaseLayout>
 
 <script type="module">

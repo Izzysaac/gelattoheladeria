@@ -1,8 +1,8 @@
 ---
-const { titulo, direccion, telefono } = Astro.props;
+const { titulo, direccion, telefono, class: className } = Astro.props;
 ---
 
-<footer class="footer mt-25 p-5 text-(---color-text)/50">
+<footer class=`footer py-6 text-(---color-text)/50 ${className}`>
     <p>
         &copy; <span id="year">2026</span>
         <strong>{titulo}</strong>. Todos los derechos reservados.
@@ -21,6 +21,6 @@ const { titulo, direccion, telefono } = Astro.props;
     }
 </style>
 
-<!-- <script >
+<script is:inline>
     document.getElementById("year").textContent = String(new Date().getFullYear())
-</script> -->
+</script>

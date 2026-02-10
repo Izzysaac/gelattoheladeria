@@ -9,9 +9,8 @@ import type { PageType } from "./types";
 const PAGE_BUILDERS: Record<PageType, (params: any) => any> = {
     main: ({ tenant, info, reviews }) =>
         buildMainPageData({ tenant, info, reviews }),
-    menu: ({ tenant, info, menu }) => buildMenuPageData({ tenant, info, menu }),
-    pedido: ({ tenant, info, menu }) =>
-        buildMenuPageData({ tenant, info, menu }),
+    menu: ({ tenant, info, menu, reviews }) => buildMenuPageData({ tenant, info, menu, reviews }),
+    pedido: ({ tenant, info, menu, reviews }) => buildMenuPageData({ tenant, info, menu, reviews })
 };
 
 export async function buildTenantData(page: string) {

@@ -7,7 +7,9 @@ const { class: className, titulo, logo } = Astro.props;
         id="logo"
         src={logo}
         alt={titulo}
-        class="pointer-events-none w-[20vw] max-w-25 rounded-2xl border-3 border-(--color-separacion)"
+        width="75px"
+        height="75px"
+        class="pointer-events-none rounded-2xl border-3 border-(--color-separacion)"
         fetchpriority="high"
         loading="eager"
     />

@@ -1,0 +1,37 @@
+---
+import StarIcon from "@assets/Star.svg";
+import DeliveryIcon from "@assets/motorbike.svg";
+import DeliveryTimeIcon from "@assets/deliveryTime.svg";
+
+
+const {rating, userRatingCount, tiempoEntrega, valorEntrega} = Astro.props;
+
+---
+
+<div class="text-sm border border-(--color-separacion) rounded-2xl py-3 flex justify-evenly items-end w-[calc(100%-20px)] max-w-125 my-3">
+    <p>
+        <StarIcon width={20} height={20} fill="var(--color-background)" class:list={"inline text-center"}/>
+        <span>{rating} ({userRatingCount})</span>
+        <span>Valoración</span>
+    </p>
+    <p>
+        <DeliveryTimeIcon width={20} height={20} fill="var(--color-background)" class:list={"inline text-center"}/>
+        <span>{tiempoEntrega} min</span>
+        <span>Entrega</span>
+    </p>
+    <p>
+        <DeliveryIcon width={25} height={25} fill="var(--color-background)" class:list={"inline text-center"}/>
+        <span class="mt-1!">{valorEntrega}</span>
+        <span>Envío</span>
+    </p>
+</div>
+
+<style>
+    @import "tailwindcss";
+    p{
+        @apply text-center w-full 
+    }
+    span {
+        @apply block not-last:font-bold not-last:mt-2 last:opacity-80
+    }
+</style>

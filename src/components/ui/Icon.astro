@@ -1,6 +1,10 @@
 ---
 import Instagram from "@assets/instagram.svg";
 import Facebook from "@assets/facebook.svg";
+import Whatapp from "@assets/whatapp.svg";
+import LocationIcon from "@assets/location.svg";
+import PhoneIcon from "@assets/phone.svg";
+
 
 const {
     name,
@@ -19,5 +23,20 @@ const {
 {
     name == "facebook" && (
         <Facebook width={width} height={height} fill={fill} stroke={stroke} />
+    )
+}
+{
+    name == "whatapp" && (
+        <Whatapp width={width} height={height} fill={fill} stroke={stroke} />
+    )
+}
+{
+    name == "location" && (
+        <LocationIcon width={width} height={height} fill={fill} stroke={stroke} />
+    )
+}
+{
+    name == "phone" && (
+        <PhoneIcon width={width} height={height} fill={fill} stroke={stroke} />
     )
 }

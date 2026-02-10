@@ -7,8 +7,10 @@ import Menu from "@components/sections/Menu.astro";
 import CategoryNav from "@components/sections/CategoryNav.astro";
 import ViewImage from "@components/sections/ViewImage.astro";
 import StickyBar from "@components/sections/StickyBar.astro";
+import Badges from "@components/ui/Badges.astro";
+import Header from "@layoutsHeader.astro";
 
-const { head, contact, logo, menu, categorias, footer } = Astro.props;
+const { head, header, contact, badges, logo, menu, categorias, footer } = Astro.props;
 const modo = "menu";
 ---
 
@@ -20,15 +22,16 @@ const modo = "menu";
         hidden
     >
     </div>
+    <Header {...header} />
     <div class="flex flex-col items-center justify-center py-12">
-        <Logo {...logo} />
-        <h1 class="invisible">Menú</h1>
+        <Badges {...badges} />
+        <h1 class="invisible h-0">Menú</h1>
         <CategoryNav categorias={categorias} />
         <Menu menuPorCategoria={menu} modo={modo} />
         <ViewImage />
         <StickyBar modo={modo} />
     </div>
-    <Footer {...footer} />
+    <Footer {...footer} class:list={"pb-26"}/>
 </BaseLayout>
 
 <script is:inline src="/viewimg.js" defer></script>

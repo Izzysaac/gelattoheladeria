@@ -12,11 +12,12 @@ export const buildMainPageData = ({ tenant, info, reviews }) => {
     };
 };
 
-export const buildMenuPageData = ({ tenant, info, menu }) => {
+export const buildMenuPageData = ({ tenant, info, menu, reviews }) => {
     return {
         head: buildHead(info),
+        header: buildHeader(info, reviews),
+        badges: buildBadges(info, reviews),
         contact: buildContact(info),
-        logo: buildLogo(info),
         menu: buildMenu(menu),
         categorias: buildCategorias(menu),
         footer: buildFooter(info),
@@ -49,6 +50,15 @@ const buildHeader = (info, reviews) => {
         rating: Number(reviews.meta?.rating) || 0,
     };
 };
+
+const buildBadges = (info, reviews) => {
+    return {
+        tiempoEntrega: info.tiempoEntrega,
+        valorEntrega: info.valorEntrega,
+        userRatingCount: Number(reviews.meta?.userRatingCount) || 0,
+        rating: Number(reviews.meta?.rating) || 0,
+    }
+}
 
 const buildHorario = (horario) => {
     if (!horario || !Array.isArray(horario)) {
@@ -122,8 +132,9 @@ const buildButtonsList = (info) => {
 };
 
 const buildContact = (info) => {
+
     return {
-        direccion: info.direccion,
+        direccion: info.direccion[0].valor,
         telefono: info.telefono,
     };
 };
