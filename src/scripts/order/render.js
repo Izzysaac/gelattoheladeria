@@ -17,6 +17,49 @@ const productosMap = Array.from(dom.productos).map(productoEl => ({
     }
 }));
 
+// 🔄 Modal items caching - Cache para elementos del modal
+const modalItemsCache = new Map();
+
+// Función para limpiar cache cuando el modal se cierra o se vacía
+export const clearModalCache = () => {
+    modalItemsCache.clear();
+};
+
+// Función para obtener elemento del modal con cache
+const getModalItem = (nombre) => {
+    // Si ya está en cache, retornarlo
+    if (modalItemsCache.has(nombre)) {
+        return modalItemsCache.get(nombre);
+    }
+    
+    // Si no, buscarlo y cachearlo
+    const item = dom.listaPedido.querySelector(`[data-nombre="${nombre}"]`);
+    if (item) {
+        modalItemsCache.set(nombre, item);
+    }
+    return item;
+};
+
+// Función para eliminar de cache cuando se elimina del DOM
+const removeFromModalCache = (nombre) => {
+    modalItemsCache.delete(nombre);
+};
+
+// 🔄 Performance monitoring - Para debug y análisis
+export const getModalCacheStats = () => {
+    return {
+        cacheSize: modalItemsCache.size,
+        cachedItems: Array.from(modalItemsCache.keys()),
+        memoryUsage: modalItemsCache.size * 200 // Estimación: ~200 bytes por elemento cacheado
+    };
+};
+
+// Función para limpiar cache manualmente (útil para debugging)
+export const forceClearModalCache = () => {
+    clearModalCache();
+    console.log('Modal cache cleared manually');
+};
+
 export const renderProductos = () => {
     productosMap.forEach(({ nombre, refs }) => {
         const cantidad = state.items[nombre]?.cantidad || 0;
@@ -74,6 +117,8 @@ export const renderBarra = () => {
 const closeModal = () => {
     dom.modalVerPedido.close();
     document.body.classList.remove("no-scroll");
+    // 🔄 Limpiar cache al cerrar modal para liberar memoria
+    clearModalCache();
 };
 
 export const renderModal = () => {
@@ -84,12 +129,17 @@ export const renderModal = () => {
     const itemsArray = Object.values(items);
 
     if (totalItems === 0) {
+        // 🔄 Si no hay items, limpiamos el modal pero NO lo cerramos
+        // Así el usuario ve que el pedido está vacío
+        dom.listaPedido.replaceChildren();
+        clearModalCache();
         closeModal();
         return;
     }
 
-    // 2. Limpiar la lista (replaceChildren es eficiente)
+    // 2. Limpiar la lista y cache (replaceChildren es eficiente)
     dom.listaPedido.replaceChildren();
+    clearModalCache(); // 🔄 Limpiar cache al reconstruir modal
 
     // 3. Crear el fragmento (Memoria volátil, súper rápido)
     const fragment = document.createDocumentFragment();
@@ -145,11 +195,15 @@ export const renderSingleModal = (nombre) => {
     if (!dom.listaPedido) return;
 
     const item = state.items[nombre];
-    const itemEnDOM = dom.listaPedido.querySelector(`[data-nombre="${nombre}"]`);
+    // 🔄 Usar cache en lugar de querySelector directo
+    const itemEnDOM = getModalItem(nombre);
 
     // CASO 1: El producto ya no existe en el estado (cantidad 0)
     if (!item || item.cantidad <= 0) {
-        if (itemEnDOM) itemEnDOM.remove(); // Lo eliminamos físicamente
+        if (itemEnDOM) {
+            itemEnDOM.remove(); // Lo eliminamos físicamente
+            removeFromModalCache(nombre); // 🔄 Limpiar de cache
+        }
         if (state.totalItems === 0) closeModal(); // Si era el último, cerramos
         return;
     }
@@ -180,6 +234,8 @@ export const renderSingleModal = (nombre) => {
     }
 
     dom.listaPedido.appendChild(row);
+    // 🔄 Cacheamos el nuevo elemento para futuras actualizaciones
+    modalItemsCache.set(nombre, row);
 };
 
 export const renderEntrega = () => {

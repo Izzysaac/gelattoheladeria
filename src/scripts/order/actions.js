@@ -1,5 +1,5 @@
 import { state } from "./state.js";
-import { renderSingleProducto, renderBarra, renderModal, renderSingleModal, renderEntrega } from "./render.js"
+import { renderSingleProducto, renderBarra, renderSingleModal, renderEntrega, renderTodo, clearModalCache } from "./render.js"
 
 const STORAGE_KEY = "pedido_state";
 
@@ -16,8 +16,7 @@ export const cargarState = () => {
         state.totalItems = stateParseado.totalItems || 0;
         state.totalPrecio = stateParseado.totalPrecio || 0;
     }
-    // Object.assign(state, JSON.parse(saved));
-}; //! REVISAR SI SON EQUIVALENTES (basicamente llena variable state con datos de localsorage)
+}; 
 
 
 const updateTotales = () => {
@@ -67,7 +66,6 @@ export const updateCantidad = (producto, delta) => {
     renderBarra();
 
     // 3. El modal solo se re-renderiza si está abierto
-    // renderModal();
     renderSingleModal(nombre);
 
 };
