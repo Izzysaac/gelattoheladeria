@@ -1,11 +1,9 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Footer from "@layoutsFooter.astro";
-
-import Logo from "@components/ui/Logo.astro";
 import Menu from "@components/sections/Menu.astro";
 import CategoryNav from "@components/sections/CategoryNav.astro";
-import ViewImage from "@components/sections/ViewImage.astro";
+import ImageViewer from "@components/sections/ImageViewer.astro";
 import StickyBar from "@components/sections/StickyBar.astro";
 import Modal from "@components/sections/Modal.astro";
 import Header from "@layoutsHeader.astro";
@@ -30,17 +28,14 @@ const modo = "pedido";
         <h1 class="invisible h-0">Menú</h1>
         <CategoryNav categorias={categorias} />
         <Menu menuPorCategoria={menu} modo={modo} />
-        <ViewImage />
+        <ImageViewer />
         <StickyBar modo={modo} />
         <Modal />
     </main>
     <Footer {...footer} class:list={"pb-26"}/>
 </BaseLayout>
 
-<script type="module">
-    import { init } from "/scripts/init.js";
-    init();
-</script>
+<script src="../../scripts/order/init.js"></script>
 
 <style is:global>
     .cerrado {
@@ -49,4 +44,5 @@ const modo = "pedido";
     .ocultar {
         visibility: hidden;
     }
+    /* En tu CSS */
 </style>

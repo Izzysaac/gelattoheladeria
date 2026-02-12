@@ -11,8 +11,10 @@ const { head, header, buttonsList, footer, reviews, tenant } = Astro.props;
 
 <BaseLayout head={head}>
     <Header {...header} />
-    <ButtonList {...buttonsList} />
-    {tenant.features.reviews && <Reviews {...reviews} />}
-    <slot />
+    <main>
+        <ButtonList {...buttonsList} />
+        {tenant.features.reviews && <Reviews {...reviews} />}
+        <slot />
+    </main>
     <Footer {...footer} class:list={"mt-26"}/>
 </BaseLayout>

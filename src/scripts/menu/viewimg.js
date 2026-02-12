@@ -7,7 +7,7 @@ if (!imageViewer || !imageViewerImg || !imageViewerCloseBtn) {
     console.error('ImageViewer: Required DOM elements not found');
 }
 
-const showImageViewer = (img) => {
+export const showImageViewer = (img) => {
     if (!img?.src) return;
 
     const smallSrc = img.src;

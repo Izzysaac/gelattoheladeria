@@ -18,6 +18,7 @@ import TipoEntrega from "@components/ui/TipoEntrega.astro";
             <button
                 id="btn-cerrar-modal"
                 class="w-fit self-end rounded-full bg-(--color-secondary) p-2"
+                aria-label="Volver a menu"
             >
                 <ArrowLeftIcon
                     width={20}
@@ -29,6 +30,7 @@ import TipoEntrega from "@components/ui/TipoEntrega.astro";
             <button
                 id="btn-borrar-modal"
                 class="w-fit self-end rounded-full bg-(--color-secondary) p-2"
+                aria-label="Borrar pedido"
             >
                 <Trash
                     width={20}
@@ -40,7 +42,7 @@ import TipoEntrega from "@components/ui/TipoEntrega.astro";
 
         <div id="lista-pedido"></div>
         <button
-            id="btn-modificar-pedido"
+            id="btn-modificar-pedido cursor-pointer"
             class="w-fit self-end rounded-full bg-(--color-secondary) px-3 py-1.5 font-semibold"
             >Añadir productos</button
         >
@@ -61,9 +63,6 @@ import TipoEntrega from "@components/ui/TipoEntrega.astro";
         margin: 0;
         box-sizing: border-box;
         margin-left: auto;
-    }
-    dialog::backdrop {
-        background: rgba(0, 0, 0, 0.7);
     }
     .contenido {
         padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));

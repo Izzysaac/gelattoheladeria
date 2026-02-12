@@ -74,11 +74,11 @@ const extraerProductoDesdeElemento = (el) => {
 
 export const bindEventosProductos = () => {
   // * Cerrar visor de imagen
-  dom.dialogImageViwerCloseBtn.addEventListener("click", () =>
-    dom.dialogImageViewer.close(),
+  dom.imageViewerCloseBtn.addEventListener("click", () =>
+      dom.imageViewer.close(),
   );
-  dom.dialogImageViewer.addEventListener("click", (e) => {
-    if (e.target === dom.dialogImageViewer) dom.dialogImageViewer.close();
+  dom.imageViewer.addEventListener("click", (e) => {
+      if (e.target === dom.imageViewer) dom.imageViewer.close();
   });
 
   //* Abrir modal de pedido
@@ -106,9 +106,9 @@ export const bindEventosProductos = () => {
       const img = actionEl.closest("[data-nombre]")?.querySelector("img");
       if (!img) return;
       const imageUrl = img.dataset.image || img.src;
-      dom.dialogImageViewerImg.src = imageUrl;
-      dom.dialogImageViewerImg.alt = img.alt || "";
-      dom.dialogImageViewer.showModal();
+      dom.imageViewerImg.src = imageUrl;
+      dom.imageViewerImg.alt = img.alt || "";
+      dom.imageViewer.showModal();
       return;
     }
     // * Acciones de negocio (producto)

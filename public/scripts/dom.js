@@ -23,7 +23,7 @@ export const dom = {
   inputDireccion: document.getElementById("input-direccion"),
 
   /* Image Viewer */
-  dialogImageViewer: document.getElementById("dialogImageViewer"),
-  dialogImageViewerImg: document.getElementById("imageViewerImg"),
-  dialogImageViwerCloseBtn: document.getElementById("dialogImageViewerClose"),
+  imageViewer: document.getElementById("imageViewer"),
+  imageViewerImg: document.getElementById("imageViewerImg"),
+  imageViewerCloseBtn: document.getElementById("imageViewerCloseBtn"),
 };

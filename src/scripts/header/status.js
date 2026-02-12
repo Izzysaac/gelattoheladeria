@@ -413,3 +413,5 @@ export const updateStatus = () => {
 	statusLight.classList.add(statusClass);
 	hightlightCurrentDay();
 }
+
+updateStatus();

@@ -39,9 +39,13 @@ const { head } = Astro.props;
     dialog[open] {
         animation: fadeIn 200ms ease-out;
     }
+    dialog::backdrop {
+        background: rgba(0, 0, 0, 0.7);
+    }
 
     button {
         touch-action: manipulation;
+        cursor: pointer;
     }
     @keyframes fadeIn {
         from {

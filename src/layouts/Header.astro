@@ -15,7 +15,6 @@ const {
     correo,
 } = Astro.props;
 
-const bannerUrl = `url('${banner}')`;
 
 const dayNames = [
     "Domingo",
@@ -32,7 +31,7 @@ const dayNames = [
     id="mainHeader"
     class="relative m-auto flex max-w-120 flex-col items-center text-(--index-text)"
 >
-    <img src={banner} />
+    <img src={banner} alt=`Imagen de presentacion de ${titulo}` fetchpriority="high" loading="eager" width="820" height="462"/>
 
     <!-- Fixed header that appears on scroll OK-->
     <div id="fixedHeader" class="fixed-header max-w-120 sm:hidden">
@@ -51,18 +50,20 @@ const dayNames = [
                     fill="var(--color-background)"
                     stroke="var(--color-text)"
                     class:list={"pointer-events-none"}
+                    aria-label="Más información"
                 />
             </button>
         </div>
     </div>
 
-    <button id="infoBtn" class="fixed top-3 right-3">
+    <button id="infoBtn" class="fixed top-3 right-3" aria-label="Más información">
         <InfoIcon
             width={35}
             height={35}
             fill="var(--color-background)"
             stroke="var(--color-text)"
             class:list={"pointer-events-none"}
+            aria-label="Más información"
         />
     </button>
 
@@ -93,12 +94,14 @@ const dayNames = [
                     data-horario={JSON.stringify(horario)}
                     class="text-sm opacity-90"
                 >
+                Cargando ...
                 </p>
             </div>
         </div>
         <p class="mt-3">{descripcion}</p>
     </div>
 </header>
+
 <dialog
     id="informacion"
     class="mt-auto mb-0 w-full max-w-dvh backdrop:bg-black backdrop:opacity-70 bg-transparent"
@@ -106,7 +109,7 @@ const dayNames = [
     <div
         class="flex h-fit w-full max-w-120 flex-col gap-2 bg-(--color-background) px-3 py-3 text-sm text-(--color-text) rounded-t-3xl "
     >
-        <button id="closeInfoBtn" class="w-fit self-end rounded-full border-2">
+        <button id="closeInfoBtn" class="w-fit self-end rounded-full border-2" aria-label="Cerrar información">
             <CrossIcon
                 width={30}
                 height={30}
@@ -242,89 +245,11 @@ const dayNames = [
     </div>
 </dialog>
 
-<script is:inline>
-    const info = document.getElementById("informacion");
-    const infoBtn = document.getElementById("infoBtn");
-    const fixedInfoBtn = document.getElementById("fixedInfoBtn");
-    const fixedHeader = document.getElementById("fixedHeader");
-    const mainHeader = document.getElementById("mainHeader");
-    const statusLight = document.getElementById("statusLight");
-    const fixedStatusLight = document.getElementById("fixedStatusLight");
-    const closeInfoBtn = document.getElementById("closeInfoBtn");
+<script src="../scripts/header/information.js" />
+<script src="../scripts/header/status.js" />
 
-    // Info modal functionality
-    const showModal = () => info.showModal();
-    infoBtn.addEventListener("click", showModal);
-    fixedInfoBtn.addEventListener("click", showModal);
-
-    info.addEventListener("click", (e) =>
-        e.target === info ? info.close() : null,
-    );
-    closeInfoBtn.addEventListener("click", () => info.close());
-
-    // Scroll functionality for fixed header
-    let lastScrollY = 0;
-    let ticking = false;
-
-    function updateFixedHeader() {
-        const scrollY = window.scrollY;
-        const headerHeight = mainHeader.offsetHeight;
-
-        // Show fixed header when scrolled past the main header
-        if (scrollY > headerHeight - 60) {
-            fixedHeader.classList.add("show");
-        } else {
-            fixedHeader.classList.remove("show");
-        }
-
-        // Sync status light classes
-        if (statusLight && fixedStatusLight) {
-            fixedStatusLight.className =
-                statusLight.className
-                    .replace("h-4 w-4", "")
-                    .replace("absolute bottom-1 right-1", "")
-                    .trim() + " fixed-status-light";
-        }
-
-        lastScrollY = scrollY;
-        ticking = false;
-    }
-
-    function requestTick() {
-        if (!ticking) {
-            requestAnimationFrame(updateFixedHeader);
-            ticking = true;
-        }
-    }
-
-    // Throttled scroll listener
-    window.addEventListener("scroll", requestTick, { passive: true });
-
-    // Initial check
-    updateFixedHeader();
-</script>
-
-<script type="module">
-    import { updateStatus } from "/status.js";
-    updateStatus();
-</script>
-
-<style define:vars={{ bannerUrl }}>
+<style>
     @import "tailwindcss";
-    .hero {
-        position: relative;
-    }
-
-    .wave {
-        position: absolute;
-        bottom: -1px;
-    }
-
-    .info {
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
 
     .open {
         @apply bg-green-500;
@@ -446,6 +371,8 @@ const dayNames = [
         }
     }
 
+
+    /* Status light on logo */
     .anchor-img {
         anchor-name: --logo-image;
     }
@@ -455,6 +382,8 @@ const dayNames = [
         bottom: calc(anchor(bottom) + 3px);
         right: calc(anchor(right) + 3px);
     }
+
+    /* Highlight current day */
     .currentDayHightlight {
         background-color: var(--color-secondary);
     }

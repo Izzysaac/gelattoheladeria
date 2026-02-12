@@ -1,12 +1,12 @@
 ---
-import { formatFromThousands, cloudinaryUrl } from "@scripts/utils.js";
+import { formatFromThousands } from "@scripts/utils.js";
 import Plus from "@assets/plus-svgrepo-com.svg";
 import Minus from "@assets/minus-svgrepo-com.svg";
+import { getCldImageUrl } from "astro-cloudinary/helpers";
 
 const { menuPorCategoria, modo } = Astro.props;
 ---
 
-<!-- <CategoryNav categorias={categorias} /> -->
 <section id="menu" class="menu w-full max-w-200 px-2.5">
     {
         Object.entries(menuPorCategoria).map(([categoria, items]) => (
@@ -16,15 +16,14 @@ const { menuPorCategoria, modo } = Astro.props;
                     {(items as any)
                         .filter((item) => item.activo)
                         .map((item: any) => (
-                            <li
-                                class="producto"
-                                data-nombre={item.nombre}
-                                data-precio={item.precio}
-                                data-imagen={item.imagen}
-                                data-descripcion={item.descripcion}
-                                data-image={cloudinaryUrl(item.imagen)}
-                            >
-                                <article class="flex min-h-25 justify-start gap-2.5 border-b border-(--color-separacion) py-4">
+                            <li>
+                                <article
+                                    class="producto flex min-h-25 justify-start gap-2.5 border-b border-(--color-separacion) py-4"
+                                    data-nombre={item.nombre}
+                                    data-precio={item.precio}
+                                    data-descripcion={item.descripcion}
+                                    data-imagen={getCldImageUrl({src: item.imagen, width: 480, height: 480})}
+                                >
                                     <div class="informacion flex w-full flex-col self-stretch">
                                         <div class="flex justify-between gap-2">
                                             <h3 class="">{item.nombre}</h3>
@@ -43,6 +42,7 @@ const { menuPorCategoria, modo } = Astro.props;
                                                 <button
                                                     data-action="add-product"
                                                     class="add-product"
+                                                    aria-label="Agregar al pedido"
                                                 >
                                                     <Plus
                                                         width={25}
@@ -50,9 +50,9 @@ const { menuPorCategoria, modo } = Astro.props;
                                                         fill="inherit"
                                                     />
                                                 </button>
-                                                <button
-                                                    data-action="remove-product"
+                                                <button data-action="remove-product"
                                                     class="remove cerrado"
+                                                    aria-label="Quitar del pedido"
                                                 >
                                                     <Minus
                                                         width={25}
@@ -62,9 +62,9 @@ const { menuPorCategoria, modo } = Astro.props;
                                                 <output class="cantidad cerrado mx-1">
                                                     0
                                                 </output>
-                                                <button
-                                                    data-action="add-product"
+                                                <button data-action="add-product"
                                                     class="add cerrado"
+                                                    aria-label="Agregar al pedido"
                                                 >
                                                     <Plus
                                                         width={25}
@@ -75,12 +75,24 @@ const { menuPorCategoria, modo } = Astro.props;
                                         )}
                                     </div>
                                     {item.imagen && (
-                                        <figure class="order-first aspect-square w-[30%] max-w-40 shrink-0">
+                                        <figure class="order-first shrink-0">
                                             <img
-                                                src={cloudinaryUrl(item.imagen)}
+                                                src={getCldImageUrl({
+                                                    src: item.imagen,
+                                                    width: 480,
+                                                    height: 480,
+                                                })}
+                                                width={160}
+                                                height={160}
+                                                data-image={getCldImageUrl({
+                                                    src: item.imagen,
+                                                    width: 800,
+                                                    height: 800,
+                                                })}
                                                 alt={item.nombre}
+                                                loading="lazy"
                                                 data-action="view-image"
-                                                class="h-full w-full rounded-xl object-cover"
+                                                class="aspect-square w-[30vw] max-w-40 rounded-xl object-cover"
                                             />
                                         </figure>
                                     )}
@@ -99,6 +111,9 @@ const { menuPorCategoria, modo } = Astro.props;
         scroll-margin-top: 4rem; /* altura del nav */
     }
     button {
-        @apply px-1.5 py-1.5;
+        @apply px-1.5 py-1.5 cursor-pointer;
+    }
+    svg{
+        pointer-events: none;
     }
 </style>

@@ -1,5 +1,5 @@
 ---
-import { cloudinaryReviews } from "@scripts/utils";
+import { getCldImageUrl } from 'astro-cloudinary/helpers';
 import Image from "astro/components/Image.astro";
 import GoogleReviewImg from "@assets/google-review2.png";
 import RenderStars from "@components/ui/RenderStars.astro";
@@ -28,11 +28,12 @@ const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
             <article class="flex w-full flex-col gap-2 border-b border-b-(--color-separacion) px-3 py-4">
                 <header class="flex gap-2">
                     <img
-                        src={cloudinaryReviews(review.authorPhoto)}
+                        src={getCldImageUrl({ src: review.authorPhoto, width: 64, height: 64 })}
                         width="32"
                         height="32"
                         loading="lazy"
                         class="h-fit"
+                        alt={`Foto de perfil de ${review.authorName}`}
                     />
                     <p class="flex flex-col">
                         <span>{review.authorName}</span>
@@ -45,7 +46,8 @@ const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
                         </time>
                     </p>
                     <div
-                        aria-label={`${review.rating} estrellas`}
+                        role="img"
+                        aria-label={`Calificación ${review.rating} de 5`}
                         class="stars ms-auto flex gap-0.5"
                     >
                         <RenderStars rating={review.rating} />
@@ -79,27 +81,4 @@ const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
     >
 </section>
 
-<script type="module">
-    import { timeAgo } from "/timeago.js";
-    document.querySelectorAll("[data-time]").forEach((el) => {
-        el.textContent = timeAgo(el.dataset.time);
-    });
-
-    document.querySelectorAll("[data-clamp]").forEach((el) => {
-        const boton = el.nextElementSibling;
-        if (!boton) return;
-
-        requestAnimationFrame(() => {
-            if (el.scrollHeight > el.clientHeight) {
-                boton.hidden = false;
-            }
-        });
-
-        boton.addEventListener("click", () => {
-            const expandido = el.classList.toggle("line-clamp-none");
-
-            boton.textContent = expandido ? "Ver menos" : "Ver más";
-            boton.setAttribute("aria-expanded", expandido);
-        });
-    });
-</script>
+<script src="../../scripts/reviews/reviews.js" />

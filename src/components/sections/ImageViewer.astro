@@ -2,15 +2,15 @@
 
 ---
 
-<dialog id="dialogImageViewer">
-    <button id="dialogImageViewerClose" class="close" aria-label="Cerrar"
+<dialog id="imageViewer">
+    <button id="imageViewerCloseBtn" aria-label="Cerrar" aria-label="Cerrar"
         >✕</button
     >
     <img id="imageViewerImg" data-action="viewImage" />
 </dialog>
 
 <style>
-    dialog#dialogImageViewer {
+    dialog#imageViewer {
         border: none;
         padding: 0;
         background: transparent;
@@ -19,17 +19,20 @@
         margin: auto;
     }
 
-    dialog::backdrop {
-        background: rgba(0, 0, 0, 0.7);
-    }
     #imageViewerImg {
-        width: 100%;
+        width: 90vw;
+        max-width: 500px;
         height: auto;
         max-height: 90vh;
         border-radius: 12px;
+        transition: filter 0.3s ease;
     }
 
-    .close {
+    #imageViewerImg.blurred {
+        filter: blur(2px);
+    }
+
+    #imageViewerCloseBtn {
         position: absolute;
         top: 12px;
         right: 12px;

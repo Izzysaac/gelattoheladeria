@@ -5,7 +5,7 @@ import Footer from "@layoutsFooter.astro";
 import Logo from "@components/ui/Logo.astro";
 import Menu from "@components/sections/Menu.astro";
 import CategoryNav from "@components/sections/CategoryNav.astro";
-import ViewImage from "@components/sections/ViewImage.astro";
+import ImageViewer from "@components/sections/ImageViewer.astro";
 import StickyBar from "@components/sections/StickyBar.astro";
 import Badges from "@components/ui/Badges.astro";
 import Header from "@layoutsHeader.astro";
@@ -15,26 +15,19 @@ const modo = "menu";
 ---
 
 <BaseLayout head={head}>
-    <div
-        id="datos"
-        data-direccionlocal={contact.direccion}
-        data-telefono={contact.telefono}
-        hidden
-    >
-    </div>
     <Header {...header} />
-    <div class="flex flex-col items-center justify-center">
+    <main class="flex flex-col items-center justify-center">
         <Badges {...badges} />
         <h1 class="invisible h-0">Menú</h1>
         <CategoryNav categorias={categorias} />
         <Menu menuPorCategoria={menu} modo={modo} />
-        <ViewImage />
+        <ImageViewer />
         <StickyBar modo={modo} />
-    </div>
+    </main>
     <Footer {...footer} class:list={"pb-26"}/>
 </BaseLayout>
 
-<script is:inline src="/viewimg.js" defer></script>
+<script src="../../scripts/menu/viewimg.js" />
 
 <style is:global>
     .cerrado {
