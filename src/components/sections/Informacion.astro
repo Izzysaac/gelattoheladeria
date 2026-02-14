@@ -1,0 +1,163 @@
+---
+import CrossIcon from "@assets/cross.svg";
+import Icon from "@components/ui/Icon.astro";
+
+const { horario, socials, direccion, telefono, correo } = Astro.props;
+
+const dayNames = [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+];
+---
+
+<dialog 
+    id="informacion" class="mt-auto mb-0 w-full max-w-dvh backdrop:bg-black backdrop:opacity-70 bg-transparent">
+    <div
+        class="flex h-fit w-full max-w-120 flex-col gap-2 bg-(--color-background) px-2.5 py-5 text-sm text-(--color-text) rounded-t-3xl "
+    >
+        <button id="closeInfoBtn" class="w-fit self-end rounded-full border-2" aria-label="Cerrar información">
+            <CrossIcon
+                width={30}
+                height={30}
+                fill="bg-(--color-text)"
+                class:list={"pointer-events-none"}
+            />
+        </button>
+
+        <div class="p-2">
+            <h3>
+                <Icon
+                    name="clock"
+                    width={20}
+                    height={20}
+                    fill="none"
+                    stroke="none"
+                    class:list={"inline"}
+                />
+                Horario:
+                <span id="sheduleMsg"></span>
+            </h3>
+            <div id="scheduleList" class="m-auto mt-1 flex w-fit flex-col">
+                {
+                    horario.weekly.map((dia) => {
+                        return (
+                            <div
+                                data-day={dia.day}
+                                class="flex w-fit min-w-50 items-start justify-between border-b border-(--color-separacion) px-3 py-2"
+                            >
+                                <span class="self-center font-medium">
+                                    {dayNames[dia.day]}
+                                </span>
+                                <div class="text-right opacity-80">
+                                    {dia.ranges.map((rango) => (
+                                        <div>
+                                            {rango.open}-{rango.close}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    })
+                }
+            </div>
+        </div>
+        <a
+            href={direccion[0].url}
+            class="flex items-center gap-1 p-2 align-middle"
+        >
+            <Icon
+                name="location"
+                width={20}
+                height={20}
+                fill="none"
+                stroke="none"
+                class:list={"inline!"}
+            />
+            Ubicación: {direccion[0].valor}
+            <Icon
+                name="external"
+                width={16}
+                height={16}
+                fill="none"
+                stroke="none"
+                class:list={"inline opacity-80"}
+            />
+        </a>
+        <a
+            href={`tel:${telefono}`}
+            class={"flex items-center p-2 align-middle gap-1"}
+        >
+            <Icon
+                name="phone"
+                width={20}
+                height={20}
+                fill="none"
+                stroke="none"
+                class:list={"inline"}
+            />
+            Teléfono: {telefono}
+            <Icon
+                name="external"
+                width={16}
+                height={16}
+                fill="none"
+                stroke="none"
+                class:list={"inline opacity-80"}
+            />
+        </a>
+
+        {
+            correo && (
+                <a
+                    href={`mailto:${correo}`}
+                    class="flex items-center gap-1 p-2 align-middle"
+                >
+                    <Icon
+                        name="email"
+                        width={20}
+                        height={20}
+                        fill="none"
+                        stroke="none"
+                        class:list={"inline"}
+                    />
+                    Correo: {correo}
+                    <Icon
+                        name="external"
+                        width={16}
+                        height={16}
+                        fill="none"
+                        stroke="none"
+                        class:list={"inline"}
+                    />
+                </a>
+            )
+        }
+        <div class="mt-2 flex justify-center gap-4">
+            {
+                socials.map((social) => (
+                    <a href={social.url} class="block">
+                        <Icon
+                            name={social.valor}
+                            width={25}
+                            height={25}
+                            fill="currentColor"
+                            stroke="none"
+                            class:list={"inline"}
+                        />
+                    </a>
+                ))
+            }
+        </div>
+    </div>
+</dialog>
+
+<style>
+    .currentDayHightlight {
+        background-color: var(--color-secondary);
+    }
+</style>

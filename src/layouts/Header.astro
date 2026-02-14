@@ -1,7 +1,6 @@
 ---
 import InfoIcon from "@assets/information.svg";
-import CrossIcon from "@assets/cross.svg";
-import Icon from "@components/ui/Icon.astro";
+import Informacion from "@components/sections/Informacion.astro";
 
 const {
     titulo,
@@ -14,49 +13,16 @@ const {
     telefono,
     correo,
 } = Astro.props;
-
-
-const dayNames = [
-    "Domingo",
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes",
-    "Sábado",
-];
 ---
 
 <header
     id="mainHeader"
-    class="relative m-auto flex max-w-120 flex-col items-center text-(--index-text)"
+    class="m-auto flex max-w-120 flex-col items-center text-(--index-text)"
 >
-    <img src={banner} alt=`Imagen de presentacion de ${titulo}` fetchpriority="high" loading="eager" width="820" height="462"/>
-
-    <!-- Fixed header that appears on scroll OK-->
-    <div id="fixedHeader" class="fixed-header max-w-120 sm:hidden">
-        <div class="fixed-header-content md:hidden">
-            <a href="/" class="fixed-logo-container">
-                <img src={logo.logo} alt={logo.titulo} class="fixed-logo" />
-                <div id="fixedStatusLight" class="fixed-status-light"></div>
-            </a>
-
-            <h1 id="fixedTitulo" class="fixed-title">{titulo}</h1>
-
-            <button id="fixedInfoBtn" class="fixed-info-btn">
-                <InfoIcon
-                    width={30}
-                    height={30}
-                    fill="var(--color-background)"
-                    stroke="var(--color-text)"
-                    class:list={"pointer-events-none"}
-                    aria-label="Más información"
-                />
-            </button>
-        </div>
-    </div>
-
-    <button id="infoBtn" class="fixed top-3 right-3" aria-label="Más información">
+    <button id="infoBtn"
+        class="fixed top-3 right-3"
+        aria-label="Más información"
+    >
         <InfoIcon
             width={35}
             height={35}
@@ -67,186 +33,53 @@ const dayNames = [
         />
     </button>
 
-    <div class="w-full p-2.5">
-        <div class="flex">
-            <a id="logo" href="/" class="relative">
-                <img
-                    id="logoImg"
-                    src={logo.logo}
-                    alt={logo.titulo}
-                    width="70px"
-                    height="70px"
-                    class="anchor-img pointer-events-none rounded-full border-3 border-(--color-separacion)"
-                    fetchpriority="high"
-                    loading="eager"
-                />
-                <div
-                    id="statusLight"
-                    class="h-4.5 w-4.5 rounded-full border-3 border-(--color-background)"
-                >
-                </div>
-            </a>
+    <img
+        id="banner"
+        src={banner}
+        alt=`Imagen de presentacion de ${titulo}`
+        fetchpriority="high"
+        loading="eager"
+        width="820"
+        height="462"
+    />
 
-            <div class="flex flex-col justify-center px-2.5">
-                <h1 id="titulo" class="text-xl font-semibold">{titulo}</h1>
-                <p
-                    id="statusMsg"
-                    data-horario={JSON.stringify(horario)}
-                    class="text-sm opacity-90"
-                >
-                Cargando ...
-                </p>
+    <div id="anchorContainer" class="flex w-full p-2.5">
+        <a id="logo" href="/">
+            <img
+                id="logoImg"
+                src={logo.logo}
+                alt={logo.titulo}
+                width="70px"
+                height="70px"
+                class="anchor-img pointer-events-none rounded-full border-3 border-(--color-separacion)"
+                fetchpriority="high"
+                loading="eager"
+            />
+            <div
+                id="statusLight"
+                class="h-4.5 w-4.5 rounded-full border-3 border-(--color-background)"
+            >
             </div>
+        </a>
+
+        <div class="flex flex-col justify-center px-2.5">
+            <h1 id="titulo" class="text-xl font-semibold">{titulo}</h1>
+            <p
+                id="statusMsg"
+                data-horario={JSON.stringify(horario)}
+                class="text-sm opacity-90"
+            >
+                Cargando ...
+            </p>
         </div>
-        <p class="mt-3">{descripcion}</p>
     </div>
+
+    <p class="mt-3 px-2.5">{descripcion}</p>
+    <Informacion {...Astro.props} />
 </header>
 
-<dialog
-    id="informacion"
-    class="mt-auto mb-0 w-full max-w-dvh backdrop:bg-black backdrop:opacity-70 bg-transparent"
->
-    <div
-        class="flex h-fit w-full max-w-120 flex-col gap-2 bg-(--color-background) px-3 py-3 text-sm text-(--color-text) rounded-t-3xl "
-    >
-        <button id="closeInfoBtn" class="w-fit self-end rounded-full border-2" aria-label="Cerrar información">
-            <CrossIcon
-                width={30}
-                height={30}
-                fill="bg-(--color-text)"
-                class:list={"pointer-events-none"}
-            />
-        </button>
-
-        <div class="p-2">
-            <h3>
-                <Icon
-                    name="clock"
-                    width={20}
-                    height={20}
-                    fill="none"
-                    stroke="none"
-                    class:list={"inline"}
-                />
-                Horario:
-                <span id="sheduleMsg"></span>
-            </h3>
-            <div class="m-auto mt-1 flex w-fit flex-col">
-                {
-                    horario.weekly.map((dia) => {
-                        return (
-                            <div
-                                data-day={dia.day}
-                                class="flex w-fit min-w-50 items-start justify-between border-b border-(--color-separacion) px-3 py-2"
-                            >
-                                <span class="self-center font-medium">
-                                    {dayNames[dia.day]}
-                                </span>
-                                <div class="text-right opacity-80">
-                                    {dia.ranges.map((rango) => (
-                                        <div>
-                                            {rango.open}-{rango.close}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        );
-                    })
-                }
-            </div>
-        </div>
-        <a
-            href={direccion[0].url}
-            class="flex items-center gap-1 p-2 align-middle"
-        >
-            <Icon
-                name="location"
-                width={20}
-                height={20}
-                fill="none"
-                stroke="none"
-                class:list={"inline!"}
-            />
-            Ubicación: {direccion[0].valor}
-            <Icon
-                name="external"
-                width={16}
-                height={16}
-                fill="none"
-                stroke="none"
-                class:list={"inline opacity-80"}
-            />
-        </a>
-        <a
-            href={`tel:${telefono}`}
-            class={"flex items-center p-2 align-middle gap-1"}
-        >
-            <Icon
-                name="phone"
-                width={20}
-                height={20}
-                fill="none"
-                stroke="none"
-                class:list={"inline"}
-            />
-            Teléfono: {telefono}
-            <Icon
-                name="external"
-                width={16}
-                height={16}
-                fill="none"
-                stroke="none"
-                class:list={"inline opacity-80"}
-            />
-        </a>
-
-        {
-            correo && (
-                <a
-                    href={`mailto:${correo}`}
-                    class="flex items-center gap-1 p-2 align-middle"
-                >
-                    <Icon
-                        name="email"
-                        width={20}
-                        height={20}
-                        fill="none"
-                        stroke="none"
-                        class:list={"inline"}
-                    />
-                    Correo: {correo}
-                    <Icon
-                        name="external"
-                        width={16}
-                        height={16}
-                        fill="none"
-                        stroke="none"
-                        class:list={"inline"}
-                    />
-                </a>
-            )
-        }
-        <div class="mt-2 flex justify-center gap-4">
-            {
-                socials.map((social) => (
-                    <a href={social.url} class="block">
-                        <Icon
-                            name={social.valor}
-                            width={25}
-                            height={25}
-                            fill="currentColor"
-                            stroke="none"
-                            class:list={"inline"}
-                        />
-                    </a>
-                ))
-            }
-        </div>
-    </div>
-</dialog>
-
-<script src="../scripts/header/information.js" />
-<script src="../scripts/header/status.js" />
+<script src="../scripts/header/information.js"></script>
+<script src="../scripts/header/status/index.js"></script>
 
 <style>
     @import "tailwindcss";
@@ -263,115 +96,6 @@ const dayNames = [
     .opening-soon {
         @apply bg-blue-500;
     }
-
-    /* Fixed Header Styles */
-    .fixed-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        background: var(--color-background);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid var(--color-separacion);
-        transform: translateY(-100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        opacity: 0;
-        visibility: hidden;
-    }
-
-    .fixed-header.show {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .fixed-header-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        max-width: 500px;
-        margin: 0 auto;
-        padding: 0.75rem 1rem;
-        height: 60px;
-    }
-
-    .fixed-logo-container {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    .fixed-logo {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        border: 2px solid var(--color-separacion);
-        pointer-events: none;
-    }
-
-    .fixed-status-light {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        border: 2px solid var(--color-background);
-    }
-
-    .fixed-title {
-        font-size: 1.12rem;
-        font-weight: 600;
-        color: var(--index-text);
-        margin: 0;
-        flex: 1;
-        text-align: start;
-        padding: 0 1rem;
-    }
-
-    .fixed-info-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0.5rem;
-        border-radius: 50%;
-        transition: background-color 0.2s ease;
-    }
-
-    .fixed-info-btn:hover {
-        background-color: var(--color-separacion);
-    }
-
-    /* Animation for elements */
-    .fixed-header-content > * {
-        animation: slideInUp 0.4s ease-out forwards;
-    }
-
-    .fixed-logo-container {
-        animation-delay: 0.1s;
-    }
-
-    .fixed-title {
-        animation-delay: 0.2s;
-    }
-
-    .fixed-info-btn {
-        animation-delay: 0.3s;
-    }
-
-    @keyframes slideInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-
     /* Status light on logo */
     .anchor-img {
         anchor-name: --logo-image;
@@ -381,10 +105,5 @@ const dayNames = [
         position-anchor: --logo-image;
         bottom: calc(anchor(bottom) + 3px);
         right: calc(anchor(right) + 3px);
-    }
-
-    /* Highlight current day */
-    .currentDayHightlight {
-        background-color: var(--color-secondary);
     }
 </style>
