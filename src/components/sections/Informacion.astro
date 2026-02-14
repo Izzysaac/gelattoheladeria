@@ -20,12 +20,12 @@ const dayNames = [
     <div
         class="flex h-fit w-full max-w-120 flex-col gap-2 bg-(--color-background) px-2.5 py-5 text-sm text-(--color-text) rounded-t-3xl "
     >
-        <button id="closeInfoBtn" class="w-fit self-end rounded-full border-2" aria-label="Cerrar información">
+        <button id="closeInfoBtn" class="w-fit self-end rounded-full border-2 group" aria-label="Cerrar información">
             <CrossIcon
                 width={30}
                 height={30}
                 fill="bg-(--color-text)"
-                class:list={"pointer-events-none"}
+                class:list={"pointer-events-none group-active:fill-(--color-separacion)"}
             />
         </button>
 

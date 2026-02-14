@@ -6,7 +6,7 @@ const { action } = Astro.props;
 
 {
     action == "order" && (
-        <a href="/pedido" class="stickybarBtn ms-auto text-nowrap">
+        <a href="/pedido" class="stickybarBtn ms-auto text-nowrap active:opacity-80">
             Hacer pedido
         </a>
     )
@@ -17,7 +17,7 @@ const { action } = Astro.props;
             <OrderSummary />
             <button
                 id="btn-ver-pedido"
-                class="stickybarBtn text-nowrap"
+                class="stickybarBtn text-nowrap active:opacity-80"
                 data-action="ver-pedido"
             >
                 Ver pedido
@@ -29,7 +29,7 @@ const { action } = Astro.props;
     action == "submit" && (
         <div class="flex w-full justify-between gap-4">
             <OrderSummary />
-            <button id="btn-hacer-pedido" class="stickybarBtn text-nowrap">
+            <button id="btn-hacer-pedido" class="stickybarBtn text-nowrap active:opacity-80">
                 Hacer pedido
             </button>
         </div>

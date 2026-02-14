@@ -20,7 +20,7 @@ const {
     class="m-auto flex max-w-120 flex-col items-center text-(--index-text)"
 >
     <button id="infoBtn"
-        class="fixed top-3 right-3"
+        class="fixed top-3 right-3  rounded-full group"
         aria-label="Más información"
     >
         <InfoIcon
@@ -28,7 +28,7 @@ const {
             height={35}
             fill="var(--color-background)"
             stroke="var(--color-text)"
-            class:list={"pointer-events-none"}
+            class:list={"pointer-events-none group-active:fill-(--color-separacion)"}
             aria-label="Más información"
         />
     </button>
@@ -74,7 +74,7 @@ const {
         </div>
     </div>
 
-    <p class="mt-3 px-2.5">{descripcion}</p>
+    <p class="p-2.5">{descripcion}</p>
     <Informacion {...Astro.props} />
 </header>
 
