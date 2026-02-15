@@ -1,0 +1,52 @@
+---
+import ArrowLeftIcon from "@assets/arrow-left-bold-svgrepo-com.svg";
+import Trash from "@assets/trash-svgrepo-com.svg";
+
+const { mode } = Astro.props
+
+
+---
+
+{ mode == "pedido" && (
+
+<div class="sticky top-0 flex items-center justify-between bg-(--color-background) py-2.5">
+    <button
+        id="btn-cerrar-modal"
+        class="w-fit self-end rounded-full bg-(--color-secondary) p-2"
+        aria-label="Volver a menu"
+    >
+        <ArrowLeftIcon
+            width={20}
+            height={20}
+            class:list={"pointer-events-none"}
+        />
+    </button>
+    <p>Mi pedido</p>
+    <button
+        id="btn-borrar-modal"
+        class="w-fit self-end rounded-full bg-(--color-secondary) p-2"
+        aria-label="Borrar pedido"
+    >
+        <Trash width={20} height={20} class:list={"pointer-events-none"} />
+    </button>
+</div>
+)}
+
+{ mode == "checkout" && (
+
+<div class="sticky top-0 flex items-center justify-between bg-(--color-background) py-2.5">
+    <a
+        href="/pedido"
+        class="w-fit self-end rounded-full bg-(--color-secondary) p-2"
+        aria-label="Volver a menu"
+    >
+        <ArrowLeftIcon
+            width={20}
+            height={20}
+            class:list={"pointer-events-none"}
+        />
+    </a>
+    <p>Terminar pedido</p>
+<div />
+</div>
+)}

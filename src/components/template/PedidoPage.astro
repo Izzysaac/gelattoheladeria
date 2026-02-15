@@ -11,7 +11,6 @@ import Badges from "@components/ui/Badges.astro";
 
 const { head, header, badges, contact, logo, menu, categorias, footer } = Astro.props;
 const modo = "pedido";
-
 ---
 
 <BaseLayout head={head}>
@@ -30,7 +29,7 @@ const modo = "pedido";
         <Menu menuPorCategoria={menu} modo={modo} />
         <ImageViewer />
         <StickyBar modo={modo} />
-        <Modal />
+        <Modal mode={modo} />
     </main>
     <Footer {...footer} class:list={"pb-26"}/>
 </BaseLayout>

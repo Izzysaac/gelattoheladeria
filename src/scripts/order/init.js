@@ -1,10 +1,10 @@
-import { cargarState } from "./actions.js";
-import { bindEventos } from "./events.js";
+import { cargarState } from "../state.js";
+import { bindEventosPedido } from "./events.js";
 import { renderTodo } from "./render.js";
 
 const init = () => {
   cargarState();
-  bindEventos();
+  bindEventosPedido();
   renderTodo();
 };
 

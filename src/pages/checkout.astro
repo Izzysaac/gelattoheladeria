@@ -1,0 +1,10 @@
+---
+import { buildTenantData } from "@lib/buildTenantData";
+
+import CheckoutPage from "@template/CheckoutPage.astro";
+
+const { tenant, data } = await buildTenantData("checkout");
+
+---
+
+<CheckoutPage {...data} tenant={tenant} />

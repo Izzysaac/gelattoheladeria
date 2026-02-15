@@ -1,5 +1,5 @@
-import { state } from "./state.js";
-import { dom } from "./dom.js";
+import { state } from "../state.js";
+import { dom, checkoutDom } from "./dom.js";
 import { resetModals } from "../modal.js";
 
 import { debugLog } from "../debug.js";
@@ -251,15 +251,25 @@ export const renderSingleModal = (nombre) => {
     modalItemsCache.set(nombre, row);
 };
 
+
+
+export const renderTodo = () => {
+    renderBarra();
+    renderProductos();
+    renderModal();
+};
+
+
+
 export const renderEntrega = () => {
     // 1. Sincronizar Radios
-    dom.radios.forEach((radio) => {
+    checkoutDom.radios.forEach((radio) => {
         radio.checked = radio.value === state.tipoEntrega;
     });
     const isRecoger = state.tipoEntrega === "recoger";
 
     // 3. Estado del Input
-    const input = dom.inputDireccion;
+    const input = checkoutDom.inputDireccion;
     input.disabled = isRecoger;
     input.value = isRecoger ? direccionLocal : state.direccion;
 
@@ -267,21 +277,19 @@ export const renderEntrega = () => {
     input.classList.remove("invalid");
 };
 
-export const renderTodo = () => {
-    renderBarra();
-    renderProductos();
-    renderModal();
-    renderEntrega();
-};
+export const renderResumen = () => {
+    
+    const { items , totalPrecio } = state;
 
+    const html = Object.values(items).map(item => 
+        `<li class="producto-resumen"> 
+            <span>${item.cantidad}x</span>
+            <span class="grow">${item.nombre}</span>
+            <span>$${item.precio}</span>
+        </li>`)
+        .join('');
 
-// Ejemplo de enfoque híbrido rápido
-// Este método es 10 veces más rápido que clonar plantillas porque elimina todos los querySelector del bucle.
-// const html = itemsArray.map(item => `
-//     <div class="fila-producto" data-nombre="${item.nombre}">
-//         <span class="nombre">${item.nombre}</span>
-//         <span class="precio">$${(item.precio * item.cantidad).toLocaleString()}</span>
-//     </div>
-// `).join('');
+    checkoutDom.resumenPedido.innerHTML = html;
+    checkoutDom.totalPedido.textContent = `$${totalPrecio.toLocaleString()}`;
 
-// dom.listaPedido.innerHTML = html;
+}

@@ -7,7 +7,7 @@ export const dom = {
     stickyBar: document.getElementById("stickybar"),
     btnPaginaPedido: document.getElementById("btn-pagina-pedido"),
     btnVerPedido: document.getElementById("btn-ver-pedido"),
-    btnHacerPedido: document.getElementById("btn-hacer-pedido"),
+    btnHacerCheckout: document.getElementById("btn-hacer-checkout"),
     resumenTotal: document.querySelectorAll(".barra-resumen-total"),
     resumenCantidad: document.querySelectorAll(".barra-resumen-cantidad"),
 
@@ -18,14 +18,20 @@ export const dom = {
     listaPedido: document.getElementById("lista-pedido"),
     templatePedidoProducto: document.getElementById("item-pedido-template"),
 
-    /* Seleccion de tipo de entrega*/
-    entregaProducto: document.getElementById("entrega-producto"),
-    radios: document.querySelectorAll('input[name="entrega"]'),
-    divInputDireccion: document.querySelector("#campo-direccion"),
-    inputDireccion: document.getElementById("input-direccion"),
-
     /* Image Viewer */
     imageViewer: document.getElementById("imageViewer"),
     imageViewerImg: document.getElementById("imageViewerImg"),
     imageViewerCloseBtn: document.getElementById("imageViewerCloseBtn"),
 };
+
+export const checkoutDom = {
+     /* Seleccion de tipo de entrega*/
+    checkoutMain: document.getElementById("checkoutMain"),
+    entregaProducto: document.getElementById("entrega-producto"),
+    radios: document.querySelectorAll('input[name="entrega"]'),
+    divInputDireccion: document.querySelector("#campo-direccion"),
+    inputDireccion: document.getElementById("input-direccion"),   
+    resumenPedido: document.getElementById("resumenPedido"),
+    totalPedido: document.getElementById("totalPedido"),
+    btnHacerPedido: document.getElementById("btn-hacer-pedido"),
+}

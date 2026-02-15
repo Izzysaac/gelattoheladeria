@@ -1,7 +1,7 @@
 import { loadTenant } from "./loadTenant";
 import { loadCMS } from "./loadCMS";
 import { mapCMS } from "./mappers";
-import { buildMenuPageData, buildMainPageData } from "./builders";
+import { buildMenuPageData, buildMainPageData, buildCheckoutPageData } from "./builders";
 
 import type { PageType } from "./types";
 
@@ -10,7 +10,8 @@ const PAGE_BUILDERS: Record<PageType, (params: any) => any> = {
     main: ({ tenant, info, reviews }) =>
         buildMainPageData({ tenant, info, reviews }),
     menu: ({ tenant, info, menu, reviews }) => buildMenuPageData({ tenant, info, menu, reviews }),
-    pedido: ({ tenant, info, menu, reviews }) => buildMenuPageData({ tenant, info, menu, reviews })
+    pedido: ({ tenant, info, menu, reviews }) => buildMenuPageData({ tenant, info, menu, reviews }),
+    checkout: ({ tenant, info }) => buildCheckoutPageData({ tenant, info })
 };
 
 export async function buildTenantData(page: string) {

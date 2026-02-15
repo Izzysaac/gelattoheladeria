@@ -3,6 +3,8 @@ import Action from "@components/ui/Action.astro";
 
 const { modo } = Astro.props;
 /* Menu → Order → Review → Fulfillment → Submit (por ahora serian 2*/
+
+
 ---
 
 <div id="stickybar" class="stickybar flex border-t">
@@ -10,7 +12,9 @@ const { modo } = Astro.props;
 
     {modo == "pedido" && <Action action="review" />}
 
-    {modo == "details" && <Action action="submit" />}
+    {modo == "review" && <Action action="checkout" />}
+
+    {modo == "checkout" && <Action action="submit" />}
 </div>
 
 <style is:global>

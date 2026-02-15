@@ -26,11 +26,20 @@ const { action } = Astro.props;
     )
 }
 {
-    action == "submit" && (
+    action == "checkout" && (
         <div class="flex w-full justify-between gap-4">
             <OrderSummary />
-            <button id="btn-hacer-pedido" class="stickybarBtn text-nowrap active:opacity-80">
-                Hacer pedido
+            <button id="btn-hacer-checkout" class="stickybarBtn text-nowrap active:opacity-80">
+                Continuar
+            </button>
+        </div>
+    )
+}
+{
+    action == "submit" && (
+        <div class="flex w-full">
+            <button id="btn-hacer-pedido" class="stickybarBtn text-nowrap active:opacity-80 w-full">
+                Pedir por whatsapp
             </button>
         </div>
     )

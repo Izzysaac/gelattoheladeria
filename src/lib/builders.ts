@@ -24,6 +24,13 @@ export const buildMenuPageData = ({ tenant, info, menu, reviews }) => {
     };
 };
 
+export const buildCheckoutPageData = ( {tenant, info}) => {
+    return {
+        head: buildHead(info),
+        contact: buildContact(info),
+    }
+}
+
 // ==========================
 // COMPONENT BUILDERS
 // ==========================

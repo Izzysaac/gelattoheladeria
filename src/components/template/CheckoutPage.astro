@@ -1,0 +1,33 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import ModalTopBar from "@components/ui/ModalTopBar.astro";
+import StickyBar from "@components/sections/StickyBar.astro";
+import TipoEntrega from "@components/ui/TipoEntrega.astro";
+import FormaPago from "@components/ui/FormaPago.astro";
+import Notas from "@components/ui/Notas.astro";
+import ResumenPedido from "@components/ui/ResumenPedido.astro";
+
+const {  tenant, head, contact } = Astro.props;
+const modo = "checkout";
+
+---
+
+<BaseLayout>
+    <div
+        id="datos"
+        data-direccionlocal={contact.direccion}
+        data-telefono={contact.telefono}
+        hidden
+    >
+    </div>
+    <main id="checkoutMain" class="max-w-125 m-auto flex flex-col gap-8 px-2.5 pb-26">
+        <ModalTopBar mode={modo} />
+        <TipoEntrega />
+        <FormaPago />
+        <Notas />
+        <ResumenPedido />
+        <StickyBar modo={modo} />
+    </main>
+</BaseLayout>
+
+<script src="../../scripts/checkout/init.js" />

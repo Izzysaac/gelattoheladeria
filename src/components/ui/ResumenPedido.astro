@@ -1,0 +1,22 @@
+---
+
+---
+
+<div class="flex flex-col gap-2">
+    <p class="text-lg">Resumen de pedido</p>
+    <ul id="resumenPedido" class="flex flex-col gap-2 p-2"></ul>
+    <p class="text-lg flex justify-between">Total:  <span id="totalPedido"></span></p>
+</div>
+
+
+<style is:global>
+    #resumenPedido .producto-resumen {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    #resumenPedido .producto-resumen span {
+        display: block;
+    }
+</style>

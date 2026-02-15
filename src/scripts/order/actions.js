@@ -1,23 +1,5 @@
-import { state } from "./state.js";
+import { state, guardarState, cargarState } from "../state.js";
 import { renderSingleProducto, renderBarra, renderSingleModal, renderEntrega, renderTodo, clearModalCache } from "./render.js"
-
-const STORAGE_KEY = "pedido_state";
-
-const guardar = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-
-export const cargarState = () => {
-    const stateStorage = localStorage.getItem(STORAGE_KEY);
-
-    if (stateStorage) {
-        const stateParseado = JSON.parse(stateStorage);
-        state.items = stateParseado.items || {};
-        state.tipoEntrega = stateParseado.tipoEntrega || null;
-        state.direccion = stateParseado.direccion || "";
-        state.totalItems = stateParseado.totalItems || 0;
-        state.totalPrecio = stateParseado.totalPrecio || 0;
-    }
-}; 
-
 
 const updateTotales = () => {
     let items = 0;
@@ -54,7 +36,7 @@ export const updateCantidad = (producto, delta) => {
         state.items[nombre].cantidad = nuevaCantidad;
     }
     updateTotales();
-    guardar();
+    guardarState();
 
 
     // --- RENDERIZADO GRANULAR ---
@@ -74,19 +56,29 @@ export const borrarPedido = () => {
     state.items = {};
     state.totalItems = 0;
     state.totalPrecio = 0;
-    guardar();
+    guardarState();
     renderTodo();
 };
 
 export const setTipoEntrega = (tipo) => {
     state.tipoEntrega = tipo;
-    guardar();
+    guardarState();
     renderEntrega();
 };
 
 export const setDireccion = (dir) => {
     state.direccion = dir;
-    guardar();
+    guardarState();
+};
+
+export const setFormaPago = (forma) => {
+    state.formaPago = forma;
+    guardarState();
+};
+
+export const setNotas = (notas) => {
+    state.notas = notas;
+    guardarState();
 };
 
 
