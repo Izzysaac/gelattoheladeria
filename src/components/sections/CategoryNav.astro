@@ -2,7 +2,7 @@
 const { categorias } = Astro.props;
 ---
 
-<nav class="category-nav max-w-200 sm:top-0!" aria-label="Categorías del menú">
+<nav id="navMenu" class="category-nav max-w-200 sm:top-0!" aria-label="Categorías del menú">
     <ul class="m-0 flex gap-0">
         {
             categorias.map((categoria: string) => (
@@ -10,7 +10,7 @@ const { categorias } = Astro.props;
                     <a
                         data-category={categoria}
                         href={`#${categoria}`}
-                        class=""
+                        data-scroll
                     >
                         {categoria}
                     </a>

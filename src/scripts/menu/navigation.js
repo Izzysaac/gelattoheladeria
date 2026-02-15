@@ -1,11 +1,25 @@
-
 const sections = document.querySelectorAll(".grupo[id]");
 const navLinks = document.querySelectorAll(".category-nav a");
+const navMenu = document.getElementById("navMenu");
+
+navMenu.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (!link) return;
+
+    e.preventDefault();
+
+    const id = link.getAttribute("href").slice(1);
+    const section = document.getElementById(id);
+
+    section?.scrollIntoView({ behavior: "smooth" });
+    history.replaceState(null, "", `#${id}`);
+});
+
 
 const linkById = {};
 navLinks.forEach((link) => {
     const category = link.getAttribute("data-category");
-    linkById[(category)] = link;
+    linkById[category] = link;
 });
 
 const observer = new IntersectionObserver(
@@ -25,9 +39,7 @@ const observer = new IntersectionObserver(
 
             // marcar activo
             activeLink.classList.add("active");
-            activeLink.nextElementSibling?.classList.add(
-                "linea-activa",
-            );
+            activeLink.nextElementSibling?.classList.add("linea-activa");
             // centrar en el nav
             activeLink.scrollIntoView({
                 behavior: "smooth",

@@ -6,7 +6,7 @@ import {
 } from "./actions.js";
 import { dom } from "./dom.js";
 import { state } from "./state.js";
-import { showImageViewer } from "../menu/viewimg.js"
+import { openModal, manualClose, resetModals } from "../modal.js";
 
 const telefono = document.querySelector("#datos").dataset.telefono;
 // !Generar mensaje de pedido WhatsApp
@@ -84,7 +84,7 @@ const extraerProductoDesdeElemento = (el) => {
 	};
 };
 
-const controlAction = (action, element) => {
+const controlAction = (action, element, closeModal) => {
     // 1. Extraemos el producto UNA sola vez
     const producto = extraerProductoDesdeElemento(element);
     if (!producto) return;
@@ -95,7 +95,7 @@ const controlAction = (action, element) => {
             updateCantidad(producto, 1);
             break;
         case "remove-product":
-            updateCantidad(producto, -1);
+            updateCantidad(producto, -1, closeModal);
             break;
         default:
             return;
@@ -103,24 +103,17 @@ const controlAction = (action, element) => {
 };
 
 export const bindEventosProductos = () => {
-	// * Cerrar visor de imagen
-	dom.imageViewerCloseBtn.addEventListener("click", () =>
-		dom.imageViewer.close(),
-	);
-	dom.imageViewer.addEventListener("click", (e) => {
-		if (e.target === dom.imageViewer) dom.imageViewer.close();
-	});
 
 	//* Abrir modal de pedido
 	dom.btnVerPedido.addEventListener("click", () => {
-		dom.modalVerPedido.showModal();
+		openModal("pedido", dom.modalVerPedido);
 		document.body.classList.add("no-scroll");
 	});
 
 	//* Acciones de producto (carta y pedido)
-
 	// Listener para el Menú Principal
 	dom.menu.addEventListener("click", (e) => {
+
 		/* ! Flujo ideal: (se saca factor común)
 		delegación menú
 		|--filtrar clicks irrevelantes
@@ -133,12 +126,6 @@ export const bindEventosProductos = () => {
 		const action = target.getAttribute("data-action");
 		if (!action) return;
 
-		// * Ver imagen
-		if (action === "view-image") {
-			showImageViewer(target);
-			return;
-		}
-
 		// * Acciones de negocio (producto)
 		controlAction(action, target);
 	});
@@ -146,10 +133,10 @@ export const bindEventosProductos = () => {
 	// Listener para el Modal de Pedido
 	dom.listaPedido.addEventListener("click", (e) => {
 		// Usamos closest para asegurar que pillamos el botón aunque pinchen en el icono
-		const btn = e.target.closest("[data-action]");
-		if (!btn) return;
-
-		controlAction(btn.dataset.action, btn);
+		const target = e.target;
+		const action = target.getAttribute("data-action");
+		if (!action) return;
+		controlAction(action, target);
 	});
 
 };
@@ -170,6 +157,7 @@ export const bindEventosModal = () => {
 
 	// Delegación de eventos dentro del modal
 	dom.modalVerPedido.addEventListener("click", (e) => {
+		
 		const target = e.target;
 		// Cerrar modal
 		if (
@@ -177,12 +165,12 @@ export const bindEventosModal = () => {
 			target.id === "btn-cerrar-modal" ||
 			target == dom.modalVerPedido
 		) {
-			dom.modalVerPedido.close();
+			manualClose();
 			document.body.classList.remove("no-scroll");
 		}
 		// Abrir eliminar pedido
 		if (target.id === "btn-borrar-modal") {
-			dom.modalBorrarPedido.showModal();
+			openModal("borrar", dom.modalBorrarPedido);
 		}
 		// Hacer pedido
 		if (target.id === "btn-hacer-pedido") {
@@ -193,16 +181,19 @@ export const bindEventosModal = () => {
 	// Delegación de eventos dentro del modal borrar
 	dom.modalBorrarPedido.addEventListener("click", (e) => {
 		const target = e.target;
-		if (
-			target.id === "btn-borrar-pedido" ||
-			target.id === "btn-conservar-pedido" ||
-			target == dom.modalBorrarPedido
-		) {
-			dom.modalBorrarPedido.close();
+		if (target.id === "btn-conservar-pedido" ||	target == dom.modalBorrarPedido) {
+			manualClose();
+			return;
 		}
+		// Borrar pedido completamente
 		if (target.id === "btn-borrar-pedido") {
 			document.body.classList.remove("no-scroll");
-			borrarPedido();
+
+			borrarPedido(); // primero vacías estado
+			
+			history.go(-2); // luego navegas correctamente
+			
+			return;
 		}
 	});
 };

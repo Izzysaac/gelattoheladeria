@@ -12,7 +12,7 @@ import Minus from "@assets/minus-svgrepo-com.svg";
             <span class="precio font-semibold"></span>
         </div>
         <div
-            class="controles flex w-fit items-center rounded-full bg-(--color-secondary)"
+            class="controles flex w-fit items-center rounded-full bg-(--color-secondary) select-none"
         >
             <button data-action="remove-product" class="remove active:bg-(--color-separacion) rounded-full"
                 ><Minus width={25} height={25} /></button
@@ -39,5 +39,8 @@ import Minus from "@assets/minus-svgrepo-com.svg";
     @import "tailwindcss";
     button {
         @apply px-1.5 py-1.5;
+    }
+    svg{
+        pointer-events: none;
     }
 </style>

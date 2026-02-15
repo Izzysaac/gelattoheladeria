@@ -38,7 +38,7 @@ const { menuPorCategoria, modo } = Astro.props;
                                             {item.descripcion}
                                         </p>
                                         {modo != "menu" && (
-                                            <div class="controles mt-auto flex w-fit items-center self-end rounded-full bg-(--color-secondary)">
+                                            <div class="controles mt-auto flex w-fit items-center self-end rounded-full bg-(--color-secondary) select-none">
                                                 <button
                                                     data-action="add-product"
                                                     class="add-product"
@@ -111,7 +111,7 @@ const { menuPorCategoria, modo } = Astro.props;
         scroll-margin-top: 4rem; /* altura del nav */
     }
     button {
-        @apply px-1.5 py-1.5 cursor-pointer rounded-full active:bg-(--color-separacion);
+        @apply px-1.5 py-1.5 cursor-pointer rounded-full;
     }
     svg{
         pointer-events: none;

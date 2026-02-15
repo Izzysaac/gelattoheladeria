@@ -17,7 +17,7 @@ const {
 
 <header
     id="mainHeader"
-    class="m-auto flex max-w-120 flex-col items-center text-(--index-text)"
+    class="m-auto flex max-w-120 flex-col items-center text-(--index-text) mb-2"
 >
     <button id="infoBtn"
         class="fixed top-3 right-3  rounded-full group"
@@ -74,10 +74,11 @@ const {
         </div>
     </div>
 
-    <p class="p-2.5">{descripcion}</p>
+    <p class="px-2.5 opacity-95">{descripcion}</p>
     <Informacion {...Astro.props} />
 </header>
 
+<script src="../scripts/modal.js"></script>
 <script src="../scripts/header/information.js"></script>
 <script src="../scripts/header/status/index.js"></script>
 

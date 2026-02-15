@@ -29,7 +29,10 @@ const { botones } = Astro.props;
 
 
 <script>
-    document.getElementById("btnListInfo").addEventListener("click", () => {
-        (document.getElementById("informacion") as HTMLDialogElement).showModal();
+    import { openModal } from "../../scripts/modal.js";
+    const infoBtn = document.getElementById("btnListInfo");
+    const infoModal = document.getElementById("informacion")
+    infoBtn.addEventListener("click", () => {
+        openModal("info", infoModal);
     });
 </script>

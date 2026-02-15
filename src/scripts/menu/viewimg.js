@@ -1,3 +1,5 @@
+import { openModal, manualClose } from "../modal.js";
+
 const imageViewer = document.getElementById("imageViewer");
 const imageViewerImg = document.getElementById("imageViewerImg");
 const imageViewerCloseBtn = document.getElementById("imageViewerCloseBtn");
@@ -17,7 +19,7 @@ export const showImageViewer = (img) => {
     imageViewerImg.src = smallSrc;
     imageViewerImg.alt = img.alt || "";
     imageViewerImg.classList.add("blurred");
-    imageViewer.showModal();
+    openModal("imageViewer", imageViewer);
     
     // 2. Si no hay imagen grande diferente, terminamos temprano
     if (bigSrc === smallSrc) {
@@ -44,9 +46,10 @@ export const showImageViewer = (img) => {
     loader.src = bigSrc;
 };
 
-imageViewerCloseBtn.addEventListener("click", () => imageViewer.close());
+imageViewerCloseBtn.addEventListener("click", () => manualClose());
+
 imageViewer.addEventListener("click", (e) => {
-	if(e.target === imageViewer) imageViewer.close()
+	if(e.target === imageViewer) manualClose()
 });
 
 // Use event delegation for better performance
