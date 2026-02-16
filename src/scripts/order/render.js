@@ -105,7 +105,7 @@ export const renderBarra = () => {
 
     // 2. Lógica de visibilidad (Early return)
     const isEmpty = totalItems == 0;
-    dom.stickyBar.classList.toggle("ocultar", isEmpty);
+    dom.stickyBarPedido.classList.toggle("ocultar", isEmpty);
 
     if (isEmpty) return;
 
@@ -124,7 +124,8 @@ const closeModal = () => {
 };
 
 const closeModalUI = () => {
-    document.body.classList.remove("no-scroll");
+    // document.body.classList.remove("no-scroll");
+    // console.log("antiguo removido")
     clearModalCache();
 };
 
@@ -142,7 +143,7 @@ export const renderModal = () => {
         dom.listaPedido.replaceChildren();
         clearModalCache();
         closeModalUI();
-        resetModals();
+        // resetModals();
         return;
     }
 

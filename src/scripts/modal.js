@@ -2,24 +2,7 @@ import { debugLog } from "./debug.js";
 
 let modalStack = [];
 
-export const openModal = (name, dialog) => {
-    dialog.name = name;
-    dialog.showModal();
-    modalStack.push(dialog);
-    history.pushState({ modal: name }, "");
-    console.log("OPEN", history.state);
-    debugLog("OPEN", history.state);
-};
-
-export const manualClose = () => {
-    if (modalStack.length) history.back();
-    console.log("manualClose", history.state);
-    debugLog("manualClose", history.state);
-};
-
-export const resetModals = () => {
-
-};
+const body = document.body;
 
 const syncModalsWithState = (activeModalName) => {
     while (
@@ -31,8 +14,59 @@ const syncModalsWithState = (activeModalName) => {
     }
 };
 
+export const openModal = (name, dialog) => {
+    dialog.name = name;
+    dialog.showModal();
+    scrollLock.enable();
+    modalStack.push(dialog);
+    history.pushState({ modal: name }, "");
+    // console.log("OPEN", history.state);
+    debugLog("OPEN", history.state);
+};
+
+export const manualClose = () => {
+    if (modalStack.length) history.back();
+    // console.log("manualClose", history.state);
+    debugLog("manualClose", history.state);
+};
+
+async function nextTickPopState() {
+    return new Promise(resolve => {
+        window.addEventListener('popstate', resolve, { once: true });
+    });
+}
+
+export const resetModals = async () => {
+    console.log("Iniciando reset de modales...");
+
+    // Mientras el estado actual diga que hay un modal...
+    while (history.state?.modal) {
+        console.log("Cerrando nivel de historial:", history.state.modal);
+        
+        history.back();
+        
+        // ESPERAMOS a que el navegador termine de navegar antes de seguir el bucle
+        await nextTickPopState(); 
+        
+        console.log("Estado actual tras back:", history.state);
+    }
+    
+    console.log("Historial limpio de modales.");
+};
+
+const modals = document.getElementsByTagName("dialog");
+
+Array.from(modals).forEach((modal) => {
+    modal.addEventListener("cancel", (e) => {
+        e.preventDefault();
+        console.log("CANCEL", e);
+        debugLog("CANCEL", e);
+        manualClose();
+    });
+});
+
 window.addEventListener("popstate", (event) => {
-    console.log("POPSTATE", event.state);
+    // console.log("POPSTATE", event.state);
     debugLog("POPSTATE", event.state);
     const activeModalName = event.state?.modal || null;
 
@@ -40,9 +74,13 @@ window.addEventListener("popstate", (event) => {
     if (!activeModalName) {
         while (modalStack.length) {
             const modal = modalStack.pop();
-            if (modal.open) modal.close();
+            if (modal.open) {
+                modal.close();
+                scrollLock.disable();
+            }
         }
-        document.body.classList.remove("no-scroll");
+        // document.body.classList.remove("no-scroll");
+        scrollLock.disable();
         debugLog("NO MODAL - CERRANDO TODOS");
         return;
     }
@@ -52,14 +90,27 @@ window.addEventListener("popstate", (event) => {
 });
 
 
-// window.addEventListener("popstate", () => {
-//     alert(modalStack);
-//     const lastModal = modalStack.pop();
-//     if (lastModal) {
-//         lastModal.close();
-//         alert("cerrando popstate");
-//     }
-//     if (lastModal?.id == "modal-pedido")
-//         document.body.classList.remove("no-scroll");
-//     console.log("POPSTATE", history.state);
-// });
+// NO SCROLL EN IPHONE
+const scrollLock = {
+    savePosition: 0,
+    
+    enable() {
+        // Guardamos la posición actual
+        this.savePosition = window.pageYOffset;
+        
+        // Aplicamos el bloqueo
+        document.body.style.top = `-${this.savePosition}px`;
+        document.body.classList.add('is-locked');
+        console.log("IS-LOCKED");
+    },
+    
+    disable() {
+        // Quitamos el bloqueo
+        document.body.classList.remove('is-locked');
+        document.body.style.top = '';
+        console.log("IS-UNLOCKED");
+        
+        // Volvemos a la posición original
+        window.scrollTo(0, this.savePosition);
+    }
+};

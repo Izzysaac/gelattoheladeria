@@ -3,11 +3,13 @@ import Action from "@components/ui/Action.astro";
 
 const { modo } = Astro.props;
 /* Menu → Order → Review → Fulfillment → Submit (por ahora serian 2*/
-
-
 ---
 
-<div id="stickybar" class="stickybar flex border-t">
+<div id="stickybar" class="stickybar flex border-t" class:list={[
+    modo == "pedido" ? "ocultar stickybar-pedido" : "",
+    modo == "review" ? "sticky!" : ""
+]}>
+    
     {modo == "menu" && <Action action="order" />}
 
     {modo == "pedido" && <Action action="review" />}
@@ -17,16 +19,19 @@ const { modo } = Astro.props;
     {modo == "checkout" && <Action action="submit" />}
 </div>
 
+
+
 <style is:global>
     .stickybar {
         position: fixed;
         bottom: 0;
-        z-index: 9000;
+        z-index: 10;
         width: 100%;
         max-width: 500px;
         background-color: var(--color-background);
         border-top-color: var(--color-separacion);
         padding: 12px 12px;
+        pointer-events: none; 
     }
 
     .stickybarBtn {
@@ -37,5 +42,6 @@ const { modo } = Astro.props;
         border-radius: 25px;
         cursor: pointer;
         padding: 10px 30px;
+        pointer-events: auto; 
     }
 </style>

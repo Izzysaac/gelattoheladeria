@@ -50,3 +50,10 @@ const { mode } = Astro.props
 <div />
 </div>
 )}
+
+<style>
+    @import "tailwindcss";
+    button {
+        @apply px-1.5 py-1.5 cursor-pointer rounded-full active:bg-(--color-separacion);
+    }
+</style>

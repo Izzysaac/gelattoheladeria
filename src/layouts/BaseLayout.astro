@@ -25,6 +25,15 @@ const { head } = Astro.props;
         overflow: hidden;
     }
 
+    .is-locked {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        /* Evita saltos visuales si hay scrollbar en desktop */
+        padding-right: var(--scrollbar-width, 0px);
+    }
+
     html,
     body {
         margin: 0;
@@ -33,12 +42,14 @@ const { head } = Astro.props;
         background-color: var(--color-background);
         color: var(--color-text);
         font-family: Verdana, Geneva, Tahoma, sans-serif;
-        scroll-behavior: smooth;
+        /* scroll-behavior: smooth; */
+        overflow-y: auto; /*¿? */
+        -webkit-overflow-scrolling: auto; /*¿? */
     }
 
-    dialog[open] {
+    /* dialog[open] {
         animation: fadeIn 200ms ease-out;
-    }
+    } */
     dialog::backdrop {
         background: rgba(0, 0, 0, 0.7);
     }
@@ -47,7 +58,7 @@ const { head } = Astro.props;
         touch-action: manipulation;
         cursor: pointer;
     }
-    @keyframes fadeIn {
+    /* @keyframes fadeIn {
         from {
             opacity: 0;
             transform: translateY(8px);
@@ -56,5 +67,5 @@ const { head } = Astro.props;
             opacity: 1;
             transform: translateY(0);
         }
-    }
+    } */
 </style>

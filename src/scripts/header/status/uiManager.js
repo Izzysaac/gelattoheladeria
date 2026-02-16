@@ -43,9 +43,8 @@ export const highlightCurrentDay = (scheduleListEl) => {
 	if (todayElement) todayElement.classList.add("currentDayHightlight");
 };
 
-export const applyStatusToDom = ({ message, statusClass, statusMsgEl, scheduleMsgEl, statusLightEl }) => {
+export const applyStatusToDom = ({ message, statusClass, statusMsgEl, statusLightEl }) => {
 	if (statusMsgEl) statusMsgEl.textContent = message;
-	if (scheduleMsgEl) scheduleMsgEl.textContent = message;
 	if (statusLightEl && statusClass) {
 		statusLightEl.classList.remove("open", "closed", "closing-soon", "opening-soon");
 		statusLightEl.classList.add(statusClass);

@@ -44,7 +44,7 @@ const {
     />
 
     <div id="anchorContainer" class="flex w-full p-2.5">
-        <a id="logo" href="/">
+        <a id="logo" href="/" class="relative">
             <img
                 id="logoImg"
                 src={logo.logo}
@@ -101,10 +101,18 @@ const {
     .anchor-img {
         anchor-name: --logo-image;
     }
-    #statusLight {
+    /* #statusLight {
         position: absolute;
         position-anchor: --logo-image;
         bottom: calc(anchor(bottom) + 3px);
         right: calc(anchor(right) + 3px);
+    } */
+    #statusLight {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+        /* position-anchor: --logo-image; */
+        /* bottom: calc(anchor(bottom) + 3px);
+        right: calc(anchor(right) + 3px); */
     }
 </style>

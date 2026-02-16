@@ -42,8 +42,9 @@ const controlAction = (action, element, closeModal) => {
 export const bindEventosProductos = () => {
     //* Abrir modal de pedido
     dom.btnVerPedido.addEventListener("click", () => {
+        // document.body.classList.add("no-scroll");
+        // console.log("antiguo añadiro")
         openModal("pedido", dom.modalVerPedido);
-        document.body.classList.add("no-scroll");
     });
 
     //* Acciones de producto (carta y pedido)
@@ -95,8 +96,9 @@ export const bindEventosModal = () => {
             target.id === "btn-cerrar-modal" ||
             target == dom.modalVerPedido
         ) {
+            // document.body.classList.remove("no-scroll");
+            // console.log("antiguo removido")
             manualClose();
-            document.body.classList.remove("no-scroll");
         }
         // Abrir eliminar pedido
         if (target.id === "btn-borrar-modal") {
@@ -120,8 +122,8 @@ export const bindEventosModal = () => {
         }
         // Borrar pedido completamente
         if (target.id === "btn-borrar-pedido") {
-            document.body.classList.remove("no-scroll");
-
+            // document.body.classList.remove("no-scroll");
+            // console.log("antiguo removido")
             borrarPedido(); // primero vacías estado
 
             history.go(-2); // luego navegas correctamente

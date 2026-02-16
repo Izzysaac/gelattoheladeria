@@ -4,8 +4,7 @@ import { getStatusClass, getStatusDisplayText, applyStatusToDom, highlightCurren
 const getDomRefs = () => {
 	return {
 		statusLightEl: document.getElementById("statusLight"),
-		statusMsgEl: document.getElementById("statusMsg"),
-		scheduleMsgEl: document.getElementById("sheduleMsg"),
+		statusMsgEl: document.getElementById("statusMsg")
 	};
 };
 
@@ -17,7 +16,7 @@ const parseSchedule = (statusMsgEl) => {
 };
 
 export const updateStatus = ({ schedule, dom } = {}) => {
-	const { statusMsgEl, scheduleMsgEl, statusLightEl } = dom || getDomRefs();
+	const { statusMsgEl, statusLightEl } = dom || getDomRefs();
 	const effectiveSchedule = schedule || parseSchedule(statusMsgEl);
 	if (!effectiveSchedule) return;
 
@@ -25,7 +24,7 @@ export const updateStatus = ({ schedule, dom } = {}) => {
 	const message = getStatusDisplayText(result.status, result.nextChange);
 	const statusClass = getStatusClass(result.status);
 
-	applyStatusToDom({ message, statusClass, statusMsgEl, scheduleMsgEl, statusLightEl });
+	applyStatusToDom({ message, statusClass, statusMsgEl, statusLightEl });
 };
 
 const startAutoUpdates = () => {

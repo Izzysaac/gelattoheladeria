@@ -4,7 +4,7 @@ export const dom = {
     menu: document.getElementById("menu"),
 
     /* Sticky bar */
-    stickyBar: document.getElementById("stickybar"),
+    stickyBarPedido: document.getElementsByClassName("stickybar-pedido")[0],
     btnPaginaPedido: document.getElementById("btn-pagina-pedido"),
     btnVerPedido: document.getElementById("btn-ver-pedido"),
     btnHacerCheckout: document.getElementById("btn-hacer-checkout"),
