@@ -15,6 +15,7 @@ const init = () => {
     renderResumen();
 };
 
+document.getElementById("btn-cerrar-checkout").addEventListener("click", () => history.back());
 init();
 
 

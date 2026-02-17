@@ -1,4 +1,5 @@
 import { debugLog } from "./debug.js";
+import { dom } from "./order/dom.js";
 
 let modalStack = [];
 
@@ -41,6 +42,15 @@ export const resetModals = async () => {
 
     // Mientras el estado actual diga que hay un modal...
     while (history.state?.modal) {
+
+        if (history.state.modal === "pedido") {
+            console.log("modal pedido, no cierro y salgo");
+            dom.modalVerPedido.showModal();
+            scrollLock.enable();
+            modalStack.push(dom.modalVerPedido);
+            return;
+        };
+
         console.log("Cerrando nivel de historial:", history.state.modal);
         
         history.back();
