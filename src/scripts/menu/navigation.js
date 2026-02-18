@@ -10,7 +10,7 @@ navMenu.addEventListener("click", (e) => {
 
     const id = link.getAttribute("href").slice(1);
     const section = document.getElementById(id);
-
+    
     section?.scrollIntoView({ behavior: "smooth" });
     history.replaceState(null, "", `#${id}`);
 });
@@ -22,8 +22,7 @@ navLinks.forEach((link) => {
     linkById[category] = link;
 });
 
-const observer = new IntersectionObserver(
-    (entries) => {
+const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
             if (!entry.isIntersecting) return;
             const id = entry.target.id;

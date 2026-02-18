@@ -1,0 +1,8 @@
+NAME_ID=raicesgourmet
+GOOGLE_SHEET_ID=1oSO6sWzDKzCjC9ahskoofK1hjdSAF7GhsqedAxqrHNI
+PUBLIC_CLOUDINARY_CLOUD_NAME=dr5knskbb
+THEME=raicesgourmet
+PAGES=
+FEATURES=whatsapp,reviews
+LAYOUT=
+SITE="https://raicesgourmet.vercel.app"

@@ -21,7 +21,7 @@ const {rating, userRatingCount, tiempoEntrega, valorEntrega} = Astro.props;
     </p>
     <p>
         <DeliveryIcon width={25} height={25} fill="var(--color-background)" class:list={"inline text-center"}/>
-        <span class="mt-1!">{valorEntrega}</span>
+        <span id="valor-entrega" class="mt-1!">{valorEntrega == "0" ? "Gratis" : `$${valorEntrega}`}</span>
         <span>Envío</span>
     </p>
 </div>

@@ -1,6 +1,7 @@
 import {
     updateCantidad,
     borrarPedido,
+    setValorEntrega,
     setTipoEntrega,
     setDireccion,
     setFormaPago,
@@ -74,6 +75,8 @@ export const bindEventosProductos = () => {
         if (!action) return;
         controlAction(action, target);
     });
+
+    setValorEntrega(dom.datos.dataset.valorentrega);
 };
 
 export const hacerCheckout = () => {
@@ -141,7 +144,7 @@ export const bindEventosPedido = () => {
 // !Generar mensaje de pedido WhatsApp
 export const generarMensaje = () => {
     // 1. Usar totales ya calculados en el estado (Evitamos el bucle de cálculo)
-    const { items, totalPrecio, tipoEntrega, direccion, formaPago, notas } = state;
+    const { items, totalProductos, tipoEntrega, direccion, formaPago, notas } = state;
     const itemsArray = Object.values(items);
 
     if (itemsArray.length === 0) return "";
@@ -159,7 +162,7 @@ export const generarMensaje = () => {
     });
 
     // 4. Totales y entrega
-    lineas.push(`\n*Total:* $${totalPrecio.toLocaleString()}`);
+    lineas.push(`\n*Total:* $${totalProductos.toLocaleString()}`);
 
     const esDomicilio = tipoEntrega === "domicilio";
     lineas.push(
@@ -244,6 +247,8 @@ export const bindCheckout = () => {
 	checkoutDom.btnHacerPedido.addEventListener("click", () => {
 		hacerPedido();
 	});
+
+    document.getElementById("btn-cerrar-checkout").addEventListener("click", () => history.back());
 };
 
 export const bindEventosCheckout = () => {

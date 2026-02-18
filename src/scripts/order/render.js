@@ -101,7 +101,7 @@ export const renderSingleProducto = (nombre) => {
 
 export const renderBarra = () => {
     // 1. Usamos valores ya calculados en el state
-    const { totalItems, totalPrecio } = state;
+    const { totalItems, totalProductos } = state;
 
     // 2. Lógica de visibilidad (Early return)
     const isEmpty = totalItems == 0;
@@ -110,7 +110,7 @@ export const renderBarra = () => {
     if (isEmpty) return;
 
     // 3. Preparar strings (Solo una vez)
-    const totalStr = `$ ${totalPrecio.toLocaleString()}`;
+    const totalStr = `$ ${totalProductos.toLocaleString()}`;
     const cantidadStr = `${totalItems} producto${totalItems > 1 ? "s" : ""}`;
 
     // 4. Pintar (Actualización masiva del DOM)
@@ -267,9 +267,9 @@ export const renderEntrega = () => {
     checkoutDom.radios.forEach((radio) => {
         radio.checked = radio.value === state.tipoEntrega;
     });
-    const isRecoger = state.tipoEntrega === "recoger";
 
-    // 3. Estado del Input
+    // 2. Sincronizar Input
+    const isRecoger = state.tipoEntrega === "recoger";
     const input = checkoutDom.inputDireccion;
     input.disabled = isRecoger;
     input.value = isRecoger ? direccionLocal : state.direccion;
@@ -278,9 +278,23 @@ export const renderEntrega = () => {
     input.classList.remove("invalid");
 };
 
+
+export const renderFormaPago = () => {
+    if (state.formaPago) {
+        checkoutDom.formaPago.querySelector((`option[value="${state.formaPago}"]`)).selected = true;
+    }
+}
+
+export const renderNotas = () => {
+    if (state.notas) {
+        checkoutDom.notas.value = state.notas;
+    }
+}
+
+
 export const renderResumen = () => {
     
-    const { items , totalPrecio } = state;
+    const { items , valorEntrega, totalProductos } = state;
 
     const html = Object.values(items).map(item => 
         `<li class="producto-resumen"> 
@@ -291,6 +305,14 @@ export const renderResumen = () => {
         .join('');
 
     checkoutDom.resumenPedido.innerHTML = html;
-    checkoutDom.totalPedido.textContent = `$${totalPrecio.toLocaleString()}`;
+    checkoutDom.envioPedido.textContent = `$${valorEntrega.toLocaleString()}`;
+    const total = Number(totalProductos) +  Number(valorEntrega);
+    checkoutDom.totalPedido.textContent = `$${total.toLocaleString()}`;
+}
 
+export const renderCheckout = () => {
+    renderEntrega();
+    renderFormaPago();
+    renderNotas();
+    renderResumen();
 }

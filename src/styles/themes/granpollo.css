@@ -12,18 +12,3 @@ html[data-theme="granpollo"] {
   --color-secondary: rgba(0, 0, 0, 0.1);
   --color-separacion: rgba(0, 0, 0, 0.3);
 }
-
-:root {
-  /* index */
-  --index-bg: #f7f7f7;
-  --index-text: var(--color-text);
-  --index-buttons: #e10814;
-  --index-buttons-text: white;
-
-  /* menu */
-  --color-background: #fcfcfc;
-  --color-text: #111111;
-  --color-primary: #e10814;
-  --color-secondary: rgba(0, 0, 0, 0.1);
-  --color-separacion: rgba(0, 0, 0, 0.3);
-}

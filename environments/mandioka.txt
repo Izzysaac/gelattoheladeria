@@ -1,0 +1,8 @@
+NAME_ID=mandioka
+GOOGLE_SHEET_ID=16xnOacvG58XyjaiRtcc84PoQg22CVoADDqRTgYuJqig
+PUBLIC_CLOUDINARY_CLOUD_NAME=dc8vxeapd
+THEME=mandioka
+PAGES=reserva
+FEATURES=whatsapp,reviews
+LAYOUT=
+SITE="https://mandioka.vercel.app"

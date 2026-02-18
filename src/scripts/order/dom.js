@@ -22,7 +22,11 @@ export const dom = {
     imageViewer: document.getElementById("imageViewer"),
     imageViewerImg: document.getElementById("imageViewerImg"),
     imageViewerCloseBtn: document.getElementById("imageViewerCloseBtn"),
+
+    /* Datos */
+    datos: document.getElementById("datos")
 };
+
 
 export const checkoutDom = {
      /* Seleccion de tipo de entrega*/
@@ -30,7 +34,12 @@ export const checkoutDom = {
     entregaProducto: document.getElementById("entrega-producto"),
     radios: document.querySelectorAll('input[name="entrega"]'),
     divInputDireccion: document.querySelector("#campo-direccion"),
-    inputDireccion: document.getElementById("input-direccion"),   
+
+    inputDireccion: document.getElementById("input-direccion"),  
+    formaPago: document.getElementById("forma-pago"),
+    notas: document.getElementById("notas"),
+
+    envioPedido: document.getElementById("envioPedido"),
     resumenPedido: document.getElementById("resumenPedido"),
     totalPedido: document.getElementById("totalPedido"),
     btnHacerPedido: document.getElementById("btn-hacer-pedido"),

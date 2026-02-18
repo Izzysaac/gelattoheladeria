@@ -7,7 +7,7 @@ const { modo } = Astro.props;
 
 <div id="stickybar" class="stickybar flex border-t" class:list={[
     modo == "pedido" ? "ocultar stickybar-pedido" : "",
-    modo == "review" ? "sticky!" : ""
+    modo == "review" ? "sticky! pointer-events-auto!" : ""
 ]}>
     
     {modo == "menu" && <Action action="order" />}
@@ -36,7 +36,7 @@ const { modo } = Astro.props;
 
     .stickybarBtn {
         background-color: var(--color-primary);
-        color: var(--color-background);
+        color: var(--color-on-primary);
         font-weight: bold;
         border: none;
         border-radius: 25px;

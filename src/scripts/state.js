@@ -1,7 +1,8 @@
 export const state = {
 	items: {},
 	totalItems: 0,
-	totalPrecio: 0,
+	totalProductos: 0,
+	valorEntrega: 0,
 	tipoEntrega: "domicilio", // "domicilio" | "recoger"
 	direccion: "",
 	formaPago: "efectivo", // "efectivo" | "tarjeta"
@@ -20,7 +21,8 @@ export const cargarState = () => {
 		const stateParseado = JSON.parse(stateStorage);
 		state.items = stateParseado.items || {};
 		state.totalItems = stateParseado.totalItems || 0;
-		state.totalPrecio = stateParseado.totalPrecio || 0;
+		state.totalProductos = stateParseado.totalProductos || 0;
+		state.valorEntrega = stateParseado.valorEntrega || 0;
 		state.tipoEntrega = stateParseado.tipoEntrega || null;
 		state.direccion = stateParseado.direccion || "";
 		state.formaPago = stateParseado.formaPago || null;

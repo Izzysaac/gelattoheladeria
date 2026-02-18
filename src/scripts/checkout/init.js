@@ -1,6 +1,6 @@
 import { cargarState, state } from "../state.js";
 import { bindEventosCheckout } from "@scripts/order/events.js";
-import { renderResumen } from "../order/render.js";
+import { renderCheckout } from "../order/render.js";
 
 const init = () => {
     cargarState();
@@ -10,13 +10,12 @@ const init = () => {
         window.location.href = "/pedido";
         return; // Stop execution if redirecting
     }
-    
     bindEventosCheckout();
-    renderResumen();
+    renderCheckout();
 };
 
-document.getElementById("btn-cerrar-checkout").addEventListener("click", () => history.back());
 init();
+
 
 
 

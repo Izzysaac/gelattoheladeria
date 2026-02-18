@@ -11,7 +11,7 @@ const updateTotales = () => {
     });
 
     state.totalItems = items;
-    state.totalPrecio = precio;
+    state.totalProductos = precio;
 };
 
 export const updateCantidad = (producto, delta) => {
@@ -55,9 +55,14 @@ export const updateCantidad = (producto, delta) => {
 export const borrarPedido = () => {
     state.items = {};
     state.totalItems = 0;
-    state.totalPrecio = 0;
+    state.totalProductos = 0;
     guardarState();
     renderTodo();
+};
+
+export const setValorEntrega = (valor) => {
+    state.valorEntrega = valor;
+    guardarState();
 };
 
 export const setTipoEntrega = (tipo) => {

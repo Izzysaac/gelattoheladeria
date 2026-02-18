@@ -23,7 +23,7 @@ export async function loadCMS(tenant: TenantConfig) {
 }
 
 async function loadSheet(sheetId: string, nameId: string, hoja: string) {
-    const url = `https://opensheet.elk.sh/${sheetId}/${nameId}-${hoja}`;
+    const url = `https://opensheet.elk.sh/${sheetId}/${hoja}`;
 
     const res = await fetch(url);
 

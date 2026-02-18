@@ -3,7 +3,6 @@ import CrossIcon from "@assets/cross.svg";
 import Icon from "@components/ui/Icon.astro";
 
 const { horario, socials, direccion, telefono, correo } = Astro.props;
-
 const dayNames = [
     "Domingo",
     "Lunes",
@@ -20,7 +19,7 @@ const dayNames = [
     <div
         class="flex h-fit w-full max-w-120 flex-col gap-2 bg-(--color-background) px-2.5 py-5 text-sm text-(--color-text) rounded-t-3xl "
     >
-        <button id="closeInfoBtn" class="w-fit self-end rounded-full border-2 group" aria-label="Cerrar información">
+        <button id="closeInfoBtn" class="relative w-fit self-end rounded-full border-2 group" aria-label="Cerrar información">
             <CrossIcon
                 width={30}
                 height={30}
@@ -65,41 +64,41 @@ const dayNames = [
                 }
             </div>
         </div>
-        <a
-            href={direccion[0].url}
-            class="flex items-center gap-1 p-2 align-middle"
-        >
-            <Icon
-                name="location"
-                width={20}
-                height={20}
-                fill="none"
-                stroke="none"
-                class:list={"inline!"}
-            />
-            Ubicación: {direccion[0].valor}
-            <Icon
-                name="external"
-                width={16}
-                height={16}
-                fill="none"
-                stroke="none"
-                class:list={"inline opacity-80"}
-            />
+        <a href={direccion[0].url} class="flex items-center gap-1 p-2 align-middle">
+            <span class="flex items-center flex-nowrap gap-1">
+                <Icon
+                    name="location"
+                    width={20}
+                    height={20}
+                    fill="none"
+                    stroke="none"
+                    class:list={"inline!"}
+                />
+                Ubicación: 
+            </span>
+            {direccion[0].valor}
+                <Icon
+                    name="external"
+                    width={16}
+                    height={16}
+                    fill="none"
+                    stroke="none"
+                    class:list={"inline opacity-80"}
+                />
         </a>
-        <a
-            href={`tel:${telefono}`}
-            class={"flex items-center p-2 align-middle gap-1"}
-        >
-            <Icon
-                name="phone"
-                width={20}
-                height={20}
-                fill="none"
-                stroke="none"
-                class:list={"inline"}
-            />
-            Teléfono: {telefono}
+        <a href={`tel:${telefono}`} class={"flex items-center p-2 align-middle gap-1"}>
+            <span class="flex items-center flex-nowrap gap-1">
+                <Icon
+                    name="phone"
+                    width={20}
+                    height={20}
+                    fill="none"
+                    stroke="none"
+                    class:list={"inline"}
+                />
+                Teléfono: 
+            </span>
+            {telefono}
             <Icon
                 name="external"
                 width={16}
@@ -112,19 +111,19 @@ const dayNames = [
 
         {
             correo && (
-                <a
-                    href={`mailto:${correo}`}
-                    class="flex items-center gap-1 p-2 align-middle"
-                >
-                    <Icon
-                        name="email"
-                        width={20}
-                        height={20}
-                        fill="none"
-                        stroke="none"
-                        class:list={"inline"}
-                    />
-                    Correo: {correo}
+                <a href={`mailto:${correo}`} class="flex items-center gap-1 p-2 align-middle">
+                    <span class="flex items-center gap-1 flex-nowrap">
+                        <Icon
+                            name="email"
+                            width={20}
+                            height={20}
+                            fill="none"
+                            stroke="none"
+                            class:list={"inline"}
+                        />
+                        Correo: 
+                    </span>
+                    {correo}
                     <Icon
                         name="external"
                         width={16}

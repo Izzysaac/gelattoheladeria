@@ -7,6 +7,8 @@ import PhoneIcon from "@assets/phone.svg";
 import ClockIcon from "@assets/clock.svg"
 import MailIcon from "@assets/mail.svg"
 import ExternalIcon from "@assets/external.svg"
+import TiktokIcon from "@assets/tiktok.svg"
+import TicketShape from "@assets/shapes/ticket.svg";
 
 
 const {
@@ -59,5 +61,15 @@ const {
 {
     name == "external" && (
         <ExternalIcon width={width} height={height} stroke={stroke} class={className} />
+    )
+}
+{
+    name == "tiktok" && (
+        <TiktokIcon width={width} height={height} stroke={stroke} class={className} />
+    )
+}
+{
+    name == "ticket" && (
+        <TicketShape width={width} height={height} stroke={stroke} class={className} />
     )
 }
