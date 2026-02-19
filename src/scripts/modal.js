@@ -18,7 +18,7 @@ const syncModalsWithState = (activeModalName) => {
 export const openModal = (name, dialog) => {
     dialog.name = name;
     dialog.showModal();
-    scrollLock.enable();
+    // scrollLock.enable();
     modalStack.push(dialog);
     history.pushState({ modal: name }, "");
     // console.log("OPEN", history.state);
@@ -46,7 +46,7 @@ export const resetModals = async () => {
         if (history.state.modal === "pedido") {
             console.log("modal pedido, no cierro y salgo");
             dom.modalVerPedido.showModal();
-            scrollLock.enable();
+            // scrollLock.enable();
             modalStack.push(dom.modalVerPedido);
             return;
         };
@@ -86,11 +86,11 @@ window.addEventListener("popstate", (event) => {
             const modal = modalStack.pop();
             if (modal.open) {
                 modal.close();
-                scrollLock.disable();
+                // scrollLock.disable();
             }
         }
         // document.body.classList.remove("no-scroll");
-        scrollLock.disable();
+        // scrollLock.disable();
         debugLog("NO MODAL - CERRANDO TODOS");
         return;
     }
@@ -101,26 +101,38 @@ window.addEventListener("popstate", (event) => {
 
 
 // NO SCROLL EN IPHONE
+// const scrollLock = {
+//     savePosition: 0,
+    
+//     enable() {
+//         // Guardamos la posición actual
+//         this.savePosition = window.pageYOffset;
+        
+//         // Aplicamos el bloqueo
+//         document.body.style.top = `-${this.savePosition}px`;
+//         document.body.classList.add('is-locked');
+//         console.log("IS-LOCKED");
+//     },
+    
+//     disable() {
+//         // Quitamos el bloqueo
+//         document.body.classList.remove('is-locked');
+//         document.body.style.top = '';
+//         console.log("IS-UNLOCKED");
+        
+//         // Volvemos a la posición original
+//         window.scrollTo(0, this.savePosition);
+//     }
+// };
+
 const scrollLock = {
-    savePosition: 0,
-    
-    enable() {
-        // Guardamos la posición actual
-        this.savePosition = window.pageYOffset;
-        
-        // Aplicamos el bloqueo
-        document.body.style.top = `-${this.savePosition}px`;
-        document.body.classList.add('is-locked');
-        console.log("IS-LOCKED");
-    },
-    
-    disable() {
-        // Quitamos el bloqueo
-        document.body.classList.remove('is-locked');
-        document.body.style.top = '';
-        console.log("IS-UNLOCKED");
-        
-        // Volvemos a la posición original
-        window.scrollTo(0, this.savePosition);
-    }
+  enable() {
+    // document.documentElement.style.overflow = "hidden";
+    // document.body.style.overflow = "hidden";
+  },
+
+  disable() {
+    // document.documentElement.style.overflow = "";
+    // document.body.style.overflow = "";
+  }
 };

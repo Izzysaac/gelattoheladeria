@@ -7,13 +7,19 @@ const { categorias } = Astro.props;
         {
             categorias.map((categoria: string) => (
                 <li class="">
-                    <a
+                    {/* <a
                         data-category={categoria}
                         href={`#${categoria}`}
                         data-scroll
                     >
                         {categoria}
-                    </a>
+                    </a> */}
+                    <button
+                        data-category={categoria}
+                        data-scroll
+                    >
+                        {categoria}
+                    </button>
                     <div class="linea" />
                 </li>
             ))
@@ -41,18 +47,18 @@ const { categorias } = Astro.props;
         display: none;
     }
 
-    .category-nav a {
+    .category-nav button {
         display: block;
         padding: 0.5rem 0.75rem;
         white-space: nowrap;
         text-decoration: none;
     }
 
-    .category-nav a:focus-visible {
+    .category-nav button:focus-visible {
         outline: 2px solid #2563eb;
         outline-offset: 2px;
     }
-    .category-nav a.active {
+    .category-nav button.active {
         font-weight: 800;
     }
 

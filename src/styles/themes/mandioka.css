@@ -9,6 +9,7 @@ html[data-theme="mandioka"] {
   --color-background: #131313;
   --color-text: white;
   --color-primary: rgb(11, 205, 170);
+  --color-on-primary: black;
   --color-secondary: #323232;
   --color-separacion: rgba(255, 255, 255, 0.3);
 }

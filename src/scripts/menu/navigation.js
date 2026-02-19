@@ -1,20 +1,13 @@
 const sections = document.querySelectorAll(".grupo[id]");
-const navLinks = document.querySelectorAll(".category-nav a");
+const navLinks = document.querySelectorAll(".category-nav button");
 const navMenu = document.getElementById("navMenu");
 
 navMenu.addEventListener("click", (e) => {
-    const link = e.target.closest("a");
-    if (!link) return;
-
-    e.preventDefault();
-
-    const id = link.getAttribute("href").slice(1);
+    const id = e.target.getAttribute("data-category");
+    if (!id) return;
     const section = document.getElementById(id);
-    
-    section?.scrollIntoView({ behavior: "smooth" });
-    history.replaceState(null, "", `#${id}`);
+    section.scrollIntoView();
 });
-
 
 const linkById = {};
 navLinks.forEach((link) => {
@@ -22,7 +15,8 @@ navLinks.forEach((link) => {
     linkById[category] = link;
 });
 
-const observer = new IntersectionObserver((entries) => {
+const observer = new IntersectionObserver(
+    (entries) => {
         entries.forEach((entry) => {
             if (!entry.isIntersecting) return;
             const id = entry.target.id;
@@ -41,7 +35,7 @@ const observer = new IntersectionObserver((entries) => {
             activeLink.nextElementSibling?.classList.add("linea-activa");
             // centrar en el nav
             activeLink.scrollIntoView({
-                behavior: "smooth",
+                behavior: "auto",
                 inline: "center",
                 block: "nearest",
             });
