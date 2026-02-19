@@ -46,17 +46,21 @@ const dayNames = [
                         return (
                             <div
                                 data-day={dia.day}
-                                class="flex w-fit min-w-50 items-start justify-between border-b border-(--color-separacion) px-3 py-2"
+                                class="flex w-fit min-w-75 items-start justify-between border-b border-(--color-separacion) px-3 py-2"
                             >
                                 <span class="self-center font-medium">
                                     {dayNames[dia.day]}
                                 </span>
                                 <div class="text-right opacity-80">
-                                    {dia.ranges.map((rango) => (
-                                        <div>
-                                            {rango.open}-{rango.close}
-                                        </div>
-                                    ))}
+                                    {dia.specialText ? (
+                                        <div>{dia.specialText}</div>
+                                    ) : (
+                                        dia.ranges.map((rango) => (
+                                            <div>
+                                                {rango.open}-{rango.close}
+                                            </div>
+                                        ))
+                                    )}
                                 </div>
                             </div>
                         );

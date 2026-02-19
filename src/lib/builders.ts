@@ -92,8 +92,20 @@ const buildHorario = (horario) => {
 
             const timeRanges = [];
 
+            // Verificar si hay horario específico o es texto especial
             if (typeof day?.horario === "string" && day.horario.trim()) {
-                for (const range of day.horario.split(",")) {
+                const horarioText = day.horario.trim();
+                
+                // Si no parece un formato de hora (no contiene ":"), tratar como texto especial
+                if (!horarioText.includes(":")) {
+                    return {
+                        day: dayNumber,
+                        specialText: horarioText,
+                    };
+                }
+                
+                // Procesar rangos de tiempo normales
+                for (const range of horarioText.split(",")) {
                     const parts = range.trim().split("-");
 
                     if (parts.length !== 2) continue;
