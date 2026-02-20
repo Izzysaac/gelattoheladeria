@@ -24,7 +24,7 @@ const dayNames = [
                 width={30}
                 height={30}
                 fill="bg-(--color-text)"
-                class:list={"pointer-events-none group-active:fill-(--color-separacion)"}
+                class:list={"pointer-events-none group-active:fill-(--color-active-secondary)"}
             />
         </button>
 
@@ -46,7 +46,7 @@ const dayNames = [
                         return (
                             <div
                                 data-day={dia.day}
-                                class="flex w-fit min-w-75 items-start justify-between border-b border-(--color-separacion) px-3 py-2"
+                                class="flex w-fit min-w-75 items-start justify-between border-b border-(--color-border) px-3 py-2"
                             >
                                 <span class="self-center font-medium">
                                     {dayNames[dia.day]}

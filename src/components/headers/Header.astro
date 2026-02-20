@@ -14,12 +14,11 @@ const {
     correo,
 } = Astro.props;
 
-console.log(horario)
 ---
 
 <header
     id="mainHeader"
-    class="m-auto flex max-w-120 flex-col items-center text-(--index-text) mb-2"
+    class="m-auto flex max-w-120 flex-col items-center text-(--main-text) mb-2"
 >
     <button id="infoBtn"
         class="fixed top-3 right-3  rounded-full group"
@@ -30,7 +29,7 @@ console.log(horario)
             height={35}
             fill="var(--color-background)"
             stroke="var(--color-text)"
-            class:list={"pointer-events-none group-active:fill-(--color-separacion)"}
+            class:list={"pointer-events-none group-active:fill-(--color-active-secondary)"}
             aria-label="Más información"
         />
     </button>
@@ -53,7 +52,7 @@ console.log(horario)
                 alt={logo.titulo}
                 width="70px"
                 height="70px"
-                class="anchor-img pointer-events-none rounded-full border-3 border-(--color-separacion)"
+                class="anchor-img pointer-events-none rounded-full border-3 border-(--color-border)"
                 fetchpriority="high"
                 loading="eager"
             />
@@ -80,9 +79,9 @@ console.log(horario)
     <Informacion {...Astro.props} />
 </header>
 
-<script src="../scripts/modal.js"></script>
-<script src="../scripts/header/information.js"></script>
-<script src="../scripts/header/status/index.js"></script>
+<script src="../../scripts/modal.js"></script>
+<script src="../../scripts/header/information.js"></script>
+<script src="../../scripts/header/status/index.js"></script>
 
 <style>
     @import "tailwindcss";
@@ -113,8 +112,5 @@ console.log(horario)
         position: absolute;
         bottom: 3px;
         right: 3px;
-        /* position-anchor: --logo-image; */
-        /* bottom: calc(anchor(bottom) + 3px);
-        right: calc(anchor(right) + 3px); */
     }
 </style>

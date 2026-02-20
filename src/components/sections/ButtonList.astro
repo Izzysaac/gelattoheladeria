@@ -2,7 +2,7 @@
 const { botones } = Astro.props;
 ---
 
-<nav class="w-full max-w-125 m-auto mb-12 mt-6 px-2.5 text-green-900">
+<nav class="w-full max-w-125 m-auto mb-12 mt-6 px-2.5 text-(--main-buttons-text)">
     <ul class="flex flex-col justify-center gap-4">
         {
             botones.map((boton) => (
@@ -10,7 +10,7 @@ const { botones } = Astro.props;
                     <a
                         href={boton.url}
                         rel="noopener noreferrer"
-                        class="block w-full rounded-lg bg-(--index-buttons) px-3 py-4 text-center text-(--index-buttons-text) active:opacity-80"
+                        class="block w-full rounded-lg bg-(--main-buttons) px-3 py-4 text-center  active:opacity-80"
                     >
                         {boton.valor}
                     </a>
@@ -19,7 +19,7 @@ const { botones } = Astro.props;
         }
         <li>
                     <button id="btnListInfo"
-                        class="block w-full rounded-lg bg-(--index-buttons) px-3 py-4 text-center text-(--index-buttons-text) active:opacity-80"
+                        class="block w-full rounded-lg bg-(--main-buttons) px-3 py-4 text-center active:opacity-80"
                     >
                         Información
                     </button>

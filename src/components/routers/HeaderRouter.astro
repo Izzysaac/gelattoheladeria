@@ -1,0 +1,20 @@
+---
+import HeaderNoBanner from "@components/headers/NoBanner.astro";
+import HeaderDefault from "@components/headers/Header.astro";
+import HeaderCentered from "@components/headers/Centered.astro";
+import HeaderClassic from "@components/headers/Classic.astro";
+
+const { tenant, header } = Astro.props;
+
+const headers = {
+    default: HeaderDefault,
+    nobanner: HeaderNoBanner,
+    centered: HeaderCentered,
+    classic: HeaderClassic,
+};
+
+const TenantHeader = headers[tenant.layout.headerVariant] ?? HeaderDefault;
+
+---
+
+<TenantHeader {...header} />

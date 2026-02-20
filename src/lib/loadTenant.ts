@@ -31,7 +31,7 @@ export function loadTenant(): TenantConfig {
         },
 
         layout: {
-            heroVariant: "default",
+            headerVariant: import.meta.env.HEADER_VARIANT || "default",
         },
     };
 }

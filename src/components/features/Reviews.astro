@@ -13,7 +13,7 @@ const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
 <section class="m-auto flex max-w-125 flex-col items-center gap-2 text-sm px-2.5">
     <header id="google-reviews" class="pointer-events-auto mb-2 flex gap-2 items-center">
         <Image src={GoogleReviewImg} width={150} alt="google reviews" />
-        <h2 class="h-fit flex flex-col items-center justify-center rounded-xl border-2 border-(--color-separacion) p-2 text-center">
+        <h2 class="h-fit flex flex-col items-center justify-center rounded-xl border-2 border-(--color-border) p-2 text-center">
             <span class="text-xl">{rating}</span>
             <span class="flex gap-0.5">
                 <RenderStars rating={rating} width="10" height="10" />
@@ -23,7 +23,7 @@ const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
     </header>
     <!-- {
         reviews.map((review: any, i) => (
-            <article class="flex w-full flex-col gap-2 border-b border-b-(--color-separacion) px-3 py-4">
+            <article class="flex w-full flex-col gap-2 border-b border-b-(--color-border) px-3 py-4">
                 <header class="flex gap-2">
                     <img
                         src={getCldImageUrl({ src: review.authorPhoto, width: 64, height: 64 })}
@@ -72,7 +72,7 @@ const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
     <div class="wrapper flex w-full max-w-125 snap-x snap-mandatory gap-5 overflow-x-scroll">
         {
             reviews.map((review: any, i) => (
-                <article class="card snap-center w-10/12 max-w-125 shrink-0 box-border flex flex-col text-center items-center gap-2.5 rounded-lg border-2 border-(--color-separacion) px-1.5 py-4 bg-">
+                <article class="card snap-center w-10/12 max-w-125 shrink-0 box-border flex flex-col text-center items-center gap-2.5 rounded-lg border-2 border-(--color-border) px-1.5 py-4 bg-">
                     <header class="contents">
                         <div class="order-last flex flex-col justify-center gap-0.5 items-center mt-auto">
                             <img
@@ -169,7 +169,7 @@ const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
     }
 
     .card::scroll-marker:target-current {
-        background-color: var(--color-separacion);
+        background-color: var(--color-border);
     }
 
 </style>

@@ -19,7 +19,7 @@ export type TenantConfig = {
     theme: string;
     pages: Pages;
     layout: {
-        heroVariant: "default" | "image-left" | "centered";
+        headerVariant: "default" | "nobanner" | "centered";
     };
     features: Features;
 };

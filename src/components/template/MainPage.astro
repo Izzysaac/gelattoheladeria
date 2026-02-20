@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import HeaderRouter from "@components/routers/HeaderRouter.astro";
 
-import Header from "@layoutsHeader.astro";
 import Footer from "@layoutsFooter.astro";
 import ButtonList from "@components/sections/ButtonList.astro";
 import Reviews from "@components/features/Reviews.astro";
@@ -10,7 +10,9 @@ const { head, header, buttonsList, footer, reviews, tenant } = Astro.props;
 ---
 
 <BaseLayout head={head}>
-    <Header {...header} />
+
+    <HeaderRouter tenant={tenant} header={header}/>
+
     <main>
         <ButtonList {...buttonsList} />
         {tenant.features.reviews && reviews.userRatingCount > 0 && <Reviews {...reviews} />}

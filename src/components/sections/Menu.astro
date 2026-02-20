@@ -18,7 +18,7 @@ const { menuPorCategoria, modo } = Astro.props;
                         .map((item: any) => (
                             <li>
                                 <article
-                                    class="producto flex min-h-25 justify-start gap-2.5 border-b border-(--color-separacion) py-4"
+                                    class="producto flex min-h-25 justify-start gap-2.5 border-b border-(--color-border) py-4"
                                     data-nombre={item.nombre}
                                     data-precio={item.precio}
                                     data-descripcion={item.descripcion}
@@ -111,7 +111,7 @@ const { menuPorCategoria, modo } = Astro.props;
         scroll-margin-top: 4rem; /* altura del nav */
     }
     button {
-        @apply px-1.5 py-1.5 cursor-pointer rounded-full active:bg-(--color-separacion);
+        @apply px-1.5 py-1.5 cursor-pointer rounded-full active:bg-(--color-active-secondary);
     }
     svg{
         pointer-events: none;

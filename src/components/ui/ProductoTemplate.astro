@@ -5,7 +5,7 @@ import Minus from "@assets/minus-svgrepo-com.svg";
 
 <template id="item-pedido-template">
     <article
-        class="item-pedido flex items-start justify-between gap-4 border-b border-(--color-separacion) py-3"
+        class="item-pedido flex items-start justify-between gap-4 border-b border-(--color-border) py-3"
     >
         <div class="flex grow flex-col justify-between gap-1">
             <span class="nombre"></span>
@@ -14,11 +14,11 @@ import Minus from "@assets/minus-svgrepo-com.svg";
         <div
             class="controles flex w-fit items-center rounded-full bg-(--color-secondary) select-none"
         >
-            <button data-action="remove-product" class="remove active:bg-(--color-separacion) rounded-full"
+            <button data-action="remove-product" class="remove active:bg-(--color-active-secondary) rounded-full"
                 ><Minus width={25} height={25} /></button
             >
             <span class="cantidad mx-1"></span>
-            <button data-action="add-product" class="add active:bg-(--color-separacion) rounded-full"
+            <button data-action="add-product" class="add active:bg-(--color-active-secondary) rounded-full"
                 ><Plus width={25} height={25} /></button
             >
         </div>

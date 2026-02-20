@@ -1,0 +1,94 @@
+---
+import InfoIcon from "@assets/information.svg";
+import Informacion from "@components/sections/Informacion.astro";
+
+const {
+    titulo,
+    descripcion,
+    logo,
+    banner,
+    horario,
+    socials,
+    direccion,
+    telefono,
+    correo,
+} = Astro.props;
+---
+
+<header
+    id="mainHeader"
+    class="m-auto mb-2 flex max-w-120 flex-col items-center text-(--main-text)"
+>
+    <button
+        id="infoBtn"
+        class="group fixed top-3 right-3 rounded-full"
+        aria-label="Más información"
+    >
+        <InfoIcon
+            width={35}
+            height={35}
+            fill="var(--color-background)"
+            stroke="var(--color-text)"
+            class:list={"pointer-events-none group-active:fill-(--color-active-secondary)"}
+            aria-label="Más información"
+        />
+    </button>
+    <h1 class="visually-hidden">Restaurante Raíces Gourmet</h1>
+    <img
+        src={logo.logo}
+        alt=`Imagen de presentacion de ${logo.titulo}`
+        fetchpriority="high"
+        loading="eager"
+        width="200px"
+        height="200px"
+    />
+    <p class="flex w-full px-2.5">
+        <span id="statusLight"
+    class="block h-4.5 w-4.5 rounded-full border-3 border-(--color-background)"></span>
+        <span id="statusMsg"
+        data-horario={JSON.stringify(horario)}
+        class="">Cargando ...</span>
+    </p>
+
+
+    <p class="px-2.5">{descripcion}</p>
+    <Informacion {...Astro.props} />
+</header>
+
+<script src="../../scripts/modal.js"></script>
+<script src="../../scripts/header/information.js"></script>
+<script src="../../scripts/header/status/index.js"></script>
+
+<style>
+    @import "tailwindcss";
+
+    .open {
+        @apply bg-green-500;
+    }
+    .closed {
+        @apply bg-red-500;
+    }
+    .closing-soon {
+        @apply bg-orange-500;
+    }
+    .opening-soon {
+        @apply bg-blue-500;
+    }
+    /* Status light on logo */
+    .anchor-img {
+        anchor-name: --logo-image;
+    }
+    /* #statusLight {
+        position: absolute;
+        position-anchor: --logo-image;
+        bottom: calc(anchor(bottom) + 3px);
+        right: calc(anchor(right) + 3px);
+    } */
+    /* #statusLight {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+        /* position-anchor: --logo-image; */
+    /* bottom: calc(anchor(bottom) + 3px);
+        right: calc(anchor(right) + 3px); */
+</style>
