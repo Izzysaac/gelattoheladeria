@@ -39,6 +39,7 @@ export const checkoutDom = {
     formaPago: document.getElementById("forma-pago"),
     notas: document.getElementById("notas"),
 
+    envioPedidoContainer: document.getElementById("envioPedidoContainer"),
     envioPedido: document.getElementById("envioPedido"),
     resumenPedido: document.getElementById("resumenPedido"),
     totalPedido: document.getElementById("totalPedido"),

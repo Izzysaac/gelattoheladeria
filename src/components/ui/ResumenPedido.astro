@@ -8,7 +8,7 @@ import Icon from "./Icon.astro"
         <p class="text-lg">Resumen de pedido:</p>
         <ul id="resumenPedido" class="flex flex-col gap-2 p-2"></ul>
         <div class="p-2 border-t border-dashed">
-            <p class="flex justify-between">Envio: <span id="envioPedido"></span></p>
+            <p id="envioPedidoContainer" class="flex justify-between">Envio: <span id="envioPedido"></span></p>
             <p class="flex justify-between text-lg">
                 Total: <span id="totalPedido"></span>
             </p>
@@ -25,5 +25,8 @@ import Icon from "./Icon.astro"
     }
     #resumenPedido .producto-resumen span {
         display: block;
+    }
+    .oculto {
+        display: none;
     }
 </style>

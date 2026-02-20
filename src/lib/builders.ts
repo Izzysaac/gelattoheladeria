@@ -100,6 +100,7 @@ const buildHorario = (horario) => {
                 if (!horarioText.includes(":")) {
                     return {
                         day: dayNumber,
+                        ranges: [], // Array vacío para mantener consistencia
                         specialText: horarioText,
                     };
                 }

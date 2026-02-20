@@ -276,6 +276,8 @@ export const renderEntrega = () => {
 
     // Limpieza de validación
     input.classList.remove("invalid");
+
+    renderResumen();
 };
 
 
@@ -294,7 +296,9 @@ export const renderNotas = () => {
 
 export const renderResumen = () => {
     
-    const { items , valorEntrega, totalProductos } = state;
+    const {tipoEntrega, items , valorEntrega, totalProductos } = state;
+
+    let total = 0;
 
     const html = Object.values(items).map(item => 
         `<li class="producto-resumen"> 
@@ -305,9 +309,16 @@ export const renderResumen = () => {
         .join('');
 
     checkoutDom.resumenPedido.innerHTML = html;
-    checkoutDom.envioPedido.textContent = `$${valorEntrega.toLocaleString()}`;
-    const total = Number(totalProductos) +  Number(valorEntrega);
-    checkoutDom.totalPedido.textContent = `$${total.toLocaleString()}`;
+
+    if (tipoEntrega === "domicilio") {
+        checkoutDom.envioPedido.textContent = `$${valorEntrega.toLocaleString()}`;
+        checkoutDom.envioPedidoContainer.classList.remove("oculto");
+        total = Number(totalProductos) +  Number(valorEntrega);
+        checkoutDom.totalPedido.textContent = `$${total.toLocaleString()}`;
+    } else {
+        checkoutDom.envioPedidoContainer.classList.add("oculto");    }
+        total = Number(totalProductos);
+        checkoutDom.totalPedido.textContent = `$${total.toLocaleString()}`;
 }
 
 export const renderCheckout = () => {

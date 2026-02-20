@@ -1,0 +1,24 @@
+html[data-theme="broasterchefpitalito"] {
+
+
+    /* Base */
+    --brand: #df0b0a;
+    --accent: #f6e768;
+
+    --neutral-0: #f3f3f3;
+    --neutral-900: #090909;
+
+    /* index */
+    /* --index-bg: grey; */
+    --index-text: var(--neutral-900);
+    --index-buttons: var(--brand);
+    --index-buttons-text: var(--neutral-0);
+
+    /* menu */
+    --color-background: var(--neutral-0);
+    --color-text: var(--neutral-900);
+    --color-primary: var(--brand);
+    --color-on-primary: var(--neutral-0);
+    --color-secondary: hsl(from var(--color-background) h s 80%);
+    --color-separacion: hsl(from var(--color-background) h s 60%);
+}
