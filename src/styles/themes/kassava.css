@@ -1,0 +1,26 @@
+html[data-theme="kassava"] {
+
+    /* Base */
+    --brand: #771b0c;
+    --accent: #404040;
+
+    --neutral-0: white;
+    --neutral-900: #101414;
+
+    /* Main */
+    --main-text: var(--neutral-0);
+    --main-buttons: var(--brand);
+    --main-buttons-text: var(--neutral-0);
+
+    /* App */
+    --color-background: var(--neutral-900);
+    --color-text: var(--neutral-0);
+    --color-border: hsl(from var(--brand) h s 20%);
+
+    /* Acciones */
+    --color-primary: var(--brand);
+    --color-on-primary: var(--neutral-0);
+    --color-secondary: var(--accent);
+    --color-on-secondary: var(--neutral-900);
+    --color-active-secondary: oklch(from var(--brand) calc(l + 0.15) c h);
+}

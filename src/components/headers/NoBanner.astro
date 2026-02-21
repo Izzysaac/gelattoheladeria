@@ -17,7 +17,7 @@ const {
 
 <header
     id="mainHeader"
-    class="m-auto mb-2 flex max-w-120 flex-col items-center text-(--main-text)"
+    class="m-auto mb-2 flex max-w-120 flex-col items-center text-(--main-text) pt-8 gap-5"
 >
     <button
         id="infoBtn"
@@ -42,16 +42,17 @@ const {
         width="200px"
         height="200px"
     />
-    <p class="flex w-full px-2.5">
-        <span id="statusLight"
-    class="block h-4.5 w-4.5 rounded-full border-3 border-(--color-background)"></span>
-        <span id="statusMsg"
-        data-horario={JSON.stringify(horario)}
-        class="">Cargando ...</span>
-    </p>
+    <div>
+        <p class="flex w-full px-2.5 items-center">
+            <span id="statusLight"
+        class="block h-4.5 w-4.5 rounded-full border-3 border-(--color-background)"></span>
+            <span id="statusMsg"
+            data-horario={JSON.stringify(horario)}
+            class="">Cargando ...</span>
+        </p>
+        <p class="px-2.5">{descripcion}</p>
 
-
-    <p class="px-2.5">{descripcion}</p>
+    </div>
     <Informacion {...Astro.props} />
 </header>
 

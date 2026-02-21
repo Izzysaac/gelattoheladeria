@@ -23,7 +23,7 @@ const modo = "pedido";
     >
     </div>
     <Header {...header} />
-    <main class="flex flex-col items-center justify-center">
+    <main class="flex flex-col items-center justify-center mb-26">
         <Badges {...badges} />
         <h1 class="invisible h-0">Menú</h1>
         <CategoryNav categorias={categorias} />
@@ -32,7 +32,6 @@ const modo = "pedido";
         <Modal mode={modo} />
         <StickyBar modo={modo} />
     </main>
-    <Footer {...footer} class:list={"pb-26"}/>
 </BaseLayout>
 
 <script src="../../scripts/menu/viewimg.js" />
