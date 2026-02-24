@@ -45,9 +45,12 @@ const buildHead = (info) => {
 };
 
 const buildHeader = (info, reviews) => {
+    console.log(info);
     return {
         titulo: info.titulo,
         descripcion: info.descripcion,
+        mainLogo: info.mainLogo,
+        mainBanner: info.mainBanner,
         logo: buildLogo(info),
         banner: info.banner,
         horario: buildHorario(info.horario),

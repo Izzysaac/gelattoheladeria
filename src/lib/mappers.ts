@@ -35,6 +35,8 @@ const mapInfo = (infoRaw: any[]) => {
     return {
         titulo: getSingle("titulo"),
         descripcion: getSingle("descripcion"),
+        mainBanner: getSingle("banner"),
+        mainLogo: getSingle("logo"),
         banner: getSingle("banner"),
         logo: getSingle("logo"),
         telefono: getSingle("telefono"),
