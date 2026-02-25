@@ -22,6 +22,7 @@ export function loadTenant(): TenantConfig {
             menu: true,
             pedido: true,
             reserva: pagesEnv.includes("reserva"),
+            eventos: pagesEnv.includes("eventos"),
         },
 
         features: {
@@ -32,6 +33,7 @@ export function loadTenant(): TenantConfig {
 
         layout: {
             headerVariant: import.meta.env.HEADER_VARIANT || "default",
+            eventosVariant: import.meta.env.EVENTOS_VARIANT || "default",
         },
     };
 }

@@ -31,6 +31,14 @@ export const buildCheckoutPageData = ( {tenant, info}) => {
     }
 }
 
+export const buildEventosPageData = ({ tenant, info, eventos }) => {
+    return {
+        head: buildHead(info),
+        eventos: buildEvents(eventos),
+        footer: buildFooter(info),
+    };
+}
+
 // ==========================
 // COMPONENT BUILDERS
 // ==========================
@@ -210,5 +218,23 @@ const buildReviews = (reviews) => {
         rating: Number(reviews.meta?.rating) || 0,
         reviewsUrl: reviews.meta?.reviewsUrl || "",
         reviews: reviews.reviews || [],
+    };
+};
+
+const buildEvents = (eventos) => {
+    if (!eventos || !Array.isArray(eventos)) {
+        return {
+            principal: null,
+            botones: [],
+        };
+    }
+
+    const principal = eventos.find((evento) => evento.clave === "principal") || null;
+    const botones = eventos.filter((evento) => evento.clave === "boton");
+
+
+    return {
+        principal,
+        botones,
     };
 };

@@ -1,0 +1,16 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import EventosRouter from "@components/routers/EventosRouter.astro";
+import Footer from "@layoutsFooter.astro";
+
+const { head, eventos, footer, tenant } = Astro.props;
+
+---
+
+<BaseLayout head={head}>
+
+    <EventosRouter tenant={tenant} {...eventos} />
+
+    <Footer {...footer} class:list={"mt-26"}/>
+
+</BaseLayout>

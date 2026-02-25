@@ -1,7 +1,7 @@
 import { loadTenant } from "./loadTenant";
 import { loadCMS } from "./loadCMS";
 import { mapCMS } from "./mappers";
-import { buildMenuPageData, buildMainPageData, buildCheckoutPageData } from "./builders";
+import { buildMenuPageData, buildMainPageData, buildCheckoutPageData, buildEventosPageData } from "./builders";
 
 import type { PageType } from "./types";
 
@@ -11,10 +11,11 @@ const PAGE_BUILDERS: Record<PageType, (params: any) => any> = {
         buildMainPageData({ tenant, info, reviews }),
     menu: ({ tenant, info, menu, reviews }) => buildMenuPageData({ tenant, info, menu, reviews }),
     pedido: ({ tenant, info, menu, reviews }) => buildMenuPageData({ tenant, info, menu, reviews }),
-    checkout: ({ tenant, info }) => buildCheckoutPageData({ tenant, info })
+    checkout: ({ tenant, info }) => buildCheckoutPageData({ tenant, info }),
+    eventos: ({ tenant, info, eventos  }) => buildEventosPageData({ tenant, info, eventos }),
 };
 
-export async function buildTenantData(page: string) {
+export async function buildTenantData(page: PageType) {
     const tenant = loadTenant();
 
     const cms = await loadCMS(tenant);
@@ -29,6 +30,8 @@ export async function buildTenantData(page: string) {
     }
 
     const pageData = builderStrategy({ tenant, ...mappedCMS });
+
+    console.log(pageData);
 
     return {
         tenant,

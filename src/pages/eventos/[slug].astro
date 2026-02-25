@@ -1,0 +1,64 @@
+---
+import { buildTenantData } from "@lib/buildTenantData";
+
+const { tenant, data } = await buildTenantData("eventos");
+
+if (!tenant.pages.eventos) return Astro.redirect("/");
+
+ function toSlugPage(text: string) {
+        return text
+            .toLowerCase()
+            .replace(/[áàäâ]/g, "a")
+            .replace(/[éèëê]/g, "e")
+            .replace(/[íìïî]/g, "i")
+            .replace(/[óòöô]/g, "o")
+            .replace(/[úùüû]/g, "u")
+            .replace(/\s+/g, "-")
+            .replace(/[^a-z0-9ñ-]/g, "")
+            .replace(/-+/g, "-")
+            .replace(/^-+|-+$/g, "");
+    }   
+
+export async function getStaticPaths() {
+
+	function toSlug(text: string) {
+        return text
+            .toLowerCase()
+            .replace(/[áàäâ]/g, "a")
+            .replace(/[éèëê]/g, "e")
+            .replace(/[íìïî]/g, "i")
+            .replace(/[óòöô]/g, "o")
+            .replace(/[úùüû]/g, "u")
+            .replace(/\s+/g, "-")
+            .replace(/[^a-z0-9ñ-]/g, "")
+            .replace(/-+/g, "-")
+            .replace(/^-+|-+$/g, "");
+    }
+
+    const { tenant, data } = await buildTenantData("eventos");
+
+    if (!tenant.pages.eventos) return [];
+
+    const botones = data?.eventos?.botones ?? [];
+    return botones.map((boton) => ({
+        params: { slug: toSlug(boton.nombre) },
+        props: { boton }, // solo pasar el botón específico
+    }));
+}
+
+const { slug } = Astro.params;
+const botones = data?.eventos?.botones ?? [];
+const evento = botones.find((b) => toSlugPage(b.nombre) === slug) ?? null;
+---
+
+{
+    evento ? (
+        <div>
+            <h1>{evento.nombre}</h1>
+            <p>{evento.descripcion}</p>
+            {evento.media && <img src={evento.media} alt={evento.nombre} />}
+        </div>
+    ) : (
+        <p>Evento no encontrado</p>
+    )
+}

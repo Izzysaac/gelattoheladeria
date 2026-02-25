@@ -10,6 +10,7 @@ export async function loadCMS(tenant: TenantConfig) {
 
     const hojas = ["info", "menu"];
     if (tenant.features.reviews) hojas.push("reviews");
+    if (tenant.pages.eventos) hojas.push("eventos");
 
     const sheets = await Promise.all(
         hojas.map((hoja) => loadSheet(tenant.sheetId, tenant.nameId, hoja)),

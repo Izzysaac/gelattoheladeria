@@ -3,6 +3,7 @@ export const mapCMS = (cms) => {
         info: cms.info ? mapInfo(cms.info) : null,
         menu: cms.menu ? mapMenu(cms.menu) : null,
         reviews: cms.reviews ? mapReviews(cms.reviews) : null,
+        eventos: cms.eventos ? mapEventos(cms.eventos) : null,
     };
 };
 
@@ -99,6 +100,21 @@ const mapReviews = (reviewsRaw: any[]) => {
     );
 };
 
+const mapEventos = (eventosRaw: any[]) => {
+    if (!Array.isArray(eventosRaw)) return [];
+
+    return eventosRaw
+        .filter((row) => row.clave)
+        .map((row) => ({
+            clave: row.clave?.trim() || "Sin calve",
+
+            nombre: row.nombre?.trim() || "",
+
+            descripcion: row.descripcion?.trim() || "",
+
+            media: row.media?.trim() || "",
+        }));
+};
 
 export const mapMenuDescription = (menuRaw: any[]) => {
     return menuRaw

@@ -1,9 +1,10 @@
-export type PageType = "main" | "menu" | "pedido" | "checkout";
+export type PageType = "main" | "menu" | "pedido" | "checkout" | "eventos";
 
 export type Pages = {
     menu: boolean;
     pedido: boolean;
     reserva: boolean;
+    eventos: boolean;
 };
 
 export type Features = {
@@ -20,6 +21,7 @@ export type TenantConfig = {
     pages: Pages;
     layout: {
         headerVariant: "default" | "nobanner" | "centered";
+        eventosVariant: "default" | "classic";
     };
     features: Features;
 };
