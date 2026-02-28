@@ -1,0 +1,173 @@
+---
+import Icon from "@components/ui/Icon.astro";
+---
+
+<div class="checkout-summary">
+    <details class="summary-dropdown" open>
+        <summary class="summary-header">
+            <div>
+                <span class="summary-toggle-icon">▼</span>
+                <span class="summary-title">Resumen del pedido</span>
+            </div>
+            <p id="orderSummaryGrandTotalSummary"></p>
+        </summary>
+
+        <ul id="orderSummaryItems" class="product-list flex flex-col gap-3 text-black">
+        </ul>
+
+        <div class="price-breakdown">
+            <div class="price-row">
+                <span>Subtotal:</span>
+                <span id="orderSummaryProductsTotal">$0</span>
+            </div>
+            <div class="price-row">
+                <span>Envío:</span>
+                <span id="orderSummaryShipping">$0</span>
+            </div>
+            <div class="price-row total-row">
+                <span>Total:</span>
+                <span id="orderSummaryGrandTotal">$0</span>
+            </div>
+        </div>
+    </details>
+
+    <div class="sticky-footer">
+        <span class="label">Total a pagar</span>
+        <p id="orderSummaryFinalTotal" class="final-price">$0</p>
+    </div>
+</div>
+
+<style>
+    :root {
+        --bg-top: #f9f9f9;
+        --bg-bot: #fff;
+        --border: #e1e1e1;
+        --color-text: #000;
+        --color_semimuted: #555;
+        --color-muted: #666;
+    }
+
+    .checkout-summary {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        max-width: 100%;
+        border: 1px solid #e1e1e1;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    /* Estilo del Dropdown */
+    .summary-dropdown {
+        padding: 15px;
+        background: #f9f9f9;
+    }
+
+    .summary-header {
+        list-style: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .summary-header::-webkit-details-marker {
+        display: none;
+    }
+
+    /* Lista de productos */
+    .product-list {
+        list-style: none;
+        padding: 0;
+        margin: 15px 0;
+        border-top: 1px solid #eee;
+    }
+
+    .product-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 10px 0;
+    }
+
+    .product-thumb {
+        position: relative;
+    }
+
+    .product-thumb img {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        object-fit: cover;
+        background: #eee;
+    }
+
+    .product-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #333;
+        color: white;
+        font-size: 11px;
+        padding: 2px 6px;
+        border-radius: 10px;
+    }
+
+    .product-info {
+        flex: 1;
+    }
+
+    .product-name {
+        margin: 0;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .product-subtotal {
+        margin: 4px 0 0;
+        font-size: 13px;
+        color: #888;
+    }
+
+    /* Desglose de precios */
+    .price-breakdown {
+        padding-top: 10px;
+        border-top: 1px dashed #ccc;
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        margin-bottom: 5px;
+        color: #666;
+    }
+
+    .total-row {
+        font-weight: bold;
+        color: #000;
+        margin-top: 10px;
+    }
+
+    /* Pie con el precio total destacado */
+    .sticky-footer {
+        padding: 15px;
+        background: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #eee;
+    }
+
+    .sticky-footer .label {
+        color: #888;
+        font-size: 14px;
+    }
+
+    .final-price {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 800;
+        color: #2c3e50;
+    }
+</style>

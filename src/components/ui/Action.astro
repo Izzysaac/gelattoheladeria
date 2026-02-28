@@ -37,10 +37,18 @@ const { action } = Astro.props;
 }
 {
     action == "submit" && (
-        <div class="flex w-full">
-            <button id="btn-hacer-pedido" class="stickybarBtn text-nowrap active:opacity-80 w-full">
+        <div class="flex w-full flex-col gap-2">
+            <span id="estadoFormulario" class="text-xs text-center"></span>
+            <button disabled id="btn-hacer-pedido" class="stickybarBtn text-nowrap active:opacity-80 w-full flex flex-col">
                 Pedir por Whatsapp
             </button>
         </div>
     )
 }
+
+<style>
+    #btn-hacer-pedido[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+</style>

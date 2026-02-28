@@ -1,0 +1,51 @@
+---
+
+---
+<div class="flex flex-col gap-2.5">
+
+    <h2 class="text-lg font-semibold">Datos de contacto</h2>
+    
+    <label class="field">
+        <small
+            >Nombre
+            <!-- <small class="error" data-for="name" aria-live="polite"></small> -->
+        </small>
+        <input
+            id="nombreClienteForm"
+            name="nombreCliente"
+            type="text"
+            autocomplete="name"
+            required
+            placeholder="Nombre completo"
+        />
+    </label>
+    
+    <label class="field">
+        <small
+            >Teléfono
+            <!-- <small class="error" data-for="phone" aria-live="polite"></small> -->
+        </small>
+        <input
+            id="telefonoForm"
+            name="telefono"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
+            required
+            placeholder="Teléfono"
+        />
+    </label>
+
+</div>
+
+<style>
+     @import "tailwindcss";
+
+    .field {
+        @apply flex flex-col gap-1.5;
+    }
+    input {
+        @apply rounded border border-(--color-border) bg-(--color-secondary) p-2;
+    }
+
+</style>

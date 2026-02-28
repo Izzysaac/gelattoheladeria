@@ -34,14 +34,30 @@ export const checkoutDom = {
     entregaProducto: document.getElementById("entrega-producto"),
     radios: document.querySelectorAll('input[name="entrega"]'),
     divInputDireccion: document.querySelector("#campo-direccion"),
-
     inputDireccion: document.getElementById("input-direccion"),  
-    formaPago: document.getElementById("forma-pago"),
-    notas: document.getElementById("notas"),
 
-    envioPedidoContainer: document.getElementById("envioPedidoContainer"),
-    envioPedido: document.getElementById("envioPedido"),
-    resumenPedido: document.getElementById("resumenPedido"),
-    totalPedido: document.getElementById("totalPedido"),
+    // envioPedidoContainer: document.getElementById("envioPedidoContainer"),
+    // envioPedido: document.getElementById("envioPedido"),
+    // resumenPedido: document.getElementById("resumenPedido"),
+    // totalPedido: document.getElementById("totalPedido"),
+
+
+
     btnHacerPedido: document.getElementById("btn-hacer-pedido"),
+    estadoFormulario: document.getElementById("estadoFormulario"),
+
+    // Nuevo checkout
+    // FORMULARIO
+    nombreCliente: document.getElementById("nombreClienteForm"),
+    telefono: document.getElementById("telefonoForm"),
+    direccion: document.getElementById("direccionForm"),
+    metodoPago: document.getElementById("metodoPagoForm"),
+    notas: document.getElementById("notasForm"),
+
+
+    orderSummaryItems: document.getElementById("orderSummaryItems"),
+    orderSummaryProductsTotal: document.getElementById("orderSummaryProductsTotal"),
+    orderSummaryShipping: document.getElementById("orderSummaryShipping"),
+    orderSummaryGrandTotal: document.getElementById("orderSummaryGrandTotal"),
+    orderSummaryFinalTotal: document.getElementById("orderSummaryFinalTotal")
 }

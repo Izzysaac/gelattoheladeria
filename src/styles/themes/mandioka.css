@@ -1,15 +1,26 @@
 html[data-theme="mandioka"] {
-  /* index */
-  /* --index-bg: grey; */
-  --index-text: white;
-  --index-buttons: #004007;
-  --index-buttons-text: white;
 
-  /* menu */
-  --color-background: #131313;
-  --color-text: white;
-  --color-primary: rgb(11, 205, 170);
-  --color-on-primary: black;
-  --color-secondary: #323232;
-  --color-separacion: rgba(255, 255, 255, 0.3);
+  /* Base */
+    --brand: rgb(11, 205, 170);
+    --accent: #004007;
+
+    --neutral-0: #F3F1ED;
+    --neutral-900: #131313;
+
+    /* Main */
+    --main-text: var(--neutral-0);
+    --main-buttons: var(--accent);
+    --main-buttons-text: var(--neutral-0);
+
+    /* App */
+    --color-background: var(--neutral-900);
+    --color-text: var(--neutral-0);
+    --color-border: rgba(255, 255, 255, 0.3);
+
+    /* Acciones */
+    --color-primary: var(--brand);
+    --color-on-primary: var(--neutral-900);
+    --color-secondary: #323232;
+    /* --color-on-secondary: color de iconos */
+    --color-active-secondary:rgba(255, 255, 255, 0.3);
 }

@@ -44,6 +44,7 @@ const mapInfo = (infoRaw: any[]) => {
         correo: getSingle("correo"),
         tiempoEntrega: getSingle("tiempo-entrega"),
         valorEntrega: getSingle("valor-entrega"),
+        metodosPago: getSingle("metodos-pago"),
 
         direccion: getList("direccion"),
         horario: getList("horario"),

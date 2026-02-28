@@ -28,6 +28,7 @@ export const buildCheckoutPageData = ( {tenant, info}) => {
     return {
         head: buildHead(info),
         contact: buildContact(info),
+        metodosPago: buildMetodosPago(info),
     }
 }
 
@@ -53,7 +54,6 @@ const buildHead = (info) => {
 };
 
 const buildHeader = (info, reviews) => {
-    console.log(info);
     return {
         titulo: info.titulo,
         descripcion: info.descripcion,
@@ -170,6 +170,23 @@ const buildContact = (info) => {
     };
 };
 
+
+const buildMetodosPago = (info) => {
+    const metodosPagoString = info.metodosPago || "";
+    
+    // Convertir string separado por ; a array
+    const metodosPagoArray = metodosPagoString
+        .split(";")
+        .map(metodo => metodo.trim())
+        .filter(metodo => metodo.length > 0);
+    
+    // console.log
+
+    return {
+        metodosPago: metodosPagoArray,
+    };
+}
+
 const buildLogo = (info) => {
     return {
         titulo: info.titulo,
@@ -226,15 +243,18 @@ const buildEvents = (eventos) => {
         return {
             principal: null,
             botones: [],
+            contacto: null,
         };
     }
 
     const principal = eventos.find((evento) => evento.clave === "principal") || null;
     const botones = eventos.filter((evento) => evento.clave === "boton");
+    const contacto = eventos.find((evento) => evento.clave === "contacto") || null;
 
 
     return {
         principal,
         botones,
+        contacto
     };
 };

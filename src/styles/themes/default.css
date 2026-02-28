@@ -8,7 +8,38 @@ html[data-theme="default"] {
   /* menu */
   --color-background: #fcfcfc;
   --color-text: #111111;
-  --color-primary: #24b93a;
+  --color-primary: #24b93a;html[data-theme="raicesgourmet"] {
+
+    /* Base */
+    --brand: #586A42;
+    --accent: #b08d63;
+
+    --neutral-0: #F3F1ED;
+    --neutral-900: #000000;
+
+    /* Main */
+    --main-text: var(--neutral-900);
+    --main-buttons: var(--brand);
+    --main-buttons-text: var(--neutral-0);
+
+    /* App */
+    --color-background: var(--neutral-0);
+    --color-text: var(--neutral-900);
+    --color-border: hsl(from var(--brand) h s 50%);
+
+    /* Acciones */
+    --color-primary: var(--brand);
+    --color-on-primary: var(--neutral-0);
+    --color-secondary: oklch(from var(--brand) calc(l + 0.25) c h);
+    /* --color-on-secondary: color de iconos */
+    --color-active-secondary: oklch(from var(--brand) calc(l + 0.15) c h);
+
+
+    /* Menu Navigation */
+    --nav-normal: #586A42;
+    --nav-active: #b08d63;
+}
+
   --color-secondary: rgba(0, 0, 0, 0.1);
   --color-separacion: rgba(0, 0, 0, 0.3);
 }

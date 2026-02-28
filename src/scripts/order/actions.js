@@ -1,5 +1,5 @@
 import { state, guardarState, cargarState } from "../state.js";
-import { renderSingleProducto, renderBarra, renderSingleModal, renderEntrega, renderTodo, clearModalCache } from "./render.js"
+import { renderSingleProducto, renderBarra, renderSingleModal, renderNombreCliente, renderTelefono, renderEntrega,renderMetodoPago, renderTodo, renderValidar } from "./render.js"
 
 const updateTotales = () => {
     let items = 0;
@@ -65,6 +65,18 @@ export const setValorEntrega = (valor) => {
     guardarState();
 };
 
+export const setNombreCliente = (nombre) => {
+    state.nombreCliente = nombre;
+    guardarState();
+    renderNombreCliente();
+};
+
+export const setTelefono = (telefono) => {
+    state.telefono = telefono;
+    guardarState();
+    renderTelefono();
+};
+
 export const setTipoEntrega = (tipo) => {
     state.tipoEntrega = tipo;
     guardarState();
@@ -76,15 +88,45 @@ export const setDireccion = (dir) => {
     guardarState();
 };
 
-export const setFormaPago = (forma) => {
-    state.formaPago = forma;
+export const setMetodoPago = (forma) => {
+    state.metodoPago = forma;
     guardarState();
+    renderMetodoPago();
 };
 
 export const setNotas = (notas) => {
     state.notas = notas;
     guardarState();
 };
+
+
+
+export const getShipping = () => {
+    return state.tipoEntrega === "domicilio" ? state.valorEntrega : 0;
+}
+
+export const computeTotal = (items) => {
+    return Object.values(items).reduce((total, item) => total + item.precio * item.cantidad, 0);
+}
+
+export const validarFormulario = () => {
+
+    const { nombreCliente, telefono, tipoEntrega, direccion, metodoPago } = state;
+    
+    let estado = true;
+
+    if (!nombreCliente || !telefono || !tipoEntrega || !metodoPago) estado = false;
+
+    if (tipoEntrega === "domicilio") {
+        const direccionVacia = !direccion || direccion.trim().length === 0;
+        if (direccionVacia) estado = false;
+    }
+
+    renderValidar(estado);
+    return estado;
+}
+
+
 
 
 // 3. Un último detalle: El Render Inicial

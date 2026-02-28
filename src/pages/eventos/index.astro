@@ -5,7 +5,7 @@ import EventosPage from "@template/EventosPage.astro";
 
 const { tenant, data } = await buildTenantData("eventos");
 
-console.log(data);
+// console.log(data);
 
 if (!tenant.pages.eventos) return Astro.redirect("/")       
 

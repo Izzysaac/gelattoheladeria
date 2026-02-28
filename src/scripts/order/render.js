@@ -1,8 +1,22 @@
 import { state } from "../state.js";
 import { dom, checkoutDom } from "./dom.js";
 import { resetModals } from "../modal.js";
-
 import { debugLog } from "../debug.js";
+
+import { getShipping, computeTotal, validarFormulario } from "./actions.js";
+
+
+const formatPrice = (value) => {
+		try {
+			return new Intl.NumberFormat("es-CO", {
+				style: "currency",
+				currency: "COP",
+				maximumFractionDigits: 0,
+			}).format(Number(value) || 0);
+		} catch {
+			return `$${Math.round(Number(value) || 0).toLocaleString("es-CO")}`;
+		}
+	};
 
 
 const direccionLocal = document.getElementById("datos").dataset.direccionlocal;
@@ -252,16 +266,28 @@ export const renderSingleModal = (nombre) => {
     modalItemsCache.set(nombre, row);
 };
 
-
-
 export const renderTodo = () => {
     renderBarra();
     renderProductos();
     renderModal();
 };
 
+/* ========== CHECKOUT ========== */
 
+// Render de contacto
+export const renderNombreCliente = () => {
+    if (state.nombreCliente) {
+        checkoutDom.nombreCliente.value = state.nombreCliente;
+    }
+}
 
+export const renderTelefono = () => {
+    if (state.telefono) {
+        checkoutDom.telefono.value = state.telefono;
+    }
+}
+
+// Render de entrega
 export const renderEntrega = () => {
     // 1. Sincronizar Radios
     checkoutDom.radios.forEach((radio) => {
@@ -280,50 +306,101 @@ export const renderEntrega = () => {
     renderResumen();
 };
 
-
-export const renderFormaPago = () => {
-    if (state.formaPago) {
-        checkoutDom.formaPago.querySelector((`option[value="${state.formaPago}"]`)).selected = true;
+// Render de método de pago
+export const renderMetodoPago = () => {
+    if (state.metodoPago) {
+        checkoutDom.metodoPago.querySelector((`option[value="${state.metodoPago}"]`)).selected = true;
     }
 }
 
+// Render de notas
 export const renderNotas = () => {
     if (state.notas) {
         checkoutDom.notas.value = state.notas;
     }
 }
 
+// Validad datos para botón
+export const renderValidar = (estado) => {
+    const isValid = estado;
+    checkoutDom.btnHacerPedido.disabled = !isValid;
+    checkoutDom.estadoFormulario.textContent = isValid ? "" : "Por favor, completa todos los campos correctamente.";
+}
 
+// Render del resumen
 export const renderResumen = () => {
     
     const {tipoEntrega, items , valorEntrega, totalProductos } = state;
 
     let total = 0;
 
-    const html = Object.values(items).map(item => 
-        `<li class="producto-resumen"> 
-            <span>${item.cantidad}x</span>
-            <span class="grow">${item.nombre}</span>
-            <span>$${item.precio}</span>
-        </li>`)
-        .join('');
+    const html = Object.values(items).map(item => {
+        const hasImage = item.imagen && item.imagen.trim() !== '';
+        
+        return hasImage ? 
+            // Template con imagen
+            `<li class="product-item flex gap-2 items-center">
+                <div class="flex relative w-fit">
+                    <figure class="h-16 w-16 aspect-square">
+                        <img src="${item.imagen}" alt="${item.nombre}" class="rounded object-cover h-full w-full"/>
+                    </figure>
+                    <span class="product-badge self-end absolute -top-1 -right-1 bg-black text-white rounded px-1.5 py-0.5 text-xs font-bold">${item.cantidad}</span>
+                </div>
+                <div>
+                    <p class="product-name">${item.nombre}</p>
+                    <p class="product-price text-gray-700">${formatPrice(item.precio)}</p>
+                </div>
+                <p class="product-subtotal ms-auto text-nowrap">${formatPrice(item.precio * item.cantidad)}</p>
+            </li>` :
+            // Template sin imagen
+            `<li class="product-item flex gap-2 items-center">
+                <div class="flex relative w-fit">
+                    <div class="h-16 w-16 flex items-center justify-center">
+                        <span class="product- bg-black text-white rounded px-1.5 py-0.5 text-xs font-bold">${item.cantidad}</span>
+                        <span>&nbsp;x</span>
+                    </div>
+                </div>
+                <div>
+                    <p class="product-name">${item.nombre}</p>
+                    <p class="product-price text-gray-700">${formatPrice(item.precio)}</p>
+                </div>
+                <p class="product-subtotal ms-auto text-nowrap">${formatPrice(item.precio * item.cantidad)}</p>
+            </li>`;
+    }).join('');
 
-    checkoutDom.resumenPedido.innerHTML = html;
+    // checkoutDom.resumenPedido.innerHTML = html;
+    checkoutDom.orderSummaryItems.innerHTML = html;
 
-    if (tipoEntrega === "domicilio") {
-        checkoutDom.envioPedido.textContent = `$${valorEntrega.toLocaleString()}`;
-        checkoutDom.envioPedidoContainer.classList.remove("oculto");
-        total = Number(totalProductos) +  Number(valorEntrega);
-        checkoutDom.totalPedido.textContent = `$${total.toLocaleString()}`;
-    } else {
-        checkoutDom.envioPedidoContainer.classList.add("oculto");    }
-        total = Number(totalProductos);
-        checkoutDom.totalPedido.textContent = `$${total.toLocaleString()}`;
+    const subtotal = computeTotal(items);
+	const shipping = getShipping(items);
+	const grandTotal = Number(subtotal) + Number(shipping);
+
+    checkoutDom.orderSummaryProductsTotal.textContent = `${formatPrice(subtotal)}`;
+    checkoutDom.orderSummaryShipping.textContent = `${formatPrice(shipping)}`;
+    checkoutDom.orderSummaryGrandTotal.textContent = `${formatPrice(grandTotal)}`;
+    checkoutDom.orderSummaryFinalTotal.textContent = `${formatPrice(grandTotal)}`;
+
+    // if (tipoEntrega === "domicilio") {
+    //     checkoutDom.envioPedido.textContent = `$${valorEntrega.toLocaleString()}`;
+    //     checkoutDom.envioPedidoContainer.classList.remove("oculto");
+    //     total = Number(totalProductos) +  Number(valorEntrega);
+    //     checkoutDom.totalPedido.textContent = `$${total.toLocaleString()}`;
+    // } else {
+    //     checkoutDom.envioPedidoContainer.classList.add("oculto");    }
+    //     total = Number(totalProductos);
+    //     checkoutDom.totalPedido.textContent = `$${total.toLocaleString()}`;
+}
+
+const renderForm = () => {
+    renderNombreCliente();
+    renderTelefono();
+    renderEntrega();
+    renderMetodoPago();
+    renderNotas();
+    validarFormulario();
 }
 
 export const renderCheckout = () => {
-    renderEntrega();
-    renderFormaPago();
-    renderNotas();
+    renderForm();
     renderResumen();
 }

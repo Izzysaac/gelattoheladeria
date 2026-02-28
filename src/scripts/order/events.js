@@ -2,10 +2,13 @@ import {
     updateCantidad,
     borrarPedido,
     setValorEntrega,
+    setNombreCliente,
+    setTelefono,
     setTipoEntrega,
     setDireccion,
-    setFormaPago,
+    setMetodoPago,
     setNotas,
+    validarFormulario,
 } from "./actions.js";
 import { dom ,  checkoutDom } from "./dom.js";
 import { state } from "../state.js";
@@ -144,13 +147,13 @@ export const bindEventosPedido = () => {
 // !Generar mensaje de pedido WhatsApp
 export const generarMensaje = () => {
     // 1. Usar totales ya calculados en el estado (Evitamos el bucle de cálculo)
-    const { items, totalProductos, tipoEntrega, direccion, formaPago, notas } = state;
+    const { items, totalProductos, tipoEntrega, valorEntrega, direccion, metodoPago, notas, nombreCliente, telefono } = state;
     const itemsArray = Object.values(items);
 
     if (itemsArray.length === 0) return "";
 
     // 2. Acumulador de líneas
-    const lineas = ["Hola, quiero realizar un pedido por favor:"];
+    const lineas = ["Hola, quiero realizar un pedido por favor:\n"];
 
     // 3. Generar cuerpo del mensaje
     itemsArray.forEach((item) => {
@@ -162,17 +165,28 @@ export const generarMensaje = () => {
     });
 
     // 4. Totales y entrega
-    lineas.push(`\n*Total:* $${totalProductos.toLocaleString()}`);
-
     const esDomicilio = tipoEntrega === "domicilio";
-    lineas.push(
-        `\n*Entrega:* ${esDomicilio ? "A domicilio" : "Recoger en el local"}`,
-    );
-
+    lineas.push(``);
     if (esDomicilio) {
-        lineas.push(`*Dirección:* ${direccion}`);
+        const total = Number(totalProductos) + Number(valorEntrega);
+        lineas.push(`*Envío:* $${valorEntrega.toLocaleString()}`);
+        lineas.push(`*Total:* $${total.toLocaleString()}`);
+    }else {
+        lineas.push(`*Total:* $${totalProductos.toLocaleString()}`);
     }
-	lineas.push(`*Forma de pago:* ${formaPago}`);
+
+    // 5. Entrega
+    lineas.push(`\n*Nombre:* ${nombreCliente}`);
+    lineas.push(`*Teléfono:* ${telefono}`);
+
+
+    if(esDomicilio){
+        lineas.push(`*Dirección:* ${direccion}`);
+    }else {
+        lineas.push(`*Entrega:* Recoger en el local`);
+    }
+
+	lineas.push(`*Método de pago:* ${metodoPago}`);
 
 	if (notas) {
 		lineas.push(`*Notas: ${notas}`);
@@ -189,22 +203,25 @@ export const hacerPedido = (tel = 3163896572) => {
         alert("Pedido vacío. Agrega algún producto antes de continuar.");
         return;
     }
+    // 2.0 Validación de formulario
+    const isValid = validarFormulario();
+    if (!isValid) return;
 
-    // 2. Validación de dirección (Lógica de estado)
-    const esDomicilio = state.tipoEntrega === "domicilio";
-    const direccionVacia =
-        !state.direccion || state.direccion.trim().length === 0;
+    // // 2. Validación de dirección (Lógica de estado)
+    // const esDomicilio = state.tipoEntrega === "domicilio";
+    // const direccionVacia =
+    //     !state.direccion || state.direccion.trim().length === 0;
 
-    if (esDomicilio && direccionVacia) {
-        // Feedback visual inmediato
-        checkoutDom.inputDireccion.focus(); // Mejor que scroll si es un input
-        checkoutDom.inputDireccion.classList.add("invalid");
-        checkoutDom.inputDireccion.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-        });
-        return;
-    }
+    // if (esDomicilio && direccionVacia) {
+    //     // Feedback visual inmediato
+    //     checkoutDom.inputDireccion.focus(); // Mejor que scroll si es un input
+    //     checkoutDom.inputDireccion.classList.add("invalid");
+    //     checkoutDom.inputDireccion.scrollIntoView({
+    //         behavior: "smooth",
+    //         block: "center",
+    //     });
+    //     return;
+    // }
 
     // 3. Generación de mensaje y envío
     const mensaje = generarMensaje();
@@ -226,23 +243,28 @@ export const bindCheckout = () => {
         const action = target.getAttribute("name");
         if (!action) return;
 
+        if (action === "nombreCliente") {
+            setNombreCliente(target.value);
+        }
+
+        if (action === "telefono") {
+            setTelefono(target.value);
+        }
         if (action === "entrega") {
-			console.log("accion cambio entrga")
             setTipoEntrega(target.value);
         }
 
         if (action === "direccion") {
-			console.log("accion cambio direccion")
             setDireccion(target.value);
         }
-		if (action === "forma-pago") {
+		if (action === "metodo-pago") {
 			console.log("accion cambio forma pago")
-            setFormaPago(target.value);
+            setMetodoPago(target.value);
         }
 		if (action === "notas") {
-			console.log("accion cambio notas")
             setNotas(target.value);
         }
+        validarFormulario();
     });
 	checkoutDom.btnHacerPedido.addEventListener("click", () => {
 		hacerPedido();

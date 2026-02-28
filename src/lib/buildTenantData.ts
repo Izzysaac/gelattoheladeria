@@ -31,7 +31,7 @@ export async function buildTenantData(page: PageType) {
 
     const pageData = builderStrategy({ tenant, ...mappedCMS });
 
-    console.log(pageData);
+    // console.log(pageData);
 
     return {
         tenant,

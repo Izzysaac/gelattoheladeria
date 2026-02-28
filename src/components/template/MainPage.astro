@@ -14,7 +14,7 @@ const { head, header, buttonsList, footer, reviews, tenant } = Astro.props;
     <HeaderRouter tenant={tenant} header={header}/>
 
     <main>
-        <ButtonList {...buttonsList} />
+        <ButtonList {...buttonsList} pagina="main" />
         {tenant.features.reviews && reviews.userRatingCount > 0 && <Reviews {...reviews} />}
         <slot />
     </main>

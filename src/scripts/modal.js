@@ -38,7 +38,7 @@ async function nextTickPopState() {
 }
 
 export const resetModals = async () => {
-    console.log("Iniciando reset de modales...");
+    // console.log("Iniciando reset de modales...");
 
     // Mientras el estado actual diga que hay un modal...
     while (history.state?.modal) {
