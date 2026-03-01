@@ -2,6 +2,7 @@
 import ButtonList from "@components/sections/ButtonList.astro";
 import { toSlugPage } from "@scripts/utils.js";
 import { CldImage } from 'astro-cloudinary';
+import EventButtons from "./EventButtons.astro";
 
 const { principal, botones } = Astro.props;
 
@@ -18,7 +19,8 @@ const { principal, botones } = Astro.props;
         <h1 class="visually-hidden">Eventos</h1>
         <p class="text-center mt-6 text-pretty px-2.5">{principal.descripcion}</p>
     
-        <ButtonList botones={botones} pagina="eventos"/>
+        <!-- <ButtonList botones={botones} pagina="eventos"/> -->
+         <EventButtons botones={botones}/>
 
     </main>
 </div>

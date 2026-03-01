@@ -8,13 +8,6 @@ const { categorias } = Astro.props;
         {
             categorias.map((categoria: string) => (
                 <li class="">
-                    {/* <a
-                        data-category={categoria}
-                        href={`#${categoria}`}
-                        data-scroll
-                    >
-                        {categoria}
-                    </a> */}
                     <button
                         data-category={categoria}
                         data-scroll
@@ -56,7 +49,7 @@ const { categorias } = Astro.props;
     }
 
     .category-nav button:focus-visible {
-        outline: 2px solid #2563eb;
+        outline: 2px solid black;
         outline-offset: 2px;
     }
     .category-nav button.active {

@@ -1,0 +1,26 @@
+---
+const { botones } = Astro.props;
+
+import { toSlugPage } from "@scripts/utils.js";
+---
+
+<nav
+    class="m-auto mt-6 mb-12 w-full max-w-125 px-2.5 text-(--main-buttons-text)"
+>
+    <ul class="grid grid-cols-2 gap-4 justify-center items-center">
+        {
+            botones.map((boton) => (
+                <li>
+                    <a
+                        href={`/eventos/${toSlugPage(boton.nombre)}`}
+                        rel="noopener noreferrer"
+                        style={`background-image: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('${boton.media}')`}
+                        class={`text-bold w-full rounded-lg px-3 py-4 text-center active:opacity-80 bg-cover bg-center h-25 flex justify-center items-center`}
+                    >
+                        {boton.nombre}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</nav>

@@ -1,5 +1,5 @@
 ---
-import { formatFromThousands } from "@scripts/utils.js";
+import { formatFromThousands, formatPrice } from "@scripts/utils.js";
 import Plus from "@assets/plus-svgrepo-com.svg";
 import Minus from "@assets/minus-svgrepo-com.svg";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
@@ -28,10 +28,7 @@ const { menuPorCategoria, modo } = Astro.props;
                                         <div class="flex justify-between gap-2">
                                             <h3 class="">{item.nombre}</h3>
                                             <p class="mr-2 text-nowrap">
-                                                $
-                                                {formatFromThousands(
-                                                    item.precio,
-                                                )}
+                                                {formatPrice(item.precio)}
                                             </p>
                                         </div>
                                         <p class="pr-8 text-sm text-pretty opacity-90">

@@ -3,7 +3,7 @@ import type { TenantConfig } from "./types";
 import { CMS_CACHE } from "@lib/cmsCache";
 
 export async function loadCMS(tenant: TenantConfig) {
-    CMS_CACHE.clear();
+    // CMS_CACHE.clear();
     if (CMS_CACHE.has(tenant.nameId)) {
         return CMS_CACHE.get(tenant.nameId);
     }

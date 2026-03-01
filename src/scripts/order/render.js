@@ -339,7 +339,7 @@ export const renderResumen = () => {
         
         return hasImage ? 
             // Template con imagen
-            `<li class="product-item flex gap-2 items-center">
+            `<li class="product-item flex gap-2 items-center con-img">
                 <div class="flex relative w-fit">
                     <figure class="h-16 w-16 aspect-square">
                         <img src="${item.imagen}" alt="${item.nombre}" class="rounded object-cover h-full w-full"/>
@@ -353,11 +353,11 @@ export const renderResumen = () => {
                 <p class="product-subtotal ms-auto text-nowrap">${formatPrice(item.precio * item.cantidad)}</p>
             </li>` :
             // Template sin imagen
-            `<li class="product-item flex gap-2 items-center">
+            `<li class="product-item flex gap-2 items-center sin-img">
                 <div class="flex relative w-fit">
                     <div class="h-16 w-16 flex items-center justify-center">
-                        <span class="product- bg-black text-white rounded px-1.5 py-0.5 text-xs text-bold>${item.cantidad}</span>
-                        <span>&nbsp;x</span>
+                        <span class="product-badge bg-black text-white rounded px-2 py-0.5 text-xs text-bold">${item.cantidad}</span>
+                        <span> &nbsp;x </span>
                     </div>
                 </div>
                 <div>

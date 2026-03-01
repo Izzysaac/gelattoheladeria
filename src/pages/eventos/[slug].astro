@@ -1,41 +1,14 @@
 ---
-import BaseLayout from "@layoutsBaseLayout.astro";
-import Footer from "@layoutsFooter.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Footer from "@layouts/Footer.astro";
 import { buildTenantData } from "@lib/buildTenantData";
+import { toSlugPage } from "@scripts/utils";
 
 const { tenant, data } = await buildTenantData("eventos");
 
 if (!tenant.pages.eventos) return Astro.redirect("/");
 
-function toSlugPage(text: string) {
-        return text
-            .toLowerCase()
-            .replace(/[áàäâ]/g, "a")
-            .replace(/[éèëê]/g, "e")
-            .replace(/[íìïî]/g, "i")
-            .replace(/[óòöô]/g, "o")
-            .replace(/[úùüû]/g, "u")
-            .replace(/\s+/g, "-")
-            .replace(/[^a-z0-9ñ-]/g, "")
-            .replace(/-+/g, "-")
-            .replace(/^-+|-+$/g, "");
-    }   
-
 export async function getStaticPaths() {
-
-	const toSlugPage = (text) => {
-    return text
-        .toLowerCase()
-        .replace(/[áàäâ]/g, "a")
-        .replace(/[éèëê]/g, "e")
-        .replace(/[íìïî]/g, "i")
-        .replace(/[óòöô]/g, "o")
-        .replace(/[úùüû]/g, "u")
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9ñ-]/g, "")
-        .replace(/-+/g, "-")
-        .replace(/^-+|-+$/g, "");
-    }
 
     const { tenant, data } = await buildTenantData("eventos");
 
@@ -44,7 +17,7 @@ export async function getStaticPaths() {
     const botones = data?.eventos?.botones ?? [];
     return botones.map((boton) => ({
         params: { slug: toSlugPage(boton.nombre) },
-        props: { boton }, // solo pasar el botón específico
+        props: { boton, data },
     }));
 }
 
@@ -53,10 +26,11 @@ const botones = data?.eventos?.botones ?? [];
 const evento = botones.find((b) => toSlugPage(b.nombre) === slug) ?? null;
 
 const contacto = data?.eventos?.contacto ?? null;
+
 ---
 
 
-<BaseLayout>
+<BaseLayout styles={data.estilos}>
 
 {
     evento ? (
@@ -69,7 +43,7 @@ const contacto = data?.eventos?.contacto ?? null;
 
         <main class="px-2.5 py-6 flex flex-col">
 
-            <h1 class="text-center">{evento.nombre}</h1>
+            <h1 class="text-center text-title">{evento.nombre}</h1>
             <p class="text-pretty">{evento.descripcion}</p>
             <a href={contacto.descripcion} class="m-auto block bg-(--color-primary) text-(--color-on-primary) rounded-full px-3 py-2 mt-4">{contacto.nombre}</a>
 

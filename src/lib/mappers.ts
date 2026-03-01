@@ -147,7 +147,5 @@ export const mapEstilos = (estilosRaw: any[]) => {
             return acc;
         }, {});
 
-    console.log(estilos);
-
     return estilos;
 };

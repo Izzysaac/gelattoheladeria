@@ -6,6 +6,18 @@ export function formatFromThousands(value) {
     return Math.floor(num / 1000).toString();
 }
 
+export const formatPrice = (value) => {
+		try {
+			return new Intl.NumberFormat("es-CO", {
+				style: "currency",
+				currency: "COP",
+				maximumFractionDigits: 0,
+			}).format(Number(value) || 0);
+		} catch {
+			return `$${Math.round(Number(value) || 0).toLocaleString("es-CO")}`;
+		}
+	};
+
 export const toSlugPage = (text) => {
   return text
     .toLowerCase()
