@@ -30,6 +30,6 @@ html[data-theme="broasterchefpitalito"] {
     --color-navmenu-active:  var(--neutral-500);
 
     /* Badges */
-    --bg-badge: #f6e868bc;
+    --bg-badge: var(--accent);
     --text-badge: #000000;
 }
