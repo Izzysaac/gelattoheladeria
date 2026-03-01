@@ -16,7 +16,7 @@ import { toSlugPage } from "@scripts/utils.js";
                             <a
                                 href={boton.url}
                                 rel="noopener noreferrer"
-                                class="block w-full rounded-lg bg-(--main-buttons) px-3 py-4 text-center  active:opacity-80"
+                                class="text-bold block w-full rounded-lg bg-(--main-buttons) px-3 py-4 text-center  active:opacity-80"
                             >
                                 {boton.valor}
                             </a>
@@ -25,7 +25,7 @@ import { toSlugPage } from "@scripts/utils.js";
                 }
                 <li>
                             <button id="btnListInfo"
-                                class="block w-full rounded-lg bg-(--main-buttons) px-3 py-4 text-center active:opacity-80"
+                                class="text-bold block w-full rounded-lg bg-(--main-buttons) px-3 py-4 text-center active:opacity-80"
                             >
                                 Información
                             </button>
@@ -57,7 +57,7 @@ import { toSlugPage } from "@scripts/utils.js";
                             <a
                                 href={`/eventos/${toSlugPage(boton.nombre)}`}
                                 rel="noopener noreferrer"
-                                class="block w-full rounded-lg bg-(--main-buttons) px-3 py-4 text-center active:opacity-80"
+                                class="block w-full rounded-lg bg-(--main-buttons) px-3 py-4 text-center active:opacity-80 text-bold"
                             >
                                 {boton.nombre}
                             </a>
@@ -67,7 +67,6 @@ import { toSlugPage } from "@scripts/utils.js";
             </ul>
         </nav>
 }
-    
 
 
 

@@ -9,7 +9,7 @@ import Minus from "@assets/minus-svgrepo-com.svg";
     >
         <div class="flex grow flex-col justify-between gap-1">
             <span class="nombre"></span>
-            <span class="precio font-semibold"></span>
+            <span class="precio text-bold"></span>
         </div>
         <div
             class="controles flex w-fit items-center rounded-full bg-(--color-secondary) select-none"
@@ -17,7 +17,7 @@ import Minus from "@assets/minus-svgrepo-com.svg";
             <button data-action="remove-product" class="remove active:bg-(--color-active-secondary) rounded-full"
                 ><Minus width={25} height={25} /></button
             >
-            <span class="cantidad mx-1"></span>
+            <span class="cantidad w-6 text-center"></span>
             <button data-action="add-product" class="add active:bg-(--color-active-secondary) rounded-full"
                 ><Plus width={25} height={25} /></button
             >

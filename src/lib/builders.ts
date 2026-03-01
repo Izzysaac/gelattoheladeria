@@ -2,9 +2,10 @@
 // PAGE BUILDERS
 // ==========================
 
-export const buildMainPageData = ({ tenant, info, reviews }) => {
+export const buildMainPageData = ({ tenant, info, reviews, estilos }) => {
     return {
         head: buildHead(info),
+        styles: buildStyles(estilos),
         header: buildHeader(info, reviews),
         buttonsList: buildButtonsList(info),
         footer: buildFooter(info),
@@ -12,9 +13,10 @@ export const buildMainPageData = ({ tenant, info, reviews }) => {
     };
 };
 
-export const buildMenuPageData = ({ tenant, info, menu, reviews }) => {
+export const buildMenuPageData = ({ tenant, info, menu, reviews, estilos }) => {
     return {
         head: buildHead(info),
+        styles: buildStyles(estilos),
         header: buildHeader(info, reviews),
         badges: buildBadges(info, reviews),
         contact: buildContact(info),
@@ -24,17 +26,19 @@ export const buildMenuPageData = ({ tenant, info, menu, reviews }) => {
     };
 };
 
-export const buildCheckoutPageData = ( {tenant, info}) => {
+export const buildCheckoutPageData = ( {tenant, info, estilos}) => {
     return {
         head: buildHead(info),
+        styles: buildStyles(estilos),
         contact: buildContact(info),
         metodosPago: buildMetodosPago(info),
     }
 }
 
-export const buildEventosPageData = ({ tenant, info, eventos }) => {
+export const buildEventosPageData = ({ tenant, info, eventos, estilos }) => {
     return {
         head: buildHead(info),
+        styles: buildStyles(estilos),
         eventos: buildEvents(eventos),
         footer: buildFooter(info),
     };
@@ -52,6 +56,76 @@ const buildHead = (info) => {
         banner: info.banner,
     };
 };
+
+const buildStyles = (estilos) => {
+    const fuenteRegular = estilos?.["fuente-regular"] ?? "";
+    const fuenteBold = estilos?.["fuente-bold"] ?? "";
+    const fuenteTitulo = estilos?.["fuente-titulo"] ?? "";
+
+    const preload = [fuenteRegular, fuenteBold, fuenteTitulo]
+        .filter((name) => typeof name === "string" && name.trim().length > 0)
+        .map((name) => {
+            const fontName = extractFontName(name);
+            const weight = extractWeight(name);
+            return {
+                href: `/fonts/${name.trim()}`,
+                type: "font/woff2",
+                crossOrigin: "anonymous",
+                familyName: fontName,
+                weight: weight,
+            };
+        });
+
+    const fontFamilyRegular = extractFontName(fuenteRegular);
+    const fontFamilyBold = extractFontName(fuenteBold);
+    const fontFamilyTitulo = extractFontName(fuenteTitulo);
+    const fontFamily = preload.length
+        ? `"${fontFamilyRegular}", system-ui, -apple-system, Segoe UI, Roboto, sans-serif`
+        : "Verdana, Geneva, Tahoma, sans-serif";
+
+    return {
+        fonts: {
+            preload,
+        },
+        fontFamily,
+        fontFamilyRegular,
+        fontFamilyBold,
+        fontFamilyTitulo,
+    };
+}
+
+const extractWeight = (filename: string) => {
+    const parts = filename.split('-');
+    const weightPart = parts.find(part => /^\d+$/.test(part.replace('.woff2', '')));
+    return weightPart ? weightPart.replace('.woff2', '') : '400';
+}
+
+const extractFontName = (filename: string) => {
+    // "poppins-regular-400.woff2" → "Poppins"
+    // "roboto-bold-700.woff2" → "Roboto"
+    // "crimson-text-bold-700.woff2" → "Crimson Text"
+    if (!filename) return "System Font";
+    
+    // Extraer todo hasta el primer número (peso de la fuente)
+    const fontParts = filename.split('-');
+    const weightIndex = fontParts.findIndex(part => /^\d+$/.test(part.replace('.woff2', '')));
+    
+    const fontNameParts = weightIndex > 0 ? fontParts.slice(0, weightIndex) : fontParts.slice(0, -2);
+    
+    // Eliminar palabras de estilo (regular, bold, medium, etc.)
+    const styleWords = ['regular', 'bold', 'medium', 'light', 'semibold', 'black'];
+    const familyParts = fontNameParts.filter(part => !styleWords.includes(part.toLowerCase()));
+    
+    // Convertir guiones a espacios y capitalizar cada palabra
+    const fontName = familyParts
+        .join(' ')
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    
+    // Agregar comillas si es nombre compuesto (contiene espacios)
+    return fontName;
+}
 
 const buildHeader = (info, reviews) => {
     return {

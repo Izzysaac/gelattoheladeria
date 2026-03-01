@@ -1,9 +1,13 @@
 export const mapCMS = (cms) => {
+
+
+
     return {
         info: cms.info ? mapInfo(cms.info) : null,
         menu: cms.menu ? mapMenu(cms.menu) : null,
         reviews: cms.reviews ? mapReviews(cms.reviews) : null,
         eventos: cms.eventos ? mapEventos(cms.eventos) : null,
+        estilos: cms.estilos ? mapEstilos(cms.estilos) : null,
     };
 };
 
@@ -127,4 +131,23 @@ export const mapMenuDescription = (menuRaw: any[]) => {
 
             descripcion: row.descripcion?.trim() || "",
         }));
+};
+
+export const mapEstilos = (estilosRaw: any[]) => {
+    if (!Array.isArray(estilosRaw)) return {};
+
+    const estilos = estilosRaw
+        .filter((row) => row?.clave || row?.clave)
+        .reduce((acc: Record<string, string>, row) => {
+            const key = String(row.clave || row.clave || "").trim();
+            const value = String(row.valor || "").trim();
+
+            if (!key) return acc;
+            acc[key] = value;
+            return acc;
+        }, {});
+
+    console.log(estilos);
+
+    return estilos;
 };

@@ -1,0 +1,61 @@
+---
+const { fonts } = Astro.props;
+
+const fontList = fonts?.preload?.map(f => ({
+  href: f.href,
+  name: f.familyName,
+  weight: f.weight ?? 400,
+  style: f.style ?? "normal",
+})) ?? [];
+
+const regular = fontList[0];
+const bold = fontList[1];
+const title = fontList[2];
+
+---
+<script is:inline define:vars={{ fontList, regular, bold, title }}>
+  if (Array.isArray(fontList) && fontList.length > 0) {
+
+    const style = document.createElement("style");
+    style.id = "tenant-fonts";
+
+    // 1️⃣ Registrar @font-face
+    const fontFaces = fontList.map(f => `
+      @font-face {
+        font-family: "${f.name}";
+        src: url(${f.href}) format("woff2");
+        font-weight: ${f.weight};
+        font-style: ${f.style};
+        font-display: swap;
+      }
+    `).join("\n");
+
+
+    // 3️⃣ Generar clases directamente
+    const classes = `
+      .text-regular {
+        font-family: "${regular?.name ?? "system-ui"}", system-ui, sans-serif;
+        font-weight: ${regular?.weight ?? 400};
+      }
+
+      .text-bold {
+        font-family: "${bold?.name ?? "system-ui"}", system-ui, sans-serif;
+        font-weight: ${bold?.weight ?? 700};
+      }
+
+      .text-title {
+        font-family: "${title?.name ?? "system-ui"}", system-ui, sans-serif;
+        font-weight: ${title?.weight ?? 700};
+      }
+      
+      body {
+        font-family: "${regular?.name ?? "system-ui"}", system-ui, sans-serif;
+        font-weight: ${regular?.weight ?? 400};
+      }
+    `;
+
+    style.textContent = fontFaces + classes;
+
+    document.head.appendChild(style);
+  }
+</script>

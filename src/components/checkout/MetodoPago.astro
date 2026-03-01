@@ -3,7 +3,7 @@ const { metodosPago } = Astro.props;
 ---
 
 <div class="flex flex-col gap-2">
-    <label for="metodo-pago" class="text-lg font-semibold">Método de pago</label>
+    <label for="metodo-pago" class="text-lg text-bold">Método de pago</label>
     <select name="metodo-pago" id="metodoPagoForm" class="bg-(--color-secondary) border border-(--color-border) rounded p-2">
         {
             metodosPago.metodosPago.map((metodo) => (

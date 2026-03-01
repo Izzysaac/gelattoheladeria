@@ -9,11 +9,11 @@ import Modal from "@components/sections/Modal.astro";
 import Header from "@components/headers/Header.astro";
 import Badges from "@components/ui/Badges.astro";
 
-const { head, header, badges, contact, logo, menu, categorias, footer } = Astro.props;
+const { head, styles, header, badges, contact, logo, menu, categorias, footer } = Astro.props;
 const modo = "pedido";
 ---
 
-<BaseLayout head={head}>
+<BaseLayout head={head} styles={styles}>
     <div
         id="datos"
         data-direccionlocal={contact.direccion}

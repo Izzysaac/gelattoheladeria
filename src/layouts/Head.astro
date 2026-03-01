@@ -1,7 +1,6 @@
 ---
-const { titulo, descripcion, logo, banner } = Astro.props;
+const { titulo, descripcion, logo, banner, styles } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-
 ---
 
 <head>
@@ -11,7 +10,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="canonical" href={canonicalURL.href} />
     <link rel="preconnect" href="//res.cloudinary.com" />
     <link rel="dns-prefetch" href="//res.cloudinary.com">
-    <!-- <link rel="preload" href="/fonts/main.woff2" as="font" type="font/woff2" crossorigin> -->
+    {styles?.fonts?.preload?.map((font) => (
+        <link
+            rel="preload"
+            as="font"
+            href={font.href}
+            type={font.type}
+            crossorigin={font.crossOrigin}
+        />
+    ))}
     {logo && <link rel="preload" as="image" href={logo} />}
     {banner && <link rel="preload" as="image" href={banner} />}
     <link rel="icon" href={logo} />
@@ -24,4 +31,5 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="og:site_name" content={titulo} />
     <meta name="og:type" content="website" />
     <meta name="og:locale" content="es_CO" />
+
 </head>

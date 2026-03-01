@@ -7,12 +7,15 @@ import type { PageType } from "./types";
 
 // relaciona nombre de pagina con funcion constructora
 const PAGE_BUILDERS: Record<PageType, (params: any) => any> = {
-    main: ({ tenant, info, reviews }) =>
-        buildMainPageData({ tenant, info, reviews }),
-    menu: ({ tenant, info, menu, reviews }) => buildMenuPageData({ tenant, info, menu, reviews }),
-    pedido: ({ tenant, info, menu, reviews }) => buildMenuPageData({ tenant, info, menu, reviews }),
-    checkout: ({ tenant, info }) => buildCheckoutPageData({ tenant, info }),
-    eventos: ({ tenant, info, eventos  }) => buildEventosPageData({ tenant, info, eventos }),
+    main: ({ tenant, info, reviews, estilos }) =>
+        buildMainPageData({ tenant, info, reviews, estilos }),
+    menu: ({ tenant, info, menu, reviews, estilos }) =>
+        buildMenuPageData({ tenant, info, menu, reviews, estilos }),
+    pedido: ({ tenant, info, menu, reviews, estilos }) =>
+        buildMenuPageData({ tenant, info, menu, reviews, estilos }),
+    checkout: ({ tenant, info, estilos }) => buildCheckoutPageData({ tenant, info, estilos }),
+    eventos: ({ tenant, info, eventos, estilos  }) =>
+        buildEventosPageData({ tenant, info, eventos, estilos }),
 };
 
 export async function buildTenantData(page: PageType) {
@@ -29,9 +32,8 @@ export async function buildTenantData(page: PageType) {
         return { tenant, data: {} };
     }
 
-    const pageData = builderStrategy({ tenant, ...mappedCMS });
+    const pageData = builderStrategy({ tenant, ...mappedCMS, estilos: mappedCMS.estilos });
 
-    // console.log(pageData);
 
     return {
         tenant,

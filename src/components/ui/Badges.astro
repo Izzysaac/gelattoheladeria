@@ -8,7 +8,7 @@ const {rating, userRatingCount, tiempoEntrega, valorEntrega} = Astro.props;
 
 ---
 
-<div class="text-sm border border-(--color-border) rounded-2xl py-3 flex justify-evenly items-end w-[calc(100%-20px)] max-w-125 my-3 select-none">
+<div class="box-shadow-bages text-sm border border-(--color-border) rounded-2xl py-3 flex justify-evenly items-end w-[calc(100%-20px)] max-w-125 my-3 select-none bg-(--bg-badge)/58">
     <p>
         <StarIcon width={20} height={20} fill="var(--color-background)" class:list={"inline text-center"}/>
         <span>{rating} ({userRatingCount})</span>
@@ -32,6 +32,9 @@ const {rating, userRatingCount, tiempoEntrega, valorEntrega} = Astro.props;
         @apply text-center w-full 
     }
     span {
-        @apply block not-last:font-bold not-last:mt-2 last:opacity-80
+        @apply block not-last:mt-2 last:opacity-80
+    }
+    .box-shadow-bages{
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     }
 </style>

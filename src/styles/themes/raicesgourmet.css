@@ -26,8 +26,12 @@ html[data-theme="raicesgourmet"] {
 
 
     /* Menu Navigation */
-    --nav-normal: #586A42;
-    --nav-active: #b08d63;
+    --color-navmenu-category: #586A42;
+    --color-navmenu-active: #313B24;
+
+    /* Badges */
+    --bg-badge: #B5DA88;
+    --text-badge: #000000;
 }
 
 

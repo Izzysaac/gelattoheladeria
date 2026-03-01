@@ -11,7 +11,7 @@ const { menuPorCategoria, modo } = Astro.props;
     {
         Object.entries(menuPorCategoria).map(([categoria, items]) => (
             <div class="grupo" id={categoria}>
-                <h2 class="mt-6 text-xl font-bold">{categoria}</h2>
+                <h2 class="mt-6 text-xl text-bold">{categoria}</h2>
                 <ul>
                     {(items as any)
                         .filter((item) => item.activo)

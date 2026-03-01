@@ -10,11 +10,12 @@ import StickyBar from "@components/sections/StickyBar.astro";
 import Badges from "@components/ui/Badges.astro";
 import Header from "@components/headers/Header.astro";
 
-const { head, header, contact, badges, logo, menu, categorias, footer } = Astro.props;
+const { head, styles, header, contact, badges, logo, menu, categorias, footer } = Astro.props;
+
 const modo = "menu";
 ---
 
-<BaseLayout head={head}>
+<BaseLayout head={head} styles={styles}>
     <Header {...header} />
     <main class="flex flex-col items-center justify-center mb-26">
         <Badges {...badges} />

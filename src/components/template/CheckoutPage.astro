@@ -8,13 +8,13 @@ import ResumenPedido from "@components/checkout/ResumenPedido.astro";
 import DataForm from "@components/checkout/DataForm.astro";
 import NewResumen from "@components/checkout/NewResumen.astro";
 
-const {  tenant, head, contact, metodosPago } = Astro.props;
+const { tenant, head, styles, contact, metodosPago } = Astro.props;
 
 const modo = "checkout";
 
 ---
 
-<BaseLayout>
+<BaseLayout head={head} styles={styles}>
     <div
         id="datos"
         data-direccionlocal={contact.direccion}

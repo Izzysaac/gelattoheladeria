@@ -9,21 +9,37 @@ import "@styles/themes/kassava.css";
 
 import { loadTenant } from "@lib/loadTenant";
 import Head from "./Head.astro";
+import Fonts from "./Fonts.astro";
 
 const theme = loadTenant().theme;
-const { head } = Astro.props;
+const { head, styles } = Astro.props;
+
 ---
 
 <!doctype html>
 <html lang="es" data-theme={theme}>
-    <Head {...head} />
+    <Head {...head} styles={styles} />
+    <Fonts {...styles} />
     <body>
         <slot />
     </body>
 </html>
 
+
 <style is:global>
     @import "tailwindcss";
+    html,
+    body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--color-background);
+        color: var(--color-text);
+        /* scroll-behavior: smooth; */
+        overflow-y: auto; /*¿? */
+        -webkit-overflow-scrolling: touch; /*¿? */
+    }
+
     .no-scroll {
         overflow: hidden;
     }
@@ -46,19 +62,6 @@ const { head } = Astro.props;
         overflow: hidden;
         clip: rect(0 0 0 0);
         border: 0;
-    }
-
-    html,
-    body {
-        margin: 0;
-        width: 100%;
-        height: 100%;
-        background-color: var(--color-background);
-        color: var(--color-text);
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        /* scroll-behavior: smooth; */
-        overflow-y: auto; /*¿? */
-        -webkit-overflow-scrolling: touch; /*¿? */
     }
 
     /* dialog[open] {
