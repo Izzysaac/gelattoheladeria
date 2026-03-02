@@ -196,7 +196,9 @@ export const generarMensaje = () => {
     return lineas.join("\n");
 };
 
-export const hacerPedido = (tel = 3163896572) => {
+const whatsapp = document.querySelector("#datos").dataset.whatsapp;
+
+export const hacerPedido = () => {
     // 1. Validación usando el estado derivado (O(1) vs O(n))
     if (state.totalItems === 0) {
         // En lugar de alert, podrías usar un toast o un mensaje en el DOM
@@ -228,13 +230,13 @@ export const hacerPedido = (tel = 3163896572) => {
 
     // Usamos encodeURIComponent solo al final para asegurar que caracteres
     // especiales como #, & o emojis no rompan la URL
-    const url = `https://wa.me/${tel}?text=${encodeURIComponent(mensaje)}`;
+    const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(mensaje)}`;
 
     // 4. Abrir WhatsApp
     window.open(url, "_blank");
 };
 
-const telefono = document.querySelector("#datos").dataset.telefono;
+
 
 export const bindCheckout = () => {
     checkoutDom.checkoutMain.addEventListener("change", (e) => {

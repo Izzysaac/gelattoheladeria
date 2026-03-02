@@ -242,6 +242,7 @@ const buildContact = (info) => {
     return {
         direccion: info.direccion[0].valor,
         telefono: info.telefono,
+        whatsapp: info.whatsapp,
     };
 };
 
