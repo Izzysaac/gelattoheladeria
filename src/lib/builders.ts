@@ -54,6 +54,7 @@ const buildHead = (info) => {
         descripcion: info.descripcion,
         logo: info.logo,
         banner: info.banner,
+        ogimage: info.ogimage,
     };
 };
 
