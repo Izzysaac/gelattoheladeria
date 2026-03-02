@@ -1,5 +1,5 @@
 ---
-const { titulo, descripcion, logo, banner, head, styles } = Astro.props;
+const { titulo, descripcion, logo, banner, ogimage, styles } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -24,7 +24,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="icon" href={logo} />
     <meta name="description" content={descripcion} />
     <meta name="robots" content="index, follow" />
-    <meta name="og:image" content={head} />
+    <meta name="og:image" content={ogimage} />
     <meta name="og:title" content={titulo} />
     <meta name="og:description" content={descripcion} />
     <meta name="og:url" content={canonicalURL.href} />

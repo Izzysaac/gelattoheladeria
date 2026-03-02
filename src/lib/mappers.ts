@@ -36,6 +36,7 @@ const mapInfo = (infoRaw: any[]) => {
 
     const getList = (key: string) => grouped[key] ?? [];
 
+    console.log(infoRaw)
     // 🔵 resultado final limpio
     return {
         titulo: getSingle("titulo"),
@@ -44,7 +45,7 @@ const mapInfo = (infoRaw: any[]) => {
         mainLogo: getSingle("logo"),
         banner: getSingle("banner"),
         logo: getSingle("logo"),
-        head: getSingle("head"),
+        ogimage: getSingle("ogimage"),
         telefono: getSingle("telefono"),
         correo: getSingle("correo"),
         tiempoEntrega: getSingle("tiempo-entrega"),
