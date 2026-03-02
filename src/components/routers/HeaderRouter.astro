@@ -4,6 +4,7 @@ import HeaderDefault from "@components/headers/Header.astro";
 import HeaderCentered from "@components/headers/Centered.astro";
 import HeaderClassic from "@components/headers/Classic.astro";
 import HeaderBgInfoAbove from "@components/headers/Bg-InfoAbove.astro";
+import HeaderBroaster from "@components/headers/BroasterHeader.astro";
 
 const { tenant, header } = Astro.props;
 
@@ -13,6 +14,7 @@ const headers = {
     centered: HeaderCentered,
     classic: HeaderClassic,
     "bg-info-above": HeaderBgInfoAbove,
+    broaster: HeaderBroaster,
 };
 
 const TenantHeader = headers[tenant.layout.headerVariant] ?? HeaderDefault;

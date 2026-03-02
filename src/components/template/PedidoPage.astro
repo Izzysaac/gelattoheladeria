@@ -8,8 +8,9 @@ import StickyBar from "@components/sections/StickyBar.astro";
 import Modal from "@components/sections/Modal.astro";
 import Header from "@components/headers/Header.astro";
 import Badges from "@components/ui/Badges.astro";
+import HeaderRouter from "@components/routers/HeaderRouter.astro";
 
-const { head, styles, header, badges, contact, logo, menu, categorias, footer } = Astro.props;
+const { tenant, head, styles, header, badges, contact, logo, menu, categorias, footer } = Astro.props;
 const modo = "pedido";
 ---
 
@@ -22,7 +23,8 @@ const modo = "pedido";
         hidden
     >
     </div>
-    <Header {...header} />
+    <HeaderRouter tenant={tenant} header={header}/>
+
     <main class="flex flex-col items-center justify-center mb-26">
         <Badges {...badges} />
         <h1 class="invisible h-0">Menú</h1>

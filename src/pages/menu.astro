@@ -8,4 +8,4 @@ const { tenant, data } = await buildTenantData("menu");
 if (!tenant.pages.menu) return Astro.redirect("/");
 ---
 
-<MenuPage {...data} />
+<MenuPage {...data} tenant={tenant} />

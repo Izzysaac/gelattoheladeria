@@ -33,6 +33,7 @@ export function loadTenant(): TenantConfig {
 
         layout: {
             headerVariant: import.meta.env.HEADER_VARIANT || "default",
+            menuHeaderVariant: import.meta.env.MENU_HEADER_VARIANT || "default",
             eventosVariant: import.meta.env.EVENTOS_VARIANT || "default",
         },
     };

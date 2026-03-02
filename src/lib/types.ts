@@ -20,7 +20,8 @@ export type TenantConfig = {
     theme: string;
     pages: Pages;
     layout: {
-        headerVariant: "default" | "nobanner" | "centered";
+        headerVariant: "default" | "nobanner" | "broaster" | "centered";
+        menuHeaderVariant: "default" | "broaster";
         eventosVariant: "default" | "classic";
     };
     features: Features;

@@ -135,6 +135,7 @@ const buildHeader = (info, reviews) => {
         mainBanner: info.mainBanner,
         logo: buildLogo(info),
         banner: info.banner,
+        head: info.head,
         horario: buildHorario(info.horario),
         direccion: info.direccion,
         telefono: info.telefono,
