@@ -23,6 +23,7 @@ export function loadTenant(): TenantConfig {
             pedido: true,
             reserva: pagesEnv.includes("reserva"),
             eventos: pagesEnv.includes("eventos"),
+            ticket: pagesEnv.includes("ticket"),
         },
 
         features: {

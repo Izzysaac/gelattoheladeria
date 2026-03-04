@@ -1,10 +1,11 @@
-export type PageType = "main" | "menu" | "pedido" | "checkout" | "eventos";
+export type PageType = "main" | "menu" | "pedido" | "checkout" | "eventos" | "ticket" ;
 
 export type Pages = {
     menu: boolean;
     pedido: boolean;
     reserva: boolean;
     eventos: boolean;
+    ticket: boolean;
 };
 
 export type Features = {

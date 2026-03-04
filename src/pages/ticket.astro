@@ -1,0 +1,11 @@
+---
+import { buildTenantData } from "@lib/buildTenantData";
+
+import TicketPage from "@ticket/TicketPage.astro";
+
+const { tenant, data } = await buildTenantData("menu");
+
+if (!tenant.pages.ticket) return Astro.redirect("/");
+---
+
+<TicketPage {...data} tenant={tenant}/>
