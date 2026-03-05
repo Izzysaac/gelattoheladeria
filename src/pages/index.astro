@@ -1,9 +1,11 @@
 ---
 import { buildTenantData } from "@lib/buildTenantData";
 
-import MainPage from "@template/MainPage.astro";
+// import MainPage from "@template/MainPage.astro";
+import MainRouter from "@components/routers/MainRouter.astro";
 
 const { tenant, data } = await buildTenantData("main");
 ---
 
-<MainPage {...data} tenant={tenant} />
+<MainRouter tenant={tenant} data={data} />
+<!-- <MainPage {...data} tenant={tenant} /> -->

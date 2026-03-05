@@ -1,3 +1,5 @@
+import { background } from "@cloudinary/url-gen/qualifiers/focusOn";
+
 export const mapCMS = (cms) => {
 
 
@@ -45,6 +47,8 @@ const mapInfo = (infoRaw: any[]) => {
         banner: getSingle("banner"),
         logo: getSingle("logo"),
         ogimage: getSingle("ogimage"),
+        background: getSingle("background"),
+        auxiliarImg: getSingle("auxiliar-img"),
         telefono: getSingle("telefono"),
         whatsapp: getSingle("whatsapp"),
         correo: getSingle("correo"),

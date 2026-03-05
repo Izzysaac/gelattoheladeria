@@ -1,7 +1,7 @@
 html[data-theme="kassava"] {
 
     /* Base */
-    --brand: #771b0c;
+    --brand: rgba(238, 180, 85, 0.54);
     --accent: #404040;
 
     --neutral-0: white;
@@ -23,4 +23,13 @@ html[data-theme="kassava"] {
     --color-secondary: var(--accent);
     --color-on-secondary: var(--neutral-900);
     --color-active-secondary: oklch(from var(--brand) calc(l + 0.15) c h);
+
+        /* Menu Navigation */
+    --color-navmenu-category: white;
+    --color-navmenu-active: #EEB455;
+
+    /* Badges */
+    --bg-badge: #EEB455;
+    --text-badge: white;
 }
+

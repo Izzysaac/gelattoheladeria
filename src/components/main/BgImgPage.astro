@@ -1,0 +1,116 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import HeaderRouter from "@components/routers/HeaderRouter.astro";
+
+import InfoIcon from "@assets/information.svg";
+import Informacion from "@components/sections/Informacion.astro";
+
+import Footer from "@layoutsFooter.astro";
+import ButtonList from "@components/sections/ButtonList.astro";
+import Reviews from "@components/features/Reviews.astro";
+import { getCldImageUrl } from "node_modules/astro-cloudinary/src/helpers/getCldImageUrl";
+
+const { tenant, head, styles, header, buttonsList, footer, reviews } =
+    Astro.props;
+
+const {
+    titulo,
+    descripcion,
+    logo,
+    banner,
+    background,
+    auxiliarImg,
+    horario,
+    socials,
+    direccion,
+    telefono,
+    correo,
+} = header;
+
+const bg = getCldImageUrl({ src: background });
+---
+
+<BaseLayout head={head} styles={styles}>
+    <header
+        id="mainHeader"
+        style={`background-image: url(${bg});`}
+        class="m-auto mb-2 flex min-h-full max-w-120 flex-col items-center text-(--main-text) pb-8 px-4 background-image"
+    >
+        <button
+            id="infoBtn"
+            class="group fixed top-3 right-3 rounded-full"
+            aria-label="Más información"
+        >
+            <InfoIcon
+                width={35}
+                height={35}
+                fill="var(--color-background)"
+                stroke="var(--color-text)"
+                class:list={"pointer-events-none group-active:fill-(--color-active-secondary)"}
+                aria-label="Más información"
+            />
+        </button>
+
+        <h1 id="titulo" class="visually-hidden">{titulo}</h1>
+
+        <img src={auxiliarImg} alt=`Logotipo de ${titulo}` class="w-10/12 max-w-100 mt-[35%] opacity-90" />
+        
+        <div class="w-full mt-auto">
+            <ButtonList {...buttonsList} pagina="main" />
+        </div>
+        <div>
+            <p class="flex w-full px-2.5 items-center text-xs">
+                <span id="statusLight"
+            class="block h-4.5 w-4.5 rounded-full border-3 border-(--color-background) animate-pulse"></span>
+                <span id="statusMsg"
+                data-horario={JSON.stringify(horario)}
+                class="">Cargando ...</span>
+            </p>
+        </div>
+        <Informacion {horario} {socials} {direccion} {telefono} {correo} />
+    </header>
+    {
+        tenant.features.reviews && reviews.userRatingCount > 0 && (
+            <Reviews {...reviews} />
+        )
+    }
+    <!-- <Footer {...footer} class:list={"mt-26"} /> -->
+
+    <script src="../../scripts/modal.js"></script>
+    <script src="../../scripts/header/information.js"></script>
+    <script src="../../scripts/header/status/index.js"></script>
+</BaseLayout>
+
+<style define:vars={{bg}}>
+    @import "tailwindcss";
+
+    .background-image {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+
+    .open {
+        @apply bg-green-500;
+    }
+    .closed {
+        @apply bg-red-500;
+    }
+    .closing-soon {
+        @apply bg-orange-500;
+    }
+    .opening-soon {
+        @apply bg-blue-500;
+    }
+    /* Status light on logo */
+    .anchor-img {
+        anchor-name: --logo-image;
+    }
+    /* #statusLight {
+        position: absolute;
+        position-anchor: --logo-image;
+        bottom: calc(anchor(bottom) + 3px);
+        right: calc(anchor(right) + 3px);
+    } */
+</style>

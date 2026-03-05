@@ -344,7 +344,7 @@ export const renderResumen = () => {
                     <figure class="h-16 w-16 aspect-square">
                         <img src="${item.imagen}" alt="${item.nombre}" class="rounded object-cover h-full w-full"/>
                     </figure>
-                    <span class="product-badge self-end absolute -top-1 -right-1 bg-(--color-primary) text-(--color-on-primary) rounded px-2 py-0.5 text-xs text-bold">${item.cantidad}</span>
+                    <span class="product-badge self-end absolute -top-1 -right-1 bg-black text-white rounded px-2 py-0.5 text-xs text-bold">${item.cantidad}</span>
                 </div>
                 <div>
                     <p class="product-name">${item.nombre}</p>
@@ -356,7 +356,7 @@ export const renderResumen = () => {
             `<li class="product-item flex gap-2 items-center sin-img">
                 <div class="flex relative w-fit">
                     <div class="h-16 w-16 flex items-center justify-center">
-                        <span class="product-badge bg-(--color-primary) text-(--color-on-primary) rounded px-2 py-0.5 text-xs text-bold">${item.cantidad}</span>
+                        <span class="product-badge bg-black text-white rounded px-2 py-0.5 text-xs text-bold">${item.cantidad}</span>
                         <span> &nbsp;x </span>
                     </div>
                 </div>

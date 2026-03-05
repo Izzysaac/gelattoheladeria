@@ -21,6 +21,7 @@ export type TenantConfig = {
     theme: string;
     pages: Pages;
     layout: {
+        mainLayout: "default" | "bg-image";
         headerVariant: "default" | "nobanner" | "broaster" | "centered";
         menuHeaderVariant: "default" | "broaster";
         eventosVariant: "default" | "classic";

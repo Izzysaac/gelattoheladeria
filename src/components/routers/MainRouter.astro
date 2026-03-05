@@ -1,0 +1,17 @@
+---
+import MainDefault from "@components/main/MainPage.astro";
+import MainBgImage from "@components/main/BgImgPage.astro";
+
+const { tenant, data } = Astro.props;
+
+const mains = {
+    default: MainDefault,
+    "bg-image": MainBgImage
+};
+
+const TenantMain = mains[tenant.layout.mainLayout] ?? MainDefault;
+
+---
+
+<TenantMain {...data} tenant={tenant} />
+
