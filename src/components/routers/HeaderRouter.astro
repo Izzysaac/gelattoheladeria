@@ -6,7 +6,9 @@ import HeaderClassic from "@components/headers/Classic.astro";
 import HeaderBgInfoAbove from "@components/headers/Bg-InfoAbove.astro";
 import HeaderBroaster from "@components/headers/BroasterHeader.astro";
 
-const { tenant, header } = Astro.props;
+const { tenant, header, page } = Astro.props;
+
+console.log(tenant)
 
 const headers = {
     default: HeaderDefault,
@@ -17,8 +19,9 @@ const headers = {
     broaster: HeaderBroaster,
 };
 
-const TenantHeader = headers[tenant.layout.headerVariant] ?? HeaderDefault;
+const TenantMainHeader = headers[tenant.layout.headerVariant] ?? HeaderDefault;
+const TenantHeader = headers[tenant.layout.menuHeaderVariant] ?? HeaderDefault;
 
 ---
 
-<TenantHeader {...header} />
+{page === "main" ? <TenantMainHeader {...header} /> : <TenantHeader {...header} />}

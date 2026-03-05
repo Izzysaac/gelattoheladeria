@@ -120,6 +120,12 @@ const mapEventos = (eventosRaw: any[]) => {
             descripcion: row.descripcion?.trim() || "",
 
             media: row.media?.trim() || "",
+
+            galeria: row.galeria
+				? row.galeria.split(";")
+						.map((m) => m.trim())
+						.filter((m) => m)
+				: [],
         }));
 };
 

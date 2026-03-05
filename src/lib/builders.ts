@@ -37,7 +37,7 @@ export const buildCheckoutPageData = ( {tenant, info, estilos}) => {
 
 export const buildEventosPageData = ({ tenant, info, eventos, estilos }) => {
     return {
-        head: buildHead(info),
+        head: buildEventosHead(info, eventos),
         styles: buildStyles(estilos),
         eventos: buildEvents(eventos),
         footer: buildFooter(info),
@@ -57,6 +57,17 @@ const buildHead = (info) => {
         ogimage: info.ogimage,
     };
 };
+
+const buildEventosHead = (info, eventos) => {
+    return {
+        titulo: info.titulo,
+        descripcion: info.descripcion,
+        logo: info.logo,
+        banner: info.banner,
+        ogimage: info.ogimage,
+        eventos: buildEvents(eventos)
+    };
+}
 
 const buildStyles = (estilos) => {
     const fuenteRegular = estilos?.["fuente-regular"] ?? "";
@@ -325,7 +336,6 @@ const buildEvents = (eventos) => {
     const principal = eventos.find((evento) => evento.clave === "principal") || null;
     const botones = eventos.filter((evento) => evento.clave === "boton");
     const contacto = eventos.find((evento) => evento.clave === "contacto") || null;
-
 
     return {
         principal,

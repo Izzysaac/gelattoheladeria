@@ -109,17 +109,17 @@ window.generatePDF = async function() {
         }
         
         // Preguntar si desea descargar o previsualizar
-        const action = confirm('PDF generado exitosamente.\n\nPresione OK para descargar o Cancelar para previsualizar');
+        // const action = confirm('PDF generado exitosamente.\n\nPresione OK para descargar o Cancelar para previsualizar');
         
-        if (action) {
-            // Descargar PDF
-            const downloaded = downloadPDF(result.pdfBytes, result.filename);
-            if (downloaded) {
-                showMessage(`PDF descargado: ${result.filename}`, 'success');
-            } else {
-                showMessage('Error al descargar el PDF', 'error');
-            }
-        } else {
+        // if (action) {
+        //     // Descargar PDF
+        //     const downloaded = downloadPDF(result.pdfBytes, result.filename);
+        //     if (downloaded) {
+        //         showMessage(`PDF descargado: ${result.filename}`, 'success');
+        //     } else {
+        //         showMessage('Error al descargar el PDF', 'error');
+        //     }
+        // } else {
             // Previsualizar PDF
             const previewed = previewPDF(result.pdfBytes);
             if (previewed) {
@@ -127,7 +127,7 @@ window.generatePDF = async function() {
             } else {
                 showMessage('Error al abrir previsualización. Verifique que no esté bloqueando ventanas emergentes.', 'error');
             }
-        }
+        // }
         
     } catch (error) {
         console.error('Error generando PDF:', error);

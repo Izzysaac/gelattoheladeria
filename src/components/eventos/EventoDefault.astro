@@ -5,13 +5,11 @@ import { CldImage } from 'astro-cloudinary';
 import EventButtons from "./EventButtons.astro";
 
 const { principal, botones } = Astro.props;
-
-
 ---
 
 <div class="max-w-125 m-auto">
 
-    <div>
+    <div class="bg-(--color-primary) pb-5">
         <img src={principal.media}/>
     </div>
     
@@ -20,7 +18,7 @@ const { principal, botones } = Astro.props;
         <p class="text-center mt-6 text-pretty px-2.5">{principal.descripcion}</p>
     
         <!-- <ButtonList botones={botones} pagina="eventos"/> -->
-         <EventButtons botones={botones}/>
+        <EventButtons botones={botones}/>
 
     </main>
 </div>

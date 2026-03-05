@@ -11,12 +11,13 @@ const { tenant, head, styles, header, buttonsList, footer, reviews } = Astro.pro
 
 <BaseLayout head={head} styles={styles}>
 
-    <HeaderRouter tenant={tenant} header={header}/>
+    <HeaderRouter tenant={tenant} header={header} page="main"/>
 
     <main>
         <ButtonList {...buttonsList} pagina="main" />
         {tenant.features.reviews && reviews.userRatingCount > 0 && <Reviews {...reviews} />}
         <slot />
     </main>
+    
     <Footer {...footer} class:list={"mt-26"}/>
 </BaseLayout>

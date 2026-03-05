@@ -1,12 +1,10 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Footer from "@layouts/Footer.astro";
+import ImageCarousel from "@components/ui/ImageCarousel.astro";
+
 import { buildTenantData } from "@lib/buildTenantData";
 import { toSlugPage } from "@scripts/utils";
-
-const { tenant, data } = await buildTenantData("eventos");
-
-if (!tenant.pages.eventos) return Astro.redirect("/");
 
 export async function getStaticPaths() {
 
@@ -15,47 +13,51 @@ export async function getStaticPaths() {
     if (!tenant.pages.eventos) return [];
 
     const botones = data?.eventos?.botones ?? [];
-    return botones.map((boton) => ({
+    return botones.map((boton: any) => ({
         params: { slug: toSlugPage(boton.nombre) },
         props: { boton, data },
     }));
 }
 
-const { slug } = Astro.params;
-const botones = data?.eventos?.botones ?? [];
-const evento = botones.find((b) => toSlugPage(b.nombre) === slug) ?? null;
+const { boton, data } = Astro.props;
 
-const contacto = data?.eventos?.contacto ?? null;
+const { head, styles , eventos, footer } = data;
+const { nombre , descripcion, media, galeria} = boton;
+const contacto = (eventos as any)?.contacto ?? null;
 
+// De forma dinámica trabajar el seo con la descripción e imagen en el head
+const evento = {
+    principal: {
+        descripcion: descripcion,
+        media: media,
+    }
+}
+// Create a new head object with the eventos property
+const headWithEventos = {
+    ...head as any,
+    eventos: evento
+};
 ---
 
+<BaseLayout styles={styles} head={headWithEventos}>
 
-<BaseLayout styles={data.estilos}>
+        <div class="max-w-125 m-auto">
+            
+            <div class="bg-(--color-primary) pb-5">
+                <img src={media} alt={nombre} />
+            </div>
 
-{
-    evento ? (
+            <main class="px-2.5 py-6 flex flex-col gap-2">
 
-    <div class="max-w-125 m-auto">
-        
-        <div>
-            <img src={evento.media} alt={evento.nombre} />
+                <h1 class="text-center text-title text-xl">{nombre}</h1>
+                <p class="text-pretty">{descripcion}</p>
+                <a href={contacto.descripcion} class="m-auto block bg-(--color-primary) text-(--color-on-primary) rounded-full px-3 py-2 mt-4">{contacto.nombre}</a>
+
+                <ImageCarousel galeria={galeria} />
+                
+            </main>
+
         </div>
 
-        <main class="px-2.5 py-6 flex flex-col">
-
-            <h1 class="text-center text-title">{evento.nombre}</h1>
-            <p class="text-pretty">{evento.descripcion}</p>
-            <a href={contacto.descripcion} class="m-auto block bg-(--color-primary) text-(--color-on-primary) rounded-full px-3 py-2 mt-4">{contacto.nombre}</a>
-
-        </main>
-
-    </div>
-
-    ) : (
-        <p>Evento no encontrado</p>
-    )
-}
-
-<Footer {...data.footer}/>
-
+    <Footer {...(footer as any)} />
 </BaseLayout>
