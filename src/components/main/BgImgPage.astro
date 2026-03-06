@@ -36,21 +36,6 @@ const bg = getCldImageUrl({ src: background });
         style={`background-image: url(${bg});`}
         class="m-auto mb-2 flex min-h-full max-w-120 flex-col items-center text-(--main-text) pb-8 px-4 background-image"
     >
-        <button
-            id="infoBtn"
-            class="group fixed top-3 right-3 rounded-full"
-            aria-label="Más información"
-        >
-            <InfoIcon
-                width={35}
-                height={35}
-                fill="var(--color-background)"
-                stroke="var(--color-text)"
-                class:list={"pointer-events-none group-active:fill-(--color-active-secondary)"}
-                aria-label="Más información"
-            />
-        </button>
-
         <h1 id="titulo" class="visually-hidden">{titulo}</h1>
 
         <img src={auxiliarImg} alt=`Logotipo de ${titulo}` class="w-10/12 max-w-100 mt-[35%] opacity-90" />
