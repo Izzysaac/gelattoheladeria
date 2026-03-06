@@ -22,7 +22,7 @@ export type TenantConfig = {
     pages: Pages;
     layout: {
         mainLayout: "default" | "bg-image";
-        headerVariant: "default" | "nobanner" | "broaster" | "centered";
+        headerVariant: "default" | "defaultUppercase" |"nobanner" | "broaster" | "centered";
         menuHeaderVariant: "default" | "broaster";
         eventosVariant: "default" | "classic";
     };

@@ -5,11 +5,13 @@ import HeaderCentered from "@components/headers/Centered.astro";
 import HeaderClassic from "@components/headers/Classic.astro";
 import HeaderBgInfoAbove from "@components/headers/Bg-InfoAbove.astro";
 import HeaderBroaster from "@components/headers/BroasterHeader.astro";
+import HeaderUppercase from "@components/headers/HeaderUppercase.astro";
 
 const { tenant, header, page } = Astro.props;
 
 const headers = {
     default: HeaderDefault,
+    defaultUppercase: HeaderUppercase,
     nobanner: HeaderNoBanner,
     centered: HeaderCentered,
     classic: HeaderClassic,

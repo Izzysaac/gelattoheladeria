@@ -1,0 +1,116 @@
+---
+import InfoIcon from "@assets/information.svg";
+import Informacion from "@components/sections/Informacion.astro";
+
+const {
+    titulo,
+    descripcion,
+    logo,
+    banner,
+    horario,
+    socials,
+    direccion,
+    telefono,
+    correo,
+} = Astro.props;
+
+---
+
+<header
+    id="mainHeader"
+    class="m-auto flex max-w-120 flex-col items-center text-(--main-text) mb-2"
+>
+    <button id="infoBtn"
+        class="fixed top-3 right-3  rounded-full group"
+        aria-label="Más información"
+    >
+        <InfoIcon
+            width={35}
+            height={35}
+            fill="var(--color-background)"
+            stroke="var(--color-text)"
+            class:list={"pointer-events-none group-active:fill-(--color-active-secondary)"}
+            aria-label="Más información"
+        />
+    </button>
+
+    <img
+        id="banner"
+        src={banner}
+        alt=`Imagen de presentacion de ${titulo}`
+        fetchpriority="high"
+        loading="eager"
+        width="820"
+        height="462"
+    />
+
+    <div id="anchorContainer" class="flex w-full p-2.5">
+        <a id="logo" href="/" class="relative">
+            <img
+                id="logoImg"
+                src={logo.logo}
+                alt={logo.titulo}
+                width="70px"
+                height="70px"
+                class="anchor-img pointer-events-none rounded-full border-3 border-(--color-border)"
+                fetchpriority="high"
+                loading="eager"
+            />
+            <div
+                id="statusLight"
+                class="h-4.5 w-4.5 rounded-full border-3 border-(--color-background)"
+            >
+            </div>
+        </a>
+
+        <div class="flex flex-col justify-center px-2.5">
+            <h1 id="titulo" class="text-xl text-title">{titulo}</h1>
+            <p
+                id="statusMsg"
+                data-horario={JSON.stringify(horario)}
+                class="text-sm opacity-90"
+            >
+                Cargando ...
+            </p>
+        </div>
+    </div>
+
+    <p class="px-2.5 opacity-95 text-sm">{descripcion}</p>
+    <Informacion {...Astro.props} />
+</header>
+
+<script src="../../scripts/modal.js"></script>
+<script src="../../scripts/header/information.js"></script>
+<script src="../../scripts/header/status/index.js"></script>
+
+<style>
+    @import "tailwindcss";
+
+    .open {
+        @apply bg-green-500;
+    }
+    .closed {
+        @apply bg-red-500;
+    }
+    .closing-soon {
+        @apply bg-orange-500;
+    }
+    .opening-soon {
+        @apply bg-blue-500;
+    }
+    /* Status light on logo */
+    .anchor-img {
+        anchor-name: --logo-image;
+    }
+    /* #statusLight {
+        position: absolute;
+        position-anchor: --logo-image;
+        bottom: calc(anchor(bottom) + 3px);
+        right: calc(anchor(right) + 3px);
+    } */
+    #statusLight {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+    }
+</style>
