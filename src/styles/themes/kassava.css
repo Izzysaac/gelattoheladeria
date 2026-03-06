@@ -32,4 +32,10 @@ html[data-theme="kassava"] {
     --bg-badge: #EEB455;
     --text-badge: white;
 }
+.header-descripcion{
+    font-size: 14px;
+}
 
+.badges {
+    font-weight: 700;
+}

@@ -8,7 +8,7 @@ const {rating, userRatingCount, tiempoEntrega, valorEntrega} = Astro.props;
 
 ---
 
-<div class="box-shadow-bages text-sm border border-(--color-border) rounded-2xl py-3 flex justify-evenly items-end w-[calc(100%-20px)] max-w-125 my-3 select-none bg-(--bg-badge)/58">
+<div class="badges box-shadow-bages text-sm border border-(--color-border) rounded-2xl py-3 flex justify-evenly items-end w-[calc(100%-20px)] max-w-125 my-3 select-none bg-(--bg-badge)/58">
     <p>
         <StarIcon width={20} height={20} fill="var(--color-background)" class:list={"inline text-center"}/>
         <span>{rating} ({userRatingCount})</span>
