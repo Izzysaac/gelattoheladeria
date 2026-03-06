@@ -1,13 +1,33 @@
-// pdf.js - Generador de PDF usando pdf-lib
+// pdf.js - Generador de PDF usando html2pdf.js
 
-import { PDFDocument, StandardFonts, rgb } from 'https://cdn.skypack.dev/pdf-lib@1.17.1';
+/**
+ * Loads html2pdf.js dynamically if not already loaded
+ */
+async function loadHtml2Pdf() {
+    if (typeof window !== 'undefined' && window.html2pdf) {
+        return window.html2pdf;
+    }
+    
+    // Dynamically load html2pdf.js
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js';
+    document.head.appendChild(script);
+    
+    // Wait for script to load
+    return new Promise((resolve, reject) => {
+        script.onload = () => {
+            resolve(window.html2pdf);
+        };
+        script.onerror = reject;
+    });
+}
 
 /**
  * Formatea número como moneda colombiana
  */
 function formatCurrency(amount) {
     return new Intl.NumberFormat('es-CO', {
-        style: 'currency',
+        // style: 'currency',
         currency: 'COP',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
@@ -28,354 +48,138 @@ function formatDate(date) {
 }
 
 /**
- * Genera PDF del pedido
+ * Loads the HTML template and populates it with order data
+ */
+async function loadAndPopulateTemplate(orderData) {
+    try {
+        // Load the HTML template
+        const response = await fetch('./ticket.html');
+        const htmlTemplate = await response.text();
+        
+        // Create a temporary DOM element to work with the template
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlTemplate, 'text/html');
+        
+        // Generate order number and dates
+        const orderNumber = `PED-${Date.now().toString().slice(-6)}`;
+        const currentDate = formatDate(new Date());
+
+        // Populate header information
+        // doc.getElementById('order-number').textContent = orderNumber;
+        doc.getElementById('order-date').textContent = currentDate;
+        // doc.getElementById('generation-date').textContent = currentDate;
+        
+        // Populate client information
+        const client = orderData.client || {};
+        console.log(client)
+        doc.getElementById('client-name').textContent = client.name || '';
+        doc.getElementById('client-phone').textContent = client.phone || '';
+        if (client.deliveryType == "Domicilio") {
+            doc.getElementById('client-delivery-type').textContent = client.deliveryType || '';
+            doc.getElementById('client-address').textContent = client.address || '';
+        } else {
+            doc.getElementById('client-delivery-type').textContent = client.deliveryType || '';
+            doc.getElementById('client-address').parentElement.remove();
+        }
+        doc.getElementById('client-payment').textContent = client.payment || '';
+        if (client.notes == "") {
+            doc.getElementById('client-notes').parentElement.remove();
+        } else {
+            doc.getElementById('client-notes').textContent = client.notes || '';
+        }
+        
+        // Populate products table
+        const tbody = doc.getElementById('products-tbody');
+        tbody.innerHTML = ''; // Clear existing content
+        
+        orderData.items.forEach((item) => {
+            const subtotal = item.cantidad * item.precio;
+            const row = doc.createElement('tr');
+            
+            // row.innerHTML = `
+            // <td class="text-right">${item.cantidad}</td>
+            //     <td class="product-name">${item.producto.charAt(0).toUpperCase() + item.producto.slice(1)}</td>
+            //     <td>${item.unidad}</td>
+            //     <td class="text-right">${formatCurrency(item.precio)}</td>
+            //     <td class="text-right">${formatCurrency(subtotal)}</td>
+            // `;
+            row.innerHTML = `
+                <td class="text-left cantidad">${item.cantidad}</td>
+                <td class="product-name">${item.producto.toUpperCase()}</td>
+                <td class="text-left precio-unitario">${formatCurrency(item.precio)}</td>
+                <td class="text-left subtotal">${formatCurrency(subtotal)}</td>
+            `;
+            
+            tbody.appendChild(row);
+        });
+        
+        // Populate totals
+        doc.getElementById('subtotal-amount').textContent = formatCurrency(orderData.subtotal);
+        // doc.getElementById('iva-amount').textContent = formatCurrency(orderData.iva);
+        doc.getElementById('total-amount').textContent = formatCurrency(orderData.total);
+        
+        return {
+            html: doc.documentElement.outerHTML,
+            orderNumber: orderNumber
+        };
+        
+    } catch (error) {
+        console.error('Error loading template:', error);
+        throw new Error(`Error cargando plantilla: ${error.message}`);
+    }
+}
+
+/**
+ * Genera PDF del pedido usando HTML template
  */
 export async function generateOrderPDF(orderData) {
     try {
-        // Crear nuevo documento PDF
-        const pdfDoc = await PDFDocument.create();
-        const page = pdfDoc.addPage([595, 842]); // A4 size
+        // Load html2pdf library
+        const html2pdf = await loadHtml2Pdf();
         
-        // Obtener fuentes
-        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-        const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+        // Load and populate the HTML template
+        const { html, orderNumber } = await loadAndPopulateTemplate(orderData);
         
-        // Configuración de colores
-        const primaryColor = rgb(0.17, 0.24, 0.31); // #2c3e50
-        const secondaryColor = rgb(0.2, 0.6, 0.86); // #3498db
-        const textColor = rgb(0.2, 0.2, 0.2);
-        const lightGray = rgb(0.95, 0.95, 0.95);
+        // Create a temporary container for the HTML
+        const tempContainer = document.createElement('div');
+        tempContainer.innerHTML = html;
+        tempContainer.style.position = 'absolute';
+        tempContainer.style.left = '-9999px';
+        tempContainer.style.top = '-9999px';
+        document.body.appendChild(tempContainer);
         
-        // Dimensiones de página
-        const { width, height } = page.getSize();
-        const margin = 50;
-        const contentWidth = width - (margin * 2);
-        
-        let yPosition = height - margin;
-        
-        // HEADER - Logo y título
-        page.drawRectangle({
-            x: margin,
-            y: yPosition - 80,
-            width: contentWidth,
-            height: 80,
-            color: primaryColor,
-        });
-        
-        page.drawText('EL BROASTER CHEF PITALITO', {
-            x: margin + 20,
-            y: yPosition - 35,
-            size: 24,
-            font: boldFont,
-            color: rgb(1, 1, 1),
-        });
-        
-        page.drawText('TICKET DE PEDIDO', {
-            x: margin + 20,
-            y: yPosition - 60,
-            size: 16,
-            font: font,
-            color: rgb(0.8, 0.8, 0.8),
-        });
-        
-        // Número de pedido y fecha
-        const orderNumber = `PED-${Date.now().toString().slice(-6)}`;
-        const currentDate = formatDate(new Date());
-        
-        page.drawText(`Pedido: ${orderNumber}`, {
-            x: width - margin - 150,
-            y: yPosition - 35,
-            size: 12,
-            font: boldFont,
-            color: rgb(1, 1, 1),
-        });
-        
-        page.drawText(`Fecha: ${currentDate}`, {
-            x: width - margin - 150,
-            y: yPosition - 55,
-            size: 10,
-            font: font,
-            color: rgb(0.8, 0.8, 0.8),
-        });
-        
-        yPosition -= 120;
-        
-        // INFORMACIÓN DEL CLIENTE (rellenada)
-        page.drawText('INFORMACIÓN DEL CLIENTE', {
-            x: margin,
-            y: yPosition,
-            size: 14,
-            font: boldFont,
-            color: primaryColor,
-        });
-        yPosition -= 25;
-        const client = orderData.client || {};
-        page.drawText(`Cliente: ${client.name || ''}`, {
-            x: margin,
-            y: yPosition,
-            size: 10,
-            font: font,
-            color: textColor,
-        });
-        page.drawText(`Teléfono: ${client.phone || ''}`, {
-            x: margin + 300,
-            y: yPosition,
-            size: 10,
-            font: font,
-            color: textColor,
-        });
-        yPosition -= 20;
-        page.drawText(`Dirección/Recogida: ${client.address || ''}`, {
-            x: margin,
-            y: yPosition,
-            size: 10,
-            font: font,
-            color: textColor,
-        });
-        yPosition -= 20;
-        page.drawText(`Método de pago: ${client.payment || ''}`, {
-            x: margin,
-            y: yPosition,
-            size: 10,
-            font: font,
-            color: textColor,
-        });
-        yPosition -= 20;
-        page.drawText(`Notas: ${client.notes || ''}`, {
-            x: margin,
-            y: yPosition,
-            size: 10,
-            font: font,
-            color: textColor,
-        });
-        yPosition -= 20;
-        yPosition -= 20;
-        
-        // TABLA DE PRODUCTOS
-        page.drawText('DETALLE DEL PEDIDO', {
-            x: margin,
-            y: yPosition,
-            size: 14,
-            font: boldFont,
-            color: primaryColor,
-        });
-        
-        yPosition -= 30;
-        
-        // Header de la tabla
-        const tableHeaders = ['PRODUCTO', 'CANT.', 'UNIDAD', 'PRECIO UNIT.', 'SUBTOTAL'];
-        const columnWidths = [200, 60, 80, 100, 100];
-        const columnPositions = [margin];
-        
-        // Calcular posiciones de columnas
-        for (let i = 1; i < columnWidths.length; i++) {
-            columnPositions.push(columnPositions[i-1] + columnWidths[i-1]);
-        }
-        
-        // Dibujar header de tabla
-        page.drawRectangle({
-            x: margin,
-            y: yPosition - 25,
-            width: contentWidth,
-            height: 25,
-            color: lightGray,
-        });
-        
-        tableHeaders.forEach((header, index) => {
-            page.drawText(header, {
-                x: columnPositions[index] + 5,
-                y: yPosition - 15,
-                size: 10,
-                font: boldFont,
-                color: textColor,
-            });
-        });
-        
-        yPosition -= 25;
-        
-        // Filas de productos
-        let rowIndex = 0;
-        orderData.items.forEach((item) => {
-            const subtotal = item.cantidad * item.precio;
-            
-            // Alternar color de fondo
-            if (rowIndex % 2 === 0) {
-                page.drawRectangle({
-                    x: margin,
-                    y: yPosition - 20,
-                    width: contentWidth,
-                    height: 20,
-                    color: rgb(0.98, 0.98, 0.98),
-                });
+        // Configure html2pdf options
+        const options = {
+            // margin: [15, 15, 15, 15], // top, right, bottom, left (in mm)
+            margin: [0, 0, 0, 0], 
+            filename: `pedido_${orderNumber}_${new Date().toISOString().slice(0, 10)}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+                scale: 2,
+                useCORS: true,
+                letterRendering: true,
+                allowTaint: false
+            },
+            jsPDF: {
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'portrait'
             }
-            
-            // Datos de la fila
-            const rowData = [
-                item.producto.charAt(0).toUpperCase() + item.producto.slice(1),
-                item.cantidad.toString(),
-                item.unidad,
-                formatCurrency(item.precio),
-                formatCurrency(subtotal)
-            ];
-            
-            rowData.forEach((data, index) => {
-                page.drawText(data, {
-                    x: columnPositions[index] + 5,
-                    y: yPosition - 12,
-                    size: 9,
-                    font: font,
-                    color: textColor,
-                });
-            });
-            
-            yPosition -= 20;
-            rowIndex++;
-        });
+        };
         
-        yPosition -= 20;
+        // Generate PDF
+        const pdfBytes = await html2pdf()
+            .set(options)
+            .from(tempContainer.querySelector('.ticket'))
+            .outputPdf('arraybuffer');
         
-        // TOTALES
-        const totalsStartY = yPosition;
-        
-        // Línea separadora
-        page.drawLine({
-            start: { x: margin + 300, y: yPosition },
-            end: { x: margin + contentWidth, y: yPosition },
-            thickness: 1,
-            color: textColor,
-        });
-        
-        yPosition -= 25;
-        
-        // Subtotal
-        page.drawText('Subtotal:', {
-            x: margin + 350,
-            y: yPosition,
-            size: 11,
-            font: font,
-            color: textColor,
-        });
-        
-        page.drawText(formatCurrency(orderData.subtotal), {
-            x: margin + 450,
-            y: yPosition,
-            size: 11,
-            font: font,
-            color: textColor,
-        });
-        
-        yPosition -= 20;
-        
-        // IVA
-        page.drawText('IVA (19%):', {
-            x: margin + 350,
-            y: yPosition,
-            size: 11,
-            font: font,
-            color: textColor,
-        });
-        
-        page.drawText(formatCurrency(orderData.iva), {
-            x: margin + 450,
-            y: yPosition,
-            size: 11,
-            font: font,
-            color: textColor,
-        });
-        
-        yPosition -= 25;
-        
-        // Total
-        page.drawRectangle({
-            x: margin + 340,
-            y: yPosition - 5,
-            width: 200,
-            height: 25,
-            color: primaryColor,
-        });
-        
-        page.drawText('TOTAL:', {
-            x: margin + 350,
-            y: yPosition + 5,
-            size: 12,
-            font: boldFont,
-            color: rgb(1, 1, 1),
-        });
-        
-        page.drawText(formatCurrency(orderData.total), {
-            x: margin + 450,
-            y: yPosition + 5,
-            size: 12,
-            font: boldFont,
-            color: rgb(1, 1, 1),
-        });
-        
-        yPosition -= 60;
-        
-        // NOTAS Y TÉRMINOS
-        page.drawText('NOTAS:', {
-            x: margin,
-            y: yPosition,
-            size: 12,
-            font: boldFont,
-            color: primaryColor,
-        });
-        
-        yPosition -= 20;
-        
-        const notes = [
-            '• Los precios incluyen IVA',
-            '• Productos frescos del día',
-            '• Entrega según disponibilidad',
-            '• Confirmar pedido por WhatsApp'
-        ];
-        
-        notes.forEach(note => {
-            page.drawText(note, {
-                x: margin,
-                y: yPosition,
-                size: 9,
-                font: font,
-                color: textColor,
-            });
-            yPosition -= 15;
-        });
-        
-        yPosition -= 20;
-        
-        // FOOTER
-        page.drawLine({
-            start: { x: margin, y: yPosition },
-            end: { x: margin + contentWidth, y: yPosition },
-            thickness: 1,
-            color: lightGray,
-        });
-        
-        yPosition -= 20;
-        
-        page.drawText('Distribuidora de Pollo - Productos frescos y de calidad', {
-            x: margin,
-            y: yPosition,
-            size: 8,
-            font: font,
-            color: rgb(0.5, 0.5, 0.5),
-        });
-        
-        page.drawText(`Generado el ${formatDate(new Date())}`, {
-            x: margin + 350,
-            y: yPosition,
-            size: 8,
-            font: font,
-            color: rgb(0.5, 0.5, 0.5),
-        });
-        
-        // Serializar PDF
-        const pdfBytes = await pdfDoc.save();
+        // Clean up temporary container
+        document.body.removeChild(tempContainer);
         
         return {
             success: true,
             pdfBytes: pdfBytes,
-            filename: `pedido_${orderNumber}_${new Date().toISOString().slice(0, 10)}.pdf`
+            filename: options.filename
         };
         
     } catch (error) {

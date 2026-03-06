@@ -215,8 +215,9 @@
                     placeholder="Pega aquí el mensaje de WhatsApp del cliente..."
                 ></textarea>
                 <div class="actions">
-                    <button class="btn" onclick="parseMessage()">🔍 Analizar Mensaje</button>
-                    <button id="btn-clear-all" class="btn btn-danger" onclick="clearAll()">🗑️ Limpiar Todo</button>
+                    <button class="btn" onclick="parseMessage()">Analizar</button>
+                    <button id="btn-clear-all" class="btn btn-danger" onclick="clearAll()">Limpiar</button>
+                    <button class="btn btn-success" onclick="generatePDF()">Generar PDF</button>
                 </div>
             </div>
             
@@ -228,31 +229,39 @@
             <div class="section" id="clientSection">
                 <h3>👤 Datos del Cliente</h3>
                 <form id="clientForm" autocomplete="off" style="display: flex; flex-wrap: wrap; gap: 24px;">
-                    <div style="flex: 1 1 250px; min-width: 220px;">
+                    <div >
                         <label for="clientName" style="font-weight: 500; color: #2c3e50;">Nombre</label>
                         <input type="text" id="clientName" name="clientName" class="editable" placeholder="Nombre completo" required />
                     </div>
-                    <div style="flex: 1 1 180px; min-width: 160px;">
+                    <div>
                         <label for="clientPhone" style="font-weight: 500; color: #2c3e50;">Teléfono</label>
                         <input type="tel" id="clientPhone" name="clientPhone" class="editable" placeholder="Ej: 3121234567" required pattern="[0-9\s\-\+]{7,}" />
                     </div>
-                    <div style="flex: 2 1 320px; min-width: 260px;">
-                        <label for="clientAddress" style="font-weight: 500; color: #2c3e50;">Dirección o Recogida</label>
-                        <input type="text" id="clientAddress" name="clientAddress" class="editable" placeholder="Dirección de entrega o 'Recogida local'" />
+                    <div>
+                        <label for="clientDeliveryType" style="font-weight: 500; color: #2c3e50;">Tipo de entrega</label>
+                        <select id="clientDeliveryType" name="clientDeliveryType" class="editable">
+                            <option value="">Seleccione...</option>
+                            <option value="Domicilio">Domicilio</option>
+                            <option value="Recogida local">Recogida local</option>
+                        </select>
                     </div>
-                    <div style="flex: 1 1 200px; min-width: 180px;">
+                    <div>
+                        <label for="clientAddress" style="font-weight: 500; color: #2c3e50;">Dirección</label>
+                        <input type="text" id="clientAddress" name="clientAddress" class="editable" placeholder="Dirección de entrega" />
+                    </div>
+                    <div>
                         <label for="clientPayment" style="font-weight: 500; color: #2c3e50;">Método de pago</label>
                         <select id="clientPayment" name="clientPayment" class="editable">
                             <option value="">Seleccione...</option>
                             <option value="Efectivo">Efectivo</option>
                             <option value="Transferencia">Transferencia</option>
-                            <option value="Nequi">Nequi</option>
+                            <!-- <option value="Nequi">Nequi</option>
                             <option value="Daviplata">Daviplata</option>
                             <option value="Tarjeta">Tarjeta</option>
-                            <option value="Otro">Otro</option>
+                            <option value="Otro">Otro</option> -->
                         </select>
                     </div>
-                    <div style="flex: 2 1 100%; min-width: 220px;">
+                    <div>
                         <label for="clientNotes" style="font-weight: 500; color: #2c3e50;">Notas</label>
                         <textarea id="clientNotes" name="clientNotes" class="editable" placeholder="Notas adicionales, referencias, etc..." style="min-height: 60px;"></textarea>
                     </div>
@@ -267,9 +276,8 @@
                     <table id="orderTable">
                         <thead>
                             <tr>
-                                <th>Producto</th>
                                 <th>Cantidad</th>
-                                <th>Unidad</th>
+                                <th>Producto</th>
                                 <th>Precio Unit.</th>
                                 <th>Subtotal</th>
                                 <th>Acciones</th>
@@ -285,10 +293,10 @@
                         <span>Subtotal:</span>
                         <span id="subtotal">$0.00</span>
                     </div>
-                    <div class="total-row">
+                    <!-- <div class="total-row">
                         <span>IVA (0%) OPCIONAL:</span>
                         <span id="iva">$0.00</span>
-                    </div>
+                    </div> -->
                     <div class="total-row total-final">
                         <span>Total:</span>
                         <span id="total">$0.00</span>

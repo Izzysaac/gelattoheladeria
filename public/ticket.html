@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket de Pedido</title>
+    <style>
+
+        :root{
+            --strong: #202020;
+            --medium: rgb(67, 67, 67);
+            --light: rgb(127, 127, 127);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #333;
+            background: white;
+            
+        }
+        
+        .ticket {
+            width: 210mm;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+        }
+        
+        /* Header */
+        .header {
+            color: var(--medium);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 2px dotted var(--medium);
+            & h1, .order-date {
+                font-size: 24px;
+                font-weight: bold;
+            }
+
+        }
+        
+        /* Section titles */
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--medium);
+            margin: 15px 0 15px 0;
+            text-transform: uppercase;
+        }
+        
+        /* Client info */
+        .client-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            font-size: 32px;
+        }
+        
+        .client-info .field {
+            font-size: 32px;
+            color: var(--strong);
+            display: block;
+
+            & strong {
+                font-size: 40px;
+                display: inline;
+            }
+            & span {
+                display: inline-block;
+                text-align: right;
+                width: 8ch;
+            }
+        }
+        
+        /* Order type*/
+        .order-type{
+            font-size: 32px;
+            display: flex;
+            flex-direction: column;
+            color: var(--strong);
+            & strong {
+                font-size: 38px;
+                display: inline-block;
+            }
+
+        }
+
+
+        /* Products table */
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .products-table thead {
+            background: #eaeaea;
+        }
+        
+        .products-table th {
+            padding: 10px 5px;
+            text-align: left;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--medium);
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .products-table td {
+            padding: 8px 5px;
+            font-size: 32px;
+            color: var(--strong);
+            font-weight: bold;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .precio-unitario {
+            color: var(--medium) !important;
+            font-size: 28px !important;
+        }
+        .subtotal {
+            text-align: center !important;
+
+        }
+        
+        
+        .products-table tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+        
+        .products-table .product-name {
+            text-transform: capitalize;
+        }
+        
+        
+        /* Totals section */
+        .totals-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-bottom: 2px dotted var(--medium);
+
+            display: flex;
+            flex-direction: column;
+            align-items: end;
+            font-size: 28px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .final {
+            font-size: 40px;
+            font-weight: bold;
+            color: var(--strong);
+        }
+
+    
+    </style>
+</head>
+<body>
+    <div class="ticket" id="ticket">
+        <!-- Header -->
+        <div class="header">
+            <h1>EL BROASTER CHEF PITALITO</h1>
+            <div class="order-date">Fecha: <span id="order-date"></span></div>
+            <!-- <div class="order-info">
+                <div class="order-number">Pedido: <span id="order-number"></span></div>
+            </div> -->
+        </div>
+
+        <!-- Products Table -->
+        <div class="section-title">DETALLE DE PEDIDO</div>
+        <table class="products-table">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">CANT.</th>
+                    <th style="width: 70%;">PRODUCTO</th>
+                    <th style="width: 10%;">P.U.</th>
+                    <th style="width: 10%;">SUBTOTAL</th>
+                </tr>
+            </thead>
+            <tbody id="products-tbody">
+                <tr>
+                    <td class="text-left cantidad">80</td>
+                        <td class="product-name">3 ALAS SALSA + GASEOSA</td>
+                        <td class="text-left precio-unitario">12.345</td>
+                        <td class="text-left subtotal">12.345</td>
+                </tr>
+                <!-- Products will be inserted here dynamically -->
+            </tbody>
+        </table>
+
+        <!-- Totals -->
+        <div class="totals-section">
+            <div class="total-row">
+                <span>Subtotal:</span>
+                <span id="subtotal-amount"></span>
+            </div>
+            <div class="total-row">
+                <span>Envio:</span>
+                <span id="delivery-amount"></span>
+            </div>
+            <div class="total-row final">
+                <span>TOTAL:</span>
+                <span id="total-amount"></span>
+            </div>
+        </div>
+
+        <!-- Order Type -->
+        <div class="order-type">
+            <div>Método de pago: <strong id="client-payment">Transferencia</strong></div>
+            <div>Tipo de entrega: <strong id="client-delivery-type"></strong></div>
+        </div>
+
+        <!-- Client Information -->
+        <div class="section-title">Información del Cliente</div>
+        <div class="client-info">
+            <p class="field"><span>Cliente:</span> <strong id="client-name">HJOL</strong></p>
+            <p class="field"><span>Teléfono:</span> <strong id="client-phone"></strong></p>
+            <p class="field"><span>Dirección:</span> <strong id="client-address"></strong></p>
+            <p class="field"><span>Notas:</span> <strong id="client-notes"></strong></p>
+        </div>
+
+        
+
+        <!-- Notes -->
+        <!-- <div class="notes-section">
+            <div class="section-title">Notas</div>
+            <ul class="notes-list">
+                <li>Los precios incluyen IVA</li>
+                <li>Productos frescos del día</li>
+                <li>Entrega según disponibilidad</li>
+                <li>Confirmar pedido por WhatsApp</li>
+            </ul>
+        </div> -->
+
+        <!-- Footer -->
+        <!-- <div class="footer">
+            <div>Distribuidora de Pollo - Productos frescos y de calidad</div>
+            <div>Generado el <span id="generation-date"></span></div>
+        </div> -->
+    </div>
+</body>
+</html>

@@ -57,16 +57,17 @@ function calculateTotals() {
         return sum + (item.cantidad * item.precio);
     }, 0);
     
-    const iva = subtotal * 0;
-    const total = subtotal + iva;
+    // const iva = subtotal * 0;
+    // const total = subtotal + iva;
+    const total = subtotal;
     
     currentOrder.subtotal = subtotal;
-    currentOrder.iva = iva;
+    // currentOrder.iva = iva;
     currentOrder.total = total;
     
     // Actualizar UI
     document.getElementById('subtotal').textContent = formatCurrency(subtotal);
-    document.getElementById('iva').textContent = formatCurrency(iva);
+    // document.getElementById('iva').textContent = formatCurrency(iva);
     document.getElementById('total').textContent = formatCurrency(total);
 }
 
@@ -81,12 +82,47 @@ function createTableRow(item, index) {
     const productOptions = Object.keys(PRODUCTOS_CONFIG).map(nombre => {
         return `<option value="${nombre}" ${item.producto === nombre ? 'selected' : ''}>${nombre}</option>`;
     }).join('');
+    // row.innerHTML = `
+    //     <td>
+    //         <select class="editable producto-select">
+    //             ${productOptions}
+    //         </select>
+    //     </td>
+    //     <td>
+    //         <input 
+    //             type="number" 
+    //             class="editable cantidad-input" 
+    //             value="${item.cantidad}" 
+    //             min="0.1" 
+    //             step="0.1"
+    //         />
+    //     </td>
+    //     <td>
+    //         <select class="editable unidad-select">
+    //             <option value="unidad" ${item.unidad === 'unidad' ? 'selected' : ''}>Unidad</option>
+    //             <option value="kg" ${item.unidad === 'kg' ? 'selected' : ''}>Kg</option>
+    //         </select>
+    //     </td>
+    //     <td>
+    //         <input 
+    //             type="number" 
+    //             class="editable precio-input" 
+    //             value="${item.precio}" 
+    //             min="0" 
+    //             step="100"
+    //         />
+    //     </td>
+    //     <td>
+    //         <strong>${formatCurrency(subtotal)}</strong>
+    //     </td>
+    //     <td>
+    //         <button class="btn btn-danger remove-btn" style="padding: 6px 12px; font-size: 12px;">
+    //             🗑️ Eliminar
+    //         </button>
+    //     </td>
+    // `;
+    
     row.innerHTML = `
-        <td>
-            <select class="editable producto-select">
-                ${productOptions}
-            </select>
-        </td>
         <td>
             <input 
                 type="number" 
@@ -97,9 +133,8 @@ function createTableRow(item, index) {
             />
         </td>
         <td>
-            <select class="editable unidad-select">
-                <option value="unidad" ${item.unidad === 'unidad' ? 'selected' : ''}>Unidad</option>
-                <option value="kg" ${item.unidad === 'kg' ? 'selected' : ''}>Kg</option>
+            <select class="editable producto-select">
+                ${productOptions}
             </select>
         </td>
         <td>
@@ -116,10 +151,11 @@ function createTableRow(item, index) {
         </td>
         <td>
             <button class="btn btn-danger remove-btn" style="padding: 6px 12px; font-size: 12px;">
-                🗑️ Eliminar
+                Eliminar
             </button>
         </td>
     `;
+    
     return row;
 }
 
@@ -196,7 +232,7 @@ function addProduct() {
     const newItem = {
         producto: firstProduct,
         cantidad: 1,
-        unidad: PRODUCTOS_CONFIG[firstProduct]?.unidadDefault || 'unidad',
+        // unidad: PRODUCTOS_CONFIG[firstProduct]?.unidadDefault || 'unidad',
         precio: PRODUCTOS_CONFIG[firstProduct]?.precio || 0
     };
     currentOrder.items.push(newItem);
@@ -214,7 +250,7 @@ function saveToLocalStorage() {
             items: currentOrder.items,
             timestamp: new Date().toISOString(),
             subtotal: currentOrder.subtotal,
-            iva: currentOrder.iva,
+            // iva: currentOrder.iva,
             total: currentOrder.total
         };
         
@@ -329,7 +365,7 @@ export const clearAll = function() {
     document.getElementById('whatsappMessage').value = '';
     document.getElementById('orderSection').style.display = 'none';
     // Limpiar campos de cliente
-    const clientFields = ['clientName', 'clientPhone', 'clientAddress', 'clientPayment', 'clientNotes'];
+    const clientFields = ['clientName', 'clientPhone', 'clientAddress', 'clientDeliveryType', 'clientPayment', 'clientNotes'];
     clientFields.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -364,13 +400,13 @@ export function initializeUI() {
             // Al cambiar producto, actualizar nombre y precio automáticamente
             const newProduct = e.target.value;
             const newPrice = PRODUCTOS_CONFIG[newProduct]?.precio || 0;
-            const newUnidad = PRODUCTOS_CONFIG[newProduct]?.unidadDefault || 'unidad';
+            // const newUnidad = PRODUCTOS_CONFIG[newProduct]?.unidadDefault || 'unidad';
             // Actualiza producto, precio y unidad
             updateItem(index, 'producto', newProduct);
             updateItem(index, 'precio', newPrice);
-            updateItem(index, 'unidad', newUnidad);
+            // updateItem(index, 'unidad', newUnidad);
         } else if (e.target.classList.contains('unidad-select')) {
-            updateItem(index, 'unidad', e.target.value);
+            // updateItem(index, 'unidad', e.target.value);
         } else if (e.target.classList.contains('cantidad-input')) {
             updateItem(index, 'cantidad', parseFloat(e.target.value));
         } else if (e.target.classList.contains('precio-input')) {
@@ -412,6 +448,7 @@ export function getCurrentOrder() {
     // Obtener datos de cliente desde el formulario
     const name = document.getElementById('clientName')?.value || '';
     const phone = document.getElementById('clientPhone')?.value || '';
+    const deliveryType = document.getElementById('clientDeliveryType')?.value || '';
     const address = document.getElementById('clientAddress')?.value || '';
     const payment = document.getElementById('clientPayment')?.value || '';
     const notes = document.getElementById('clientNotes')?.value || '';
@@ -424,6 +461,7 @@ export function getCurrentOrder() {
         client: {
             name,
             phone,
+            deliveryType,
             address,
             payment,
             notes
