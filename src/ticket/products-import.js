@@ -5,7 +5,6 @@
 // Import dinámico de productos
 export const PRODUCTOS_CONFIG = {
   "Ideal": {
-
     "precio": 13000,
     "categoria": "Combos",
     "descripcion": "2 presas (no pechuga) · 2 arepas · papas francesa · salsas · gaseosa",
@@ -129,6 +128,8 @@ export const PRODUCTOS_CONFIG = {
     "descripcion": ""
   }
 };
+
+export const DELIVERY = 5000;
 
 // Metadata
 export const PRODUCTS_METADATA = {

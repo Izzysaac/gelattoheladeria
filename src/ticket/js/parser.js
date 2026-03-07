@@ -9,9 +9,7 @@ const UNIDADES_PATTERNS = {
     'unidad': ['unidad', 'unidades', 'u', 'ud', 'uds', 'pieza', 'piezas']
 };
 
-/**
- * Normaliza texto removiendo acentos y convirtiendo a minúsculas
- */
+/* Normaliza texto removiendo acentos y convirtiendo a minúsculas */
 function normalizeText(text) {
     return text
         .toLowerCase()
@@ -20,9 +18,7 @@ function normalizeText(text) {
         .trim();
 }
 
-/**
- * Convierte números escritos en texto a dígitos
- */
+/* Convierte números escritos en texto a dígitos */
 function textToNumber(text) {
     const numberWords = {
         'un': 1, 'una': 1, 'uno': 1,
@@ -36,9 +32,7 @@ function textToNumber(text) {
     return numberWords[normalized] || null;
 }
 
-/**
- * Extrae números del texto (dígitos o palabras)
- */
+/* Extrae números del texto (dígitos o palabras) */
 function extractNumbers(text) {
     const numbers = [];
     
@@ -74,9 +68,7 @@ function extractNumbers(text) {
     return numbers.sort((a, b) => a.position - b.position);
 }
 
-/**
- * Identifica el producto basado en coincidencia exacta de nombre (ignorando mayúsculas/minúsculas y acentos)
- */
+/* Identifica el producto basado en coincidencia exacta de nombre (ignorando mayúsculas/minúsculas y acentos) */
 function identifyProduct(text) {
     const normalized = normalizeText(text);
     for (const producto of Object.keys(PRODUCTOS_CONFIG)) {
@@ -87,9 +79,7 @@ function identifyProduct(text) {
     return null;
 }
 
-/**
- * Identifica la unidad en el texto
- */
+/* Identifica la unidad en el texto */
 function identifyUnit(text, defaultUnit = 'unidad') {
     const normalized = normalizeText(text);
     
@@ -104,9 +94,7 @@ function identifyUnit(text, defaultUnit = 'unidad') {
     return defaultUnit;
 }
 
-/**
- * Parsea una línea de texto buscando cantidad + producto + unidad
- */
+/* Parsea una línea de texto buscando cantidad + producto + unidad */
 function parseLine(line) {
     const items = [];
     const normalized = normalizeText(line);
@@ -186,9 +174,7 @@ function parseLine(line) {
     return items;
 }
 
-/**
- * Función principal para parsear mensaje completo de WhatsApp
- */
+/* Función principal para parsear mensaje completo de WhatsApp */
 export function parseWhatsAppMessage(message) {
     if (!message || typeof message !== 'string') {
         return {
@@ -256,9 +242,7 @@ export function parseWhatsAppMessage(message) {
     }
 }
 
-/**
- * Valida y limpia un item de pedido
- */
+/* Valida y limpia un item de pedido */
 export function validateOrderItem(item) {
     const errors = [];
     
@@ -290,9 +274,7 @@ export function validateOrderItem(item) {
     };
 }
 
-/**
- * Obtiene configuración de productos disponibles
- */
+/* Obtiene configuración de productos disponibles */
 export function getAvailableProducts() {
     return Object.keys(PRODUCTOS_CONFIG).map(producto => ({
         nombre: producto,

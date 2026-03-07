@@ -160,11 +160,11 @@ export const generarMensaje = () => {
         if (item.cantidad <= 0) return;
         const subtotal = item.cantidad * item.precio;
         lineas.push(
-            `• ${item.nombre} x${item.cantidad} — $${subtotal.toLocaleString()}`,
+            `• ${item.cantidad} x ${item.nombre} ($${subtotal.toLocaleString()})`,
         );
     });
 
-    // 4. Totales y entrega
+    // 4. Totales
     const esDomicilio = tipoEntrega === "domicilio";
     lineas.push(``);
     if (esDomicilio) {
@@ -174,23 +174,19 @@ export const generarMensaje = () => {
     }else {
         lineas.push(`*Total:* $${totalProductos.toLocaleString()}`);
     }
-
-    // 5. Entrega
-    lineas.push(`\n*Nombre:* ${nombreCliente}`);
-    lineas.push(`*Teléfono:* ${telefono}`);
-
-
+    // 5. Pago y entrega
+    lineas.push(`\n*Método de pago:* ${metodoPago}`);
     if(esDomicilio){
-        lineas.push(`*Dirección:* ${direccion}`);
+        lineas.push(`*Entrega:* Domicilio`);
     }else {
-        lineas.push(`*Entrega:* Recoger en el local`);
+        lineas.push(`*Entrega:* Recogida en local`);
     }
 
-	lineas.push(`*Método de pago:* ${metodoPago}`);
-
-	if (notas) {
-		lineas.push(`*Notas: ${notas}`);
-	}
+    // 6. Datos entrega
+    if(esDomicilio) lineas.push(`\n*Dirección:* ${direccion}`);
+    lineas.push(`*Nombre:* ${nombreCliente}`);
+    lineas.push(`*Teléfono:* ${telefono}`);
+    if (notas) lineas.push(`*Notas: ${notas}`);
 
     // 5. El "Único" String final
     return lineas.join("\n");

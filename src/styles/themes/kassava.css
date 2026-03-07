@@ -31,19 +31,20 @@ html[data-theme="kassava"] {
     /* Badges */
     --bg-badge: #EEB455;
     --text-badge: white;
-}
-body {
-    text-transform: uppercase;
-}
-
-.header-status-message {
-    font-size: 12px;
-}   
-
-.header-descripcion{
-    font-size: 12px;
-}
-
-.badges {
-    font-weight: 700;
+    
+    body {
+        text-transform: uppercase;
+    }
+    
+    .header-status-message {
+        font-size: 12px;
+    }   
+    
+    .header-descripcion{
+        font-size: 12px;
+    }
+    
+    .badges {
+        font-weight: 700;
+    }
 }

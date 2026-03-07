@@ -1,17 +1,18 @@
 
 // ui.js - Manejo de interfaz de usuario para tabla editable y cálculos
-import { PRODUCTOS_CONFIG } from "../products-import.js";
+import { DeliveryAction } from "@cloudinary/url-gen/actions/delivery/DeliveryAction";
+import { PRODUCTOS_CONFIG, DELIVERY } from "../products-import.js";
 
 let currentOrder = {
     items: [],
     subtotal: 0,
+    envio: 0,
     iva: 0,
-    total: 0
+    total: 0,
 };
 
-/**
- * Muestra mensaje en la interfaz
- */
+/* ========== MENSAJES FEEDBACK ========== */
+/* Muestra mensaje en la interfaz */
 export function showMessage(message, type = 'info') {
     const messagesContainer = document.getElementById('messages');
     const messageDiv = document.createElement('div');
@@ -30,50 +31,77 @@ export function showMessage(message, type = 'info') {
     }, 5000);
 }
 
-/**
- * Limpia todos los mensajes
- */
+/* Limpia todos los mensajes*/
 export function clearMessages() {
     document.getElementById('messages').innerHTML = '';
 }
 
-/**
- * Formatea número como moneda colombiana
- */
+/* ========== FORMATEO DE DATOS ========== */
+/* Formatea número como moneda colombiana */
 function formatCurrency(amount) {
     return new Intl.NumberFormat('es-CO', {
-        style: 'currency',
+        // style: 'currency',
         currency: 'COP',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
     }).format(amount);
 }
 
-/**
- * Calcula totales del pedido
- */
+function getDeliveryType() {
+    return document.getElementById('clientDeliveryType').value;
+}
+
+function getDeliveryValue() {
+    return document.getElementById('envio').value;
+}
+
+function displayDelivery(boolean, envio) {
+    const div = document.getElementById("display-envio");
+    div.parentElement.style.display = boolean ? 'flex' : 'none';
+    if (boolean) {
+        div.textContent = formatCurrency(envio);
+    }
+}
+
+document.getElementById('clientDeliveryType').addEventListener('change', function() {
+    calculateTotals();
+});
+
+document.getElementById('envio').addEventListener('change', function() {
+    calculateTotals();
+});
+
+/* Calcula totales del pedido */
 function calculateTotals() {
     const subtotal = currentOrder.items.reduce((sum, item) => {
         return sum + (item.cantidad * item.precio);
     }, 0);
-    
-    // const iva = subtotal * 0;
-    // const total = subtotal + iva;
-    const total = subtotal;
+    let total = 0;
+
+    const deliveryType = getDeliveryType();
+    const envio = getDeliveryValue();
+    console.log(deliveryType, envio)
+    if (deliveryType == "Domicilio"){
+        total = Number(subtotal) + Number(envio);
+        displayDelivery(true, envio);
+    } else {
+        total = Number(subtotal);
+        displayDelivery(false, envio);
+    }
     
     currentOrder.subtotal = subtotal;
-    // currentOrder.iva = iva;
+    currentOrder.envio = envio;
     currentOrder.total = total;
     
     // Actualizar UI
     document.getElementById('subtotal').textContent = formatCurrency(subtotal);
     // document.getElementById('iva').textContent = formatCurrency(iva);
     document.getElementById('total').textContent = formatCurrency(total);
+
 }
 
-/**
- * Crea una fila editable de la tabla
- */
+/* ========== TABLA EDITABLE ========== */
+/* Crea una fila editable de la tabla */
 function createTableRow(item, index) {
     const row = document.createElement('tr');
     row.dataset.index = index;
@@ -128,8 +156,8 @@ function createTableRow(item, index) {
                 type="number" 
                 class="editable cantidad-input" 
                 value="${item.cantidad}" 
-                min="0.1" 
-                step="0.1"
+                min="1" 
+                step="1"
             />
         </td>
         <td>
@@ -150,8 +178,8 @@ function createTableRow(item, index) {
             <strong>${formatCurrency(subtotal)}</strong>
         </td>
         <td>
-            <button class="btn btn-danger remove-btn" style="padding: 6px 12px; font-size: 12px;">
-                Eliminar
+            <button class="btn btn-danger remove-btn" style="padding: 6px; font-size: 12px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16m-4 0-.27-.812c-.263-.787-.394-1.18-.637-1.471a2 2 0 0 0-.803-.578C13.939 3 13.524 3 12.695 3h-1.388c-.829 0-1.244 0-1.596.139a2 2 0 0 0-.803.578c-.243.29-.374.684-.636 1.471L8 6m10 0v10.2c0 1.68 0 2.52-.327 3.162a3 3 0 0 1-1.311 1.311C15.72 21 14.88 21 13.2 21h-2.4c-1.68 0-2.52 0-3.162-.327a3 3 0 0 1-1.311-1.311C6 18.72 6 17.88 6 16.2V6m8 4v7m-4-7v7"/></svg>
             </button>
         </td>
     `;
@@ -159,9 +187,7 @@ function createTableRow(item, index) {
     return row;
 }
 
-/**
- * Renderiza la tabla completa
- */
+/* Renderiza la tabla completa */
 export function renderOrderTable(items = []) {
     currentOrder.items = [...items];
     
@@ -183,9 +209,9 @@ export function renderOrderTable(items = []) {
     if (clientSection) clientSection.style.display = 'block';
 }
 
-/**
- * Actualiza un item específico
- */
+
+/* ========== GESTIÓN DE ITEMS ========== */
+/* Actualiza un item específico */
 function updateItem(index, field, value) {
     if (index < 0 || index >= currentOrder.items.length) return;
     const item = currentOrder.items[index];
@@ -208,9 +234,7 @@ function updateItem(index, field, value) {
     saveToLocalStorage();
 }
 
-/**
- * Elimina un item del pedido
- */
+/* Elimina un item del pedido */
 function removeItem(index) {
     if (index < 0 || index >= currentOrder.items.length) return;
     if (confirm('¿Está seguro de eliminar este producto?')) {
@@ -223,9 +247,7 @@ function removeItem(index) {
     }
 }
 
-/**
- * Agrega un nuevo producto vacío
- */
+/* Agrega un nuevo producto vacío */
 function addProduct() {
     // Selecciona el primer producto disponible como default
     const firstProduct = Object.keys(PRODUCTOS_CONFIG)[0];
@@ -241,9 +263,8 @@ function addProduct() {
     showMessage('Producto agregado. Complete los datos.', 'success');
 }
 
-/**
- * Guarda el pedido actual en localStorage
- */
+/* ========== GESTIÓN DE ALMACENAMIENTO ========== */
+/* Guarda el pedido actual en localStorage */
 function saveToLocalStorage() {
     try {
         const orderData = {
@@ -260,9 +281,7 @@ function saveToLocalStorage() {
     }
 }
 
-/**
- * Carga pedido desde localStorage
- */
+/*Carga pedido desde localStorage */
 function loadFromLocalStorage() {
     try {
         const saved = localStorage.getItem('currentOrder');
@@ -276,9 +295,7 @@ function loadFromLocalStorage() {
     return [];
 }
 
-/**
- * Guarda pedido con nombre personalizado
- */
+/* Guarda pedido con nombre personalizado */
 window.saveOrder = function() {
     if (currentOrder.items.length === 0) {
         showMessage('No hay productos para guardar', 'error');
@@ -316,9 +333,7 @@ window.saveOrder = function() {
     }
 };
 
-/**
- * Carga pedido guardado
- */
+/* Carga pedido guardado */
 window.loadOrder = function() {
     try {
         const savedOrders = JSON.parse(localStorage.getItem('savedOrders') || '[]');
@@ -352,9 +367,7 @@ window.loadOrder = function() {
     }
 };
 
-/**
- * Limpia todo el pedido y la interfaz
- */
+/* Limpia todo el pedido y la interfaz */
 export const clearAll = function() {
     if (currentOrder.items.length > 0) {
         if (!confirm('¿Está seguro de limpiar todo el pedido?')) {
@@ -381,9 +394,7 @@ export const clearAll = function() {
     showMessage('Todo limpiado', 'success');
 };
 
-/**
- * Inicializa la UI cargando datos previos si existen
- */
+/* Inicializa la UI cargando datos previos si existe */
 export function initializeUI() {
     const savedItems = loadFromLocalStorage();
     if (savedItems.length > 0) {
@@ -439,19 +450,20 @@ export function initializeUI() {
         });
         clearBtn.removeAttribute('onclick');
     }
+    // Envio
+    document.getElementById('envio').value = DELIVERY;
 }
 
-/**
- * Obtiene el pedido actual para exportar
- */
+/* Obtiene el pedido actual para exportar */
 export function getCurrentOrder() {
     // Obtener datos de cliente desde el formulario
-    const name = document.getElementById('clientName')?.value || '';
-    const phone = document.getElementById('clientPhone')?.value || '';
+    const payment = document.getElementById('clientPayment')?.value || '';
     const deliveryType = document.getElementById('clientDeliveryType')?.value || '';
     const address = document.getElementById('clientAddress')?.value || '';
-    const payment = document.getElementById('clientPayment')?.value || '';
+    const name = document.getElementById('clientName')?.value || '';
+    const phone = document.getElementById('clientPhone')?.value || '';
     const notes = document.getElementById('clientNotes')?.value || '';
+
     return {
         items: [...currentOrder.items],
         subtotal: currentOrder.subtotal,

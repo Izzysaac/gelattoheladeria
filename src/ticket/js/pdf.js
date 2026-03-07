@@ -1,8 +1,7 @@
 // pdf.js - Generador de PDF usando html2pdf.js
 
-/**
- * Loads html2pdf.js dynamically if not already loaded
- */
+
+/* ====== HELPERS ====== */
 async function loadHtml2Pdf() {
     if (typeof window !== 'undefined' && window.html2pdf) {
         return window.html2pdf;
@@ -22,9 +21,6 @@ async function loadHtml2Pdf() {
     });
 }
 
-/**
- * Formatea número como moneda colombiana
- */
 function formatCurrency(amount) {
     return new Intl.NumberFormat('es-CO', {
         // style: 'currency',
@@ -34,9 +30,6 @@ function formatCurrency(amount) {
     }).format(amount);
 }
 
-/**
- * Formatea fecha en español
- */
 function formatDate(date) {
     return new Intl.DateTimeFormat('es-CO', {
         year: 'numeric',
@@ -47,9 +40,7 @@ function formatDate(date) {
     }).format(date);
 }
 
-/**
- * Loads the HTML template and populates it with order data
- */
+/* ====== TEMPLATE LOADER ====== */
 async function loadAndPopulateTemplate(orderData) {
     try {
         // Load the HTML template
@@ -129,9 +120,7 @@ async function loadAndPopulateTemplate(orderData) {
     }
 }
 
-/**
- * Genera PDF del pedido usando HTML template
- */
+/* ====== PDF GENERATOR ====== */
 export async function generateOrderPDF(orderData) {
     try {
         // Load html2pdf library
@@ -191,9 +180,30 @@ export async function generateOrderPDF(orderData) {
     }
 }
 
-/**
- * Descarga el PDF generado
- */
+
+/* ====== ACTIONS ======*/
+export function previewPDF(pdfBytes) {
+    try {
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        
+        const newWindow = window.open(url, '_blank');
+        if (!newWindow) {
+            throw new Error('No se pudo abrir la ventana de previsualización');
+        }
+        
+        // Limpiar URL después de un tiempo
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+        }, 60000);
+        
+        return true;
+    } catch (error) {
+        console.error('Error previsualizando PDF:', error);
+        return false;
+    }
+}
+
 export function downloadPDF(pdfBytes, filename) {
     try {
         const blob = new Blob([pdfBytes], { type: 'application/pdf' });
@@ -213,31 +223,6 @@ export function downloadPDF(pdfBytes, filename) {
         return true;
     } catch (error) {
         console.error('Error descargando PDF:', error);
-        return false;
-    }
-}
-
-/**
- * Previsualiza el PDF en una nueva ventana
- */
-export function previewPDF(pdfBytes) {
-    try {
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        
-        const newWindow = window.open(url, '_blank');
-        if (!newWindow) {
-            throw new Error('No se pudo abrir la ventana de previsualización');
-        }
-        
-        // Limpiar URL después de un tiempo
-        setTimeout(() => {
-            URL.revokeObjectURL(url);
-        }, 60000);
-        
-        return true;
-    } catch (error) {
-        console.error('Error previsualizando PDF:', error);
         return false;
     }
 }

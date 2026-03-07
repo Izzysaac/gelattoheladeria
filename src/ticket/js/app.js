@@ -5,9 +5,7 @@ import { renderOrderTable, showMessage, clearMessages, initializeUI, getCurrentO
 import { generateOrderPDF, downloadPDF, previewPDF } from './pdf.js';
 
 
-/**
- * Parsea el mensaje de WhatsApp y actualiza la UI
- */
+/* Parsea el mensaje de WhatsApp y actualiza la UI */
 
 window.parseMessage = async function() {
     const messageTextarea = document.getElementById('whatsappMessage');
@@ -58,26 +56,29 @@ window.parseMessage = async function() {
             }
             return;
         }
-        // Renderizar tabla con productos válidos
-        renderOrderTable(validItems);
+
         // --- Extraer y actualizar datos de cliente ---
+        const paymentMatch = message.match(/\*M[eé]todo de pago:?\*\s*([^\n\r]*)/i);
+        const deliveryType = message.match(/\*Entrega:?\*\s*([^\n\r]*)/i);
+        const addressMatch = message.match(/\*Direcci[oó]n:?\*\s*([^\n\r]*)/i);
         const nameMatch = message.match(/\*Nombre:?\*\s*([^\n\r]*)/i);
         const phoneMatch = message.match(/\*Tel[eé]fono:?\*\s*([^\n\r]*)/i);
-        const addressMatch = message.match(/\*Direcci[oó]n:?\*\s*([^\n\r]*)/i);
-        const paymentMatch = message.match(/\*M[eé]todo de pago:?\*\s*([^\n\r]*)/i);
         const notesMatch = message.match(/\*Notas?\*\s*:?\s*([^\n\r]*)/i);
-        const deliveryTypeMatch = message.match(/\*Envío:?\*\s*([^\n\r]*)/i);
+        if (paymentMatch) document.getElementById('clientPayment').value = paymentMatch[1].trim();
+        if (deliveryType[1] == "Domicilio") document.getElementById('clientDeliveryType').value = "Domicilio";
+        if (deliveryType[1] == "Recogida en local") document.getElementById('clientDeliveryType').value = "Recogida en local";
+        if (addressMatch) document.getElementById('clientAddress').value = addressMatch[1].trim();
         if (nameMatch) document.getElementById('clientName').value = nameMatch[1].trim();
         if (phoneMatch) document.getElementById('clientPhone').value = phoneMatch[1].trim();
-        if (addressMatch) document.getElementById('clientAddress').value = addressMatch[1].trim();
-        if (deliveryTypeMatch) {
-            document.getElementById('clientDeliveryType').value = "Domicilio";
-        } else {
-            document.getElementById('clientDeliveryType').value = "Recogida local";
-        }
-        if (paymentMatch) document.getElementById('clientPayment').value = paymentMatch[1].trim();
         if (notesMatch) document.getElementById('clientNotes').value = notesMatch[1].trim();
         // --- Fin actualización cliente ---
+
+        console.log(validItems);
+        // validItems.add({deliveryType})
+        // Renderizar tabla con productos válidos
+        renderOrderTable(validItems, deliveryType[1]);
+
+
         const successMsg = `✅ Mensaje procesado: ${validItems.length} producto(s) encontrado(s)`;
         showMessage(successMsg, 'success');
         if (errors.length > 0) {
@@ -91,9 +92,7 @@ window.parseMessage = async function() {
     }
 };
 
-/**
- * Genera y descarga el PDF del pedido
- */
+/*Genera y descarga el PDF del pedido */
 window.generatePDF = async function() {
     const currentOrder = getCurrentOrder();
     
@@ -114,26 +113,13 @@ window.generatePDF = async function() {
             return;
         }
         
-        // Preguntar si desea descargar o previsualizar
-        // const action = confirm('PDF generado exitosamente.\n\nPresione OK para descargar o Cancelar para previsualizar');
-        
-        // if (action) {
-        //     // Descargar PDF
-        //     const downloaded = downloadPDF(result.pdfBytes, result.filename);
-        //     if (downloaded) {
-        //         showMessage(`PDF descargado: ${result.filename}`, 'success');
-        //     } else {
-        //         showMessage('Error al descargar el PDF', 'error');
-        //     }
-        // } else {
-            // Previsualizar PDF
-            const previewed = previewPDF(result.pdfBytes);
-            if (previewed) {
-                showMessage('PDF abierto en nueva ventana', 'success');
-            } else {
-                showMessage('Error al abrir previsualización. Verifique que no esté bloqueando ventanas emergentes.', 'error');
-            }
-        // }
+        // Previsualizar PDF
+        const previewed = previewPDF(result.pdfBytes);
+        if (previewed) {
+            showMessage('PDF abierto en nueva ventana', 'success');
+        } else {
+            showMessage('Error al abrir previsualización. Verifique que no esté bloqueando ventanas emergentes.', 'error');
+        }
         
     } catch (error) {
         console.error('Error generando PDF:', error);
@@ -141,9 +127,7 @@ window.generatePDF = async function() {
     }
 };
 
-/**
- * Inicializa la aplicación cuando el DOM está listo
- */
+/* Inicializa la aplicación cuando el DOM está listo */
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🐔 Aplicación de tickets iniciada');
     
@@ -157,9 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
     showMessage('Aplicación lista. Pegue un mensaje de WhatsApp para comenzar.', 'info');
 });
 
-/**
- * Configura event listeners adicionales
- */
+/* Configura event listeners adicionales */
 function setupEventListeners() {
     // Auto-guardar cuando se modifica el textarea
     const messageTextarea = document.getElementById('whatsappMessage');
@@ -221,9 +203,7 @@ function setupEventListeners() {
     });
 }
 
-/**
- * Manejo de errores globales
- */
+/* Manejo de errores globales */
 window.addEventListener('error', function(e) {
     console.error('Error global:', e.error);
     showMessage('Error inesperado en la aplicación. Revise la consola para más detalles.', 'error');
@@ -233,6 +213,3 @@ window.addEventListener('unhandledrejection', function(e) {
     console.error('Promise rechazada:', e.reason);
     showMessage('Error de procesamiento. Revise la consola para más detalles.', 'error');
 });
-
-// Exportar funciones principales para testing
-// export { parseMessage, generatePDF };
