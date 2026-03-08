@@ -62,7 +62,6 @@ async function loadAndPopulateTemplate(orderData) {
         
         // Populate client information
         const client = orderData.client || {};
-        console.log(client)
         doc.getElementById('client-name').textContent = client.name || '';
         doc.getElementById('client-phone').textContent = client.phone || '';
         if (client.deliveryType == "Domicilio") {
@@ -86,27 +85,31 @@ async function loadAndPopulateTemplate(orderData) {
         orderData.items.forEach((item) => {
             const subtotal = item.cantidad * item.precio;
             const row = doc.createElement('tr');
-            
-            // row.innerHTML = `
-            // <td class="text-right">${item.cantidad}</td>
-            //     <td class="product-name">${item.producto.charAt(0).toUpperCase() + item.producto.slice(1)}</td>
-            //     <td>${item.unidad}</td>
-            //     <td class="text-right">${formatCurrency(item.precio)}</td>
-            //     <td class="text-right">${formatCurrency(subtotal)}</td>
-            // `;
+        
             row.innerHTML = `
-                <td class="text-left cantidad">${item.cantidad}</td>
+                <td class="cantidad">${item.cantidad}</td>
                 <td class="product-name">${item.producto.toUpperCase()}</td>
-                <td class="text-left precio-unitario">${formatCurrency(item.precio)}</td>
-                <td class="text-left subtotal">${formatCurrency(subtotal)}</td>
+                <td class="precio-unitario">
+                    <div>
+                        <span>$</span>
+                        <span>${formatCurrency(item.precio)}</span>
+                    </div>
+                </td>
+                <td class="subtotal">
+                    <div>
+                        <span>$</span>
+                        <span>${formatCurrency(subtotal)}</span>
+                    </div>
+                </td>
             `;
             
             tbody.appendChild(row);
+            console.log(tbody);
         });
         
         // Populate totals
         doc.getElementById('subtotal-amount').textContent = formatCurrency(orderData.subtotal);
-        // doc.getElementById('iva-amount').textContent = formatCurrency(orderData.iva);
+        doc.getElementById("delivery-amount").textContent = formatCurrency(orderData.envio);
         doc.getElementById('total-amount').textContent = formatCurrency(orderData.total);
         
         return {
@@ -122,6 +125,7 @@ async function loadAndPopulateTemplate(orderData) {
 
 /* ====== PDF GENERATOR ====== */
 export async function generateOrderPDF(orderData) {
+    window.scrollTo(0, 0);
     try {
         // Load html2pdf library
         const html2pdf = await loadHtml2Pdf();

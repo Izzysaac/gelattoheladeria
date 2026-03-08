@@ -79,16 +79,15 @@ function calculateTotals() {
     let total = 0;
 
     const deliveryType = getDeliveryType();
-    const envio = getDeliveryValue();
-    console.log(deliveryType, envio)
+    let envio = Number(getDeliveryValue());
     if (deliveryType == "Domicilio"){
         total = Number(subtotal) + Number(envio);
         displayDelivery(true, envio);
     } else {
         total = Number(subtotal);
+        envio = 0;
         displayDelivery(false, envio);
     }
-    
     currentOrder.subtotal = subtotal;
     currentOrder.envio = envio;
     currentOrder.total = total;
@@ -271,6 +270,7 @@ function saveToLocalStorage() {
             items: currentOrder.items,
             timestamp: new Date().toISOString(),
             subtotal: currentOrder.subtotal,
+            envio: currentOrder.envio,
             // iva: currentOrder.iva,
             total: currentOrder.total
         };
@@ -312,6 +312,7 @@ window.saveOrder = function() {
             timestamp: new Date().toISOString(),
             subtotal: currentOrder.subtotal,
             iva: currentOrder.iva,
+            envio: currentOrder.envio,
             total: currentOrder.total
         };
         
@@ -455,7 +456,8 @@ export function initializeUI() {
 }
 
 /* Obtiene el pedido actual para exportar */
-export function getCurrentOrder() {
+export function 
+getCurrentOrder() {
     // Obtener datos de cliente desde el formulario
     const payment = document.getElementById('clientPayment')?.value || '';
     const deliveryType = document.getElementById('clientDeliveryType')?.value || '';
@@ -469,6 +471,7 @@ export function getCurrentOrder() {
         subtotal: currentOrder.subtotal,
         iva: currentOrder.iva,
         total: currentOrder.total,
+        envio: currentOrder.envio,
         timestamp: new Date().toISOString(),
         client: {
             name,

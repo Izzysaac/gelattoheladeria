@@ -73,10 +73,8 @@ window.parseMessage = async function() {
         if (notesMatch) document.getElementById('clientNotes').value = notesMatch[1].trim();
         // --- Fin actualización cliente ---
 
-        console.log(validItems);
-        // validItems.add({deliveryType})
         // Renderizar tabla con productos válidos
-        renderOrderTable(validItems, deliveryType[1]);
+        renderOrderTable(validItems);
 
 
         const successMsg = `✅ Mensaje procesado: ${validItems.length} producto(s) encontrado(s)`;

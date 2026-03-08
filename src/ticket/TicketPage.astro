@@ -11,10 +11,10 @@
     </head>
     <body>
         <div class="container">
-            <div class="header">
-                <h1>🐔 El Broaster del Chef</h1>
-                <p>Convierte mensajes de WhatsApp en pedidos</p>
-            </div>
+            <header>
+                <h1>🐔 El Broaster del Chef Pitalito</h1>
+                <p>Convierte mensajes de WhatsApp en Tickets de Pedidos</p>
+            </header>
 
             <div class="content">
                 <!-- Sección de mensaje y botones -->
@@ -156,7 +156,7 @@
                                 class="editable"
                                 value="0"
                                 min="0"
-                                step="100"
+                                step=""
                             />
                         </div>
                     </form>
@@ -173,11 +173,11 @@
                         <table id="orderTable" class="w-full table-fixed">
                             <thead>
                                 <tr>
-                                    <th class="w-12 sm:w-20">Cant.</th>
-                                    <th class="w-32 sm:w-auto">Producto</th>
-                                    <th class="w-16 sm:w-28">P. U.</th>
-                                    <th class="w-18 sm:w-30">Subtotal</th>
-                                    <th class="w-8 text-center"></th>
+                                    <th class="theader w-12 sm:w-20">Cant.</th>
+                                    <th class="theader w-32 sm:w-auto">Producto</th>
+                                    <th class="theader w-16 sm:w-28">P. U.</th>
+                                    <th class="theader w-18 sm:w-30">Subtotal</th>
+                                    <th class="theader w-8 text-center"></th>
                                 </tr>
                             </thead>
                             <tbody id="orderTableBody"> </tbody>
@@ -241,7 +241,7 @@
         overflow: hidden;
     }
 
-    .header {
+    header {
         background: #2c3e50;
         color: white;
         padding: 20px;
@@ -320,7 +320,7 @@
         border-bottom: 1px solid #ddd;
     }
 
-    th {
+    .theader {
         background: #f8f9fa;
         font-weight: 600;
         color: #2c3e50;
