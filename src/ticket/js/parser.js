@@ -3,12 +3,6 @@
 // Importar configuración real de productos
 import { PRODUCTOS_CONFIG } from "../products-import.js";
 
-// Patrones de unidades
-const UNIDADES_PATTERNS = {
-    'kg': ['kg', 'kilo', 'kilos', 'kilogramo', 'kilogramos', 'k'],
-    'unidad': ['unidad', 'unidades', 'u', 'ud', 'uds', 'pieza', 'piezas']
-};
-
 /* Normaliza texto removiendo acentos y convirtiendo a minúsculas */
 function normalizeText(text) {
     return text
@@ -79,98 +73,52 @@ function identifyProduct(text) {
     return null;
 }
 
-/* Identifica la unidad en el texto */
-function identifyUnit(text, defaultUnit = 'unidad') {
-    const normalized = normalizeText(text);
-    
-    for (const [unidad, patterns] of Object.entries(UNIDADES_PATTERNS)) {
-        for (const pattern of patterns) {
-            if (normalized.includes(pattern)) {
-                return unidad;
+/*
+ * Parsea una línea de WhatsApp estilo:
+ * "• 1 x Familiar ($43,000)" => { cantidad: 1, producto: "Familiar" }
+ * Extrae solo cantidad y nombre de producto.
+ */
+function parseLine(line) {
+    const items = [];
+    const raw = String(line || "").trim();
+    if (!raw) return items;
+
+    // Limpiar bullet inicial
+    const cleaned = raw.replace(/^[•\-*\s]+/, "").trim();
+
+    // Patrón principal: cantidad + x + nombre + (precio opcional)
+    // Ej: "1 x 4 Presas ($23,000)"
+    const match = cleaned.match(/^\s*(\d+(?:[.,]\d+)?)\s*[xX]\s*(.+?)(?:\s*\(.*\))?\s*$/);
+    if (!match) return items;
+
+    const cantidad = parseFloat(match[1].replace(",", "."));
+    if (!Number.isFinite(cantidad) || cantidad <= 0) return items;
+
+    const productPart = match[2].trim();
+    if (!productPart) return items;
+
+    // Intentar matchear contra el catálogo (tolerante a acentos/mayúsculas)
+    // Estrategia: buscar el producto más largo cuyo nombre normalizado esté contenido
+    const normalizedLine = normalizeText(productPart);
+    let best = null;
+    for (const producto of Object.keys(PRODUCTOS_CONFIG)) {
+        const np = normalizeText(producto);
+        if (normalizedLine.includes(np)) {
+            if (!best || np.length > best.np.length) {
+                best = { nombre: producto, np };
             }
         }
     }
-    
-    return defaultUnit;
-}
 
-/* Parsea una línea de texto buscando cantidad + producto + unidad */
-function parseLine(line) {
-    const items = [];
-    const normalized = normalizeText(line);
-    
-    // Extraer números de la línea
-    const numbers = extractNumbers(line);
-    
-    // Buscar productos en la línea (solo por nombre exacto, sin alias)
-    const productos = [];
-    for (const producto of Object.keys(PRODUCTOS_CONFIG)) {
-        const idx = normalized.indexOf(normalizeText(producto));
-        if (idx !== -1) {
-            productos.push({ nombre: producto, config: PRODUCTOS_CONFIG[producto], position: idx });
-        }
-    }
-    // Remover duplicados y ordenar por posición
-    const uniqueProducts = productos
-        .filter((item, index, arr) => 
-            arr.findIndex(p => p.nombre === item.nombre) === index
-        )
-        .sort((a, b) => a.position - b.position);
-    
-    // Asociar números con productos
-    if (numbers.length > 0 && uniqueProducts.length > 0) {
-        // Si hay igual cantidad de números y productos, asociar 1:1
-        if (numbers.length === uniqueProducts.length) {
-            uniqueProducts.forEach((producto, index) => {
-                const unidad = identifyUnit(line, producto.config.unidadDefault);
-                items.push({
-                    producto: producto.nombre,
-                    cantidad: numbers[index].value,
-                    unidad: unidad,
-                    precio: producto.config.precio
-                });
-            });
-        }
-        // Si hay más números que productos, usar el primer número para cada producto
-        else if (numbers.length >= uniqueProducts.length) {
-            uniqueProducts.forEach((producto, index) => {
-                const numero = numbers[index] || numbers[0];
-                const unidad = identifyUnit(line, producto.config.unidadDefault);
-                items.push({
-                    producto: producto.nombre,
-                    cantidad: numero.value,
-                    unidad: unidad,
-                    precio: producto.config.precio
-                });
-            });
-        }
-        // Si hay más productos que números, usar el primer número para todos
-        else {
-            const cantidad = numbers[0].value;
-            uniqueProducts.forEach(producto => {
-                const unidad = identifyUnit(line, producto.config.unidadDefault);
-                items.push({
-                    producto: producto.nombre,
-                    cantidad: cantidad,
-                    unidad: unidad,
-                    precio: producto.config.precio
-                });
-            });
-        }
-    }
-    // Si solo hay productos sin números, asumir cantidad 1
-    else if (uniqueProducts.length > 0) {
-        uniqueProducts.forEach(producto => {
-            const unidad = identifyUnit(line, producto.config.unidadDefault);
-            items.push({
-                producto: producto.nombre,
-                cantidad: 1,
-                unidad: unidad,
-                precio: producto.config.precio
-            });
-        });
-    }
-    
+    const productoFinal = best ? best.nombre : productPart;
+    const precio = PRODUCTOS_CONFIG?.[productoFinal]?.precio;
+
+    items.push({
+        producto: productoFinal,
+        cantidad,
+        precio: typeof precio === 'number' ? precio : 0,
+    });
+
     return items;
 }
 
@@ -207,7 +155,7 @@ export function parseWhatsAppMessage(message) {
         // Consolidar productos duplicados
         const consolidated = {};
         allItems.forEach(item => {
-            const key = `${item.producto}-${item.unidad}`;
+            const key = normalizeText(item.producto);
             if (consolidated[key]) {
                 consolidated[key].cantidad += item.cantidad;
             } else {
@@ -216,7 +164,7 @@ export function parseWhatsAppMessage(message) {
         });
         
         const finalItems = Object.values(consolidated);
-        
+        console.log(finalItems);
         if (finalItems.length === 0) {
             return {
                 success: false,
@@ -253,12 +201,9 @@ export function validateOrderItem(item) {
     if (!item.cantidad || isNaN(item.cantidad) || item.cantidad <= 0) {
         errors.push('Cantidad debe ser un número mayor a 0');
     }
-    
-    if (!item.unidad || !['kg', 'unidad'].includes(item.unidad)) {
-        errors.push('Unidad debe ser "kg" o "unidad"');
-    }
-    
-    if (!item.precio || isNaN(item.precio) || item.precio < 0) {
+
+    // precio es opcional, pero si viene debe ser válido
+    if (item.precio !== undefined && (isNaN(item.precio) || item.precio < 0)) {
         errors.push('Precio debe ser un número mayor o igual a 0');
     }
     
@@ -268,7 +213,8 @@ export function validateOrderItem(item) {
         item: {
             producto: String(item.producto).trim(),
             cantidad: parseFloat(item.cantidad) || 0,
-            unidad: String(item.unidad).toLowerCase(),
+            // Mantener compatibilidad: algunas partes del UI pueden esperar estas props
+            unidad: 'unidad',
             precio: parseFloat(item.precio) || 0
         }
     };
@@ -278,10 +224,9 @@ export function validateOrderItem(item) {
 export function getAvailableProducts() {
     return Object.keys(PRODUCTOS_CONFIG).map(producto => ({
         nombre: producto,
-        unidadDefault: PRODUCTOS_CONFIG[producto].unidadDefault,
         precio: PRODUCTOS_CONFIG[producto].precio
     }));
 }
 
 // Exportar para uso en tests
-export { PRODUCTOS_CONFIG, UNIDADES_PATTERNS, normalizeText, extractNumbers, identifyProduct };
+export { PRODUCTOS_CONFIG, normalizeText, extractNumbers, identifyProduct };

@@ -186,7 +186,7 @@ export const generarMensaje = () => {
     if(esDomicilio) lineas.push(`\n*Dirección:* ${direccion}`);
     lineas.push(`*Nombre:* ${nombreCliente}`);
     lineas.push(`*Teléfono:* ${telefono}`);
-    if (notas) lineas.push(`*Notas: ${notas}`);
+    if (notas) lineas.push(`*Notas:* ${notas}`);
 
     // 5. El "Único" String final
     return lineas.join("\n");
@@ -231,8 +231,6 @@ export const hacerPedido = () => {
     // 4. Abrir WhatsApp
     window.open(url, "_blank");
 };
-
-
 
 export const bindCheckout = () => {
     checkoutDom.checkoutMain.addEventListener("change", (e) => {

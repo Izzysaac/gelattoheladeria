@@ -29,16 +29,22 @@
                             >Analizar</button
                         >
                         <button
-                            id="btn-clear-all"
+                            id="btn-open-clear-all"
                             class="btn btn-danger"
-                            onclick="clearAll()">Limpiar</button
+                            >Limpiar</button
                         >
                         <button class="btn btn-success" onclick="generatePDF()"
                             >Generar PDF</button
                         >
                     </div>
                 </div>
-
+                <dialog id="dialog" class="">
+                    <div class="flex flex-col justify-center items-center p-10! m-auto gap-10">
+                        <p>¿Estás seguro de que quieres limpiar todo?</p>
+                        <button id="cancelar" class="px-4! py-3! bg-red-500 text-white rounded-full font-bold">Cancelar</button>
+                        <button id="confirmar" class="px-4! py-3! bg-green-500 text-white rounded-full font-bold">Confirmar</button>
+                    </div>
+                </dialog>
                 <!-- Sección de mensajes de estado -->
                 <div id="messages"></div>
 
@@ -212,6 +218,28 @@
         </div>
 
         <!-- Scripts -->
+        <script>
+            import { clearAll } from "./js/ui";
+            const dialog = document.getElementById("dialog") as HTMLDialogElement;
+            const openDialog = document.getElementById("btn-open-clear-all") as HTMLButtonElement;
+            const cancelar = document.getElementById("cancelar") as HTMLButtonElement;
+            const confirmar = document.getElementById("confirmar") as HTMLButtonElement;
+
+            openDialog.addEventListener("click", () => dialog.showModal());
+
+            dialog.addEventListener("click", (e) => {
+                if (e.target === dialog) {
+                    dialog.close();
+                }
+                if (e.target === cancelar) {
+                    dialog.close();
+                }
+                if (e.target === confirmar) {
+                    clearAll();
+                    dialog.close();
+                }
+            });
+        </script>
         <script src="./js/parser.js"></script>
         <script src="./js/ui.js"></script>
         <script src="./js/pdf.js"></script>
