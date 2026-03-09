@@ -11,55 +11,47 @@
     </head>
     <body>
         <div class="container">
-            <header>
-                <h1>🐔 El Broaster del Chef Pitalito</h1>
-                <p>Convierte mensajes de WhatsApp en Tickets de Pedidos</p>
+            <header class="text-center bg-red-600 text-white py-2 ">
+                <h1 class="font-bold text-2xl">GENERADOR DE TICKETS</h1>
             </header>
 
             <div class="content">
                 <!-- Sección de mensaje y botones -->
-                <div class="section">
-                    <h3>📱 Mensaje de WhatsApp</h3>
+                <div class="section flex gap-4">
+                    <div class="actions w-45">
+                        <button onclick="clearAll()"
+                            id="btn-open-clear-all"
+                            class="btn btn-danger w-full"
+                            >🗑️ Limpiar</button
+                        >
+                        <button class="btn w-full" onclick="parseMessage()"
+                            >🔍 Analizar</button
+                        >
+                        <button class="btn btn-success w-full" onclick="generatePDF()"
+                            >🍗 Ticket</button
+                        >
+                    </div>
                     <textarea
                         id="whatsappMessage"
                         placeholder="Pega aquí el mensaje de WhatsApp del cliente..."
-                        class=""></textarea>
-                    <div class="actions">
-                        <button class="btn" onclick="parseMessage()"
-                            >Analizar</button
                         >
-                        <button
-                            id="btn-open-clear-all"
-                            class="btn btn-danger"
-                            >Limpiar</button
-                        >
-                        <button class="btn btn-success" onclick="generatePDF()"
-                            >Generar PDF</button
-                        >
-                    </div>
+                    </textarea>
                 </div>
-                <dialog id="dialog" class="">
-                    <div class="flex flex-col justify-center items-center p-10! m-auto gap-10">
-                        <p>¿Estás seguro de que quieres limpiar todo?</p>
-                        <button id="cancelar" class="px-4! py-3! bg-red-500 text-white rounded-full font-bold">Cancelar</button>
-                        <button id="confirmar" class="px-4! py-3! bg-green-500 text-white rounded-full font-bold">Confirmar</button>
-                    </div>
-                </dialog>
+
                 <!-- Sección de mensajes de estado -->
-                <div id="messages"></div>
+                <div id="messages" class="fixed top-3 right-4"></div>
 
                 <!-- Sección de cliente -->
                 <div class="section" id="clientSection">
-                    <h3>👤 Datos de entrega</h3>
+                    <h3 class="text-base font-bold">👤 Datos de entrega</h3>
                     <form
                         id="clientForm"
                         autocomplete="off"
-                        class="grid grid-cols-2 gap-4"
+                        class="grid grid-cols-2 gap-2"
                     >
                         <div class="">
                             <label
                                 for="clientName"
-                                style="font-weight: 500; color: #2c3e50;"
                                 >Nombre</label
                             >
                             <input
@@ -74,7 +66,6 @@
                         <div class="">
                             <label
                                 for="clientPhone"
-                                style="font-weight: 500; color: #2c3e50;"
                                 >Teléfono</label
                             >
                             <input
@@ -90,7 +81,6 @@
                         <div class="">
                             <label
                                 for="clientDeliveryType"
-                                style="font-weight: 500; color: #2c3e50;"
                                 >Tipo de entrega</label
                             >
                             <select
@@ -108,10 +98,8 @@
                         <div class="">
                             <label
                                 for="clientAddress"
-                                style="font-weight: 500; color: #2c3e50;"
                                 >Dirección</label
                             >
-                            <!-- <input type="text" id="clientAddress" name="clientAddress" class="editable" placeholder="Dirección de entrega" /> -->
                             <textarea
                                 name="clientAddress"
                                 id="clientAddress"
@@ -120,11 +108,7 @@
                             ></textarea>
                         </div>
                         <div class="">
-                            <label
-                                for="clientPayment"
-                                style="font-weight: 500; color: #2c3e50;"
-                                >Método de pago</label
-                            >
+                            <label for="clientPayment">Método de pago</label>
                             <select
                                 id="clientPayment"
                                 name="clientPayment"
@@ -138,11 +122,7 @@
                             </select>
                         </div>
                         <div class="">
-                            <label
-                                for="clientNotes"
-                                style="font-weight: 500; color: #2c3e50;"
-                                >Notas</label
-                            >
+                            <label for="clientNotes">Notas</label>
                             <textarea
                                 id="clientNotes"
                                 name="clientNotes"
@@ -150,11 +130,7 @@
                                 placeholder="Notas adicionales"></textarea>
                         </div>
                         <div class="">
-                            <label
-                                for="envio"
-                                style="font-weight: 500; color: #2c3e50;"
-                                >Envío</label
-                            >
+                            <label for="envio">Envío</label>
                             <input
                                 type="number"
                                 id="envio"
@@ -165,30 +141,33 @@
                                 step=""
                             />
                         </div>
+                        <button class="btn" onclick="addProduct()"
+                            >➕ Agregar Producto</button
+                        >
                     </form>
                 </div>
 
-                <button class="btn" onclick="addProduct()"
-                    >➕ Agregar Producto</button
-                >
+                
 
                 <!-- Sección de pedido -->
-                <div class="section" id="orderSection" style="display: none;">
-                    <h3>📋 Pedido Procesado</h3>
+                <div class="section" id="orderSection" style="display: none; margin-top: 20px">
+                    <h3 class="text-base font-bold">📋 Pedido Procesado</h3>
                     <div class="table-container">
                         <table id="orderTable" class="w-full table-fixed">
                             <thead>
                                 <tr>
-                                    <th class="theader w-12 sm:w-20">Cant.</th>
+                                    <th class="theader w-10 sm:w-20">Cant.</th>
                                     <th class="theader w-32 sm:w-auto">Producto</th>
-                                    <th class="theader w-16 sm:w-28">P. U.</th>
-                                    <th class="theader w-18 sm:w-30">Subtotal</th>
+                                    <th class="theader w-12 sm:w-28">P. U.</th>
+                                    <th class="theader w-12 sm:w-30">Subtotal</th>
                                     <th class="theader w-8 text-center"></th>
                                 </tr>
                             </thead>
-                            <tbody id="orderTableBody"> </tbody>
+                            <tbody id="orderTableBody"></tbody>
                         </table>
                     </div>
+                    <button class="bg-[#3498db] text-white px-3 py-2 rounded-lg font-bold ms-auto block" onclick="addProduct()"
+                        >Agregar</button>
 
                     <div class="total-section">
                         <div class="total-row">
@@ -206,9 +185,7 @@
                     </div>
 
                     <div class="actions">
-                        <button class="btn" onclick="addProduct()"
-                            >➕ Agregar Producto</button
-                        >
+                        
                         <!-- <button class="btn btn-success" onclick="generatePDF()">📄 Generar PDF</button> -->
                         <!-- <button class="btn" onclick="saveOrder()">💾 Guardar Pedido</button> -->
                         <!-- <button class="btn" onclick="loadOrder()">📂 Cargar Pedido</button> -->
@@ -218,28 +195,6 @@
         </div>
 
         <!-- Scripts -->
-        <script>
-            import { clearAll } from "./js/ui";
-            const dialog = document.getElementById("dialog") as HTMLDialogElement;
-            const openDialog = document.getElementById("btn-open-clear-all") as HTMLButtonElement;
-            const cancelar = document.getElementById("cancelar") as HTMLButtonElement;
-            const confirmar = document.getElementById("confirmar") as HTMLButtonElement;
-
-            openDialog.addEventListener("click", () => dialog.showModal());
-
-            dialog.addEventListener("click", (e) => {
-                if (e.target === dialog) {
-                    dialog.close();
-                }
-                if (e.target === cancelar) {
-                    dialog.close();
-                }
-                if (e.target === confirmar) {
-                    clearAll();
-                    dialog.close();
-                }
-            });
-        </script>
         <script src="./js/parser.js"></script>
         <script src="./js/ui.js"></script>
         <script src="./js/pdf.js"></script>
@@ -249,31 +204,19 @@
 
 <style is:global>
     @import "tailwindcss";
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
 
     body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-family:monospace ;
         background: #f5f5f5;
+        
     }
 
     .container {
-        max-width: 1200px;
+        max-width: 768px;
         margin: 0 auto;
         background: white;
-        border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         overflow: hidden;
-    }
-
-    header {
-        background: #2c3e50;
-        color: white;
-        padding: 20px;
-        text-align: center;
     }
 
     .content {
@@ -281,18 +224,12 @@
     }
 
     .section {
-        margin-bottom: 30px;
-    }
-
-    .section h3 {
-        color: #2c3e50;
-        margin-bottom: 15px;
-        font-size: 18px;
+        margin-bottom: 20px;
     }
 
     textarea {
         width: 100%;
-        padding: 15px;
+        padding: 4px 6px;
         border: 2px solid #ddd;
         border-radius: 6px;
         font-size: 14px;
@@ -338,7 +275,7 @@
 
     .table-container {
         overflow-x: auto;
-        margin-top: 20px;
+        margin-top: 6px;
     }
 
     th,
@@ -346,6 +283,7 @@
         padding: 6px 2px;
         text-align: left;
         border-bottom: 1px solid #ddd;
+
     }
 
     .theader {
@@ -356,7 +294,7 @@
 
     .editable {
         border: 1px solid #ddd;
-        padding: 8px;
+        padding: 6px;
         border-radius: 4px;
         width: 100%;
     }
@@ -368,9 +306,8 @@
 
     .total-section {
         background: #f8f9fa;
-        padding: 20px;
+        padding: 10px;
         border-radius: 6px;
-        margin-top: 20px;
     }
 
     .total-row {
