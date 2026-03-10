@@ -62,8 +62,16 @@ async function loadAndPopulateTemplate(orderData) {
         
         // Populate client information
         const client = orderData.client || {};
-        doc.getElementById('client-name').textContent = client.name || '';
-        doc.getElementById('client-phone').textContent = client.phone || '';
+        if (client.name == "") {
+            doc.getElementById('client-name').parentElement.remove();
+        } else {
+            doc.getElementById('client-name').textContent = client.name || '';
+        }
+        if (client.phone == "") {
+            doc.getElementById('client-phone').parentElement.remove();
+        } else {
+            doc.getElementById('client-phone').textContent = client.phone || '';
+        }
         if (client.deliveryType == "Domicilio") {
             doc.getElementById('client-delivery-type').textContent = client.deliveryType || '';
             doc.getElementById('client-address').textContent = client.address || '';
@@ -71,7 +79,11 @@ async function loadAndPopulateTemplate(orderData) {
             doc.getElementById('client-delivery-type').textContent = client.deliveryType || '';
             doc.getElementById('client-address').parentElement.remove();
         }
-        doc.getElementById('client-payment').textContent = client.payment || '';
+        if (client.payment == "") {
+            doc.getElementById('client-payment').parentElement.remove();
+        } else {
+            doc.getElementById('client-payment').textContent = client.payment || '';
+        }
         if (client.notes == "") {
             doc.getElementById('client-notes').parentElement.remove();
         } else {

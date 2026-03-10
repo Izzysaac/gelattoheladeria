@@ -1,7 +1,7 @@
 // app.js - Controlador principal de la aplicación
 
 import { parseWhatsAppMessage, validateOrderItem } from './parser.js';
-import { renderOrderTable, showMessage, clearMessages, initializeUI, getCurrentOrder } from './ui.js';
+import { renderOrderTable, showMessage, clearMessages, initializeUI, getCurrentOrder, addProduct, clearAll } from './ui.js';
 import { generateOrderPDF, downloadPDF, previewPDF } from './pdf.js';
 
 
@@ -157,27 +157,33 @@ function setupEventListeners() {
     if (lastMessage) {
         messageTextarea.value = lastMessage;
     }
+
+    // Boton añadir producto
+    const btnAddProduct = document.getElementById('btn-add-product');
+    if (btnAddProduct) {
+        btnAddProduct.addEventListener('click', function() {
+            addProduct();
+        });
+    }
     
     // Atajos de teclado
     document.addEventListener('keydown', function(e) {
         // Ctrl/Cmd + Enter para parsear mensaje
         if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
             e.preventDefault();
-            parseMessage();
+            generatePDF();
         }
         
         // Ctrl/Cmd + S para guardar pedido
-        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Backspace') {
             e.preventDefault();
-            if (typeof window.saveOrder === 'function') {
-                window.saveOrder();
-            }
+            clearAll();
         }
         
-        // Ctrl/Cmd + P para generar PDF
-        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+        // Ctrl/Cmd + E para generar PDF
+        if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
             e.preventDefault();
-            generatePDF();
+            parseMessage();
         }
     });
     

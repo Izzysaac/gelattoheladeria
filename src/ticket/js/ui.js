@@ -247,7 +247,7 @@ function removeItem(index) {
 }
 
 /* Agrega un nuevo producto vacío */
-function addProduct() {
+export function addProduct() {
     // Selecciona el primer producto disponible como default
     const firstProduct = Object.keys(PRODUCTOS_CONFIG)[0];
     const newItem = {
