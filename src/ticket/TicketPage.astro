@@ -19,17 +19,17 @@
                 <!-- Sección de mensaje y botones -->
                 <div class="section flex gap-4">
                     <div class="actions w-45">
-                        <button onclick="clearAll()"
+                        <button onclick="clearAll()" 
                             id="btn-open-clear-all"
-                            class="btn btn-danger w-full"
-                            >🗑️ Limpiar</button
-                        >
-                        <button class="btn w-full" onclick="parseMessage()"
-                            >🔍 Analizar</button
-                        >
-                        <button class="btn btn-success w-full" onclick="generatePDF()"
-                            >📋 Ticket</button
-                        >
+                            class="btn btn-danger w-full" >
+                             🗑️   Limpiar <br> Ctrl + Borrar
+                        </button>
+                        <button class="btn w-full" onclick="parseMessage()">
+                            🔍Analizar <br> Ctrl + E
+                        </button>
+                        <button class="btn btn-success w-full" onclick="generatePDF()">
+                            📋Ticket <br> Ctrl + Enter
+                        </button>
                     </div>
                     <textarea
                         id="whatsappMessage"
