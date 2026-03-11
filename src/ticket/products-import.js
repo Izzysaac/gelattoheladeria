@@ -43,7 +43,13 @@ export const PRODUCTOS_CONFIG = {
   "Trocipollo": {
     "precio": 14000,
     "categoria": "Combos",
-    "descripcion": "Tiras de Pechuga Apanada · 2 Arepas y Papas Francesa · Gaseosa · Salsas",
+    "descripcion": "8 Tiras de Pechuga Apanada · 2 Arepas y Papas Francesa · Gaseosa · Salsas",
+    "imagen": "trocipollos_jmnrm5"
+  },
+  "Trocipollo Max": {
+    "precio": 20000,
+    "categoria": "Combos",
+    "descripcion": "16 Tiras de Pechuga Apanada · 2 Arepas y Papas Francesa · Gaseosa · Salsas",
     "imagen": "trocipollos_jmnrm5"
   },
   "Broaster Sándwich": {
@@ -95,6 +101,26 @@ export const PRODUCTOS_CONFIG = {
   "Ensalada de la casa": {
     "precio": 3000,
     "categoria": "Otros",
+    "descripcion": ""
+  },
+  "Salsa BBQ miel pequeña": {
+    "precio": 1000,
+    "categoria": "Salsas",
+    "descripcion": ""
+  },
+  "Salsa BBQ miel grande": {
+    "precio": 2000,
+    "categoria": "Salsas",
+    "descripcion": ""
+  },
+  "Salsa miel mostaza pequeña": {
+    "precio": 1000,
+    "categoria": "Salsas",
+    "descripcion": ""
+  },
+  "Salsa miel mostaza grande": {
+    "precio": 2000,
+    "categoria": "Salsas",
     "descripcion": ""
   },
   "Condor personal": {
