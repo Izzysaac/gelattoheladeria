@@ -128,6 +128,16 @@ export const PRODUCTOS_CONFIG = {
     "categoria": "Bebidas",
     "descripcion": ""
   },
+  "Condor personal": {
+    "precio": 2000,
+    "categoria": "Bebidas",
+    "descripcion": ""
+  },
+  "Condor 1L": {
+    "precio": 3500,
+    "categoria": "Bebidas",
+    "descripcion": ""
+  },
   "Condor 2L": {
     "precio": 5500,
     "categoria": "Bebidas",
@@ -145,6 +155,11 @@ export const PRODUCTOS_CONFIG = {
   },
   "Agua personal": {
     "precio": 2000,
+    "categoria": "Bebidas",
+    "descripcion": ""
+  },
+  "Jugo Del Valle 400ml": {
+    "precio": 2500,
     "categoria": "Bebidas",
     "descripcion": ""
   },
