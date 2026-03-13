@@ -9,11 +9,13 @@ const fontList = fonts?.preload?.map(f => ({
 })) ?? [];
 
 const regular = fontList[0];
-const bold = fontList[1];
-const title = fontList[2];
+const medium = fontList[1];
+const semibold = fontList[2];
+const bold = fontList[3];
+const title = fontList[4];
 
 ---
-<script is:inline define:vars={{ fontList, regular, bold, title }}>
+<script is:inline define:vars={{ fontList, regular, medium, semibold, bold, title }}>
   if (Array.isArray(fontList) && fontList.length > 0) {
 
     const style = document.createElement("style");
@@ -36,6 +38,16 @@ const title = fontList[2];
       .text-regular {
         font-family: "${regular?.name ?? "system-ui"}", system-ui, sans-serif;
         font-weight: ${regular?.weight ?? 400};
+      }
+
+      .text-medium {
+        font-family: "${medium?.name ?? "system-ui"}", system-ui, sans-serif;
+        font-weight: ${medium?.weight ?? 500};
+      }
+
+      .text-semibold {
+        font-family: "${semibold?.name ?? "system-ui"}", system-ui, sans-serif;
+        font-weight: ${semibold?.weight ?? 600};
       }
 
       .text-bold {

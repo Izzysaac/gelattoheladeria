@@ -3,11 +3,9 @@ import { formatFromThousands, formatPrice } from "@scripts/utils.js";
 import Plus from "@assets/plus-svgrepo-com.svg";
 import Minus from "@assets/minus-svgrepo-com.svg";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
-
 const { menuPorCategoria, modo } = Astro.props;
 ---
-
-<section id="menu" class="menu w-full max-w-200 px-2.5">
+<section id="menu" class="menu w-full max-w-200 px-3">
     {
         Object.entries(menuPorCategoria).map(([categoria, items]) => (
             <div class="grupo" id={categoria}>
@@ -26,7 +24,7 @@ const { menuPorCategoria, modo } = Astro.props;
                                 >
                                     <div class="informacion flex w-full flex-col self-stretch">
                                         <div class="flex justify-between gap-2">
-                                            <h3 class="">{item.nombre}</h3>
+                                            <h3 class="text-semibold">{item.nombre}</h3>
                                             <p class="mr-2 text-nowrap">
                                                 {formatPrice(item.precio)}
                                             </p>

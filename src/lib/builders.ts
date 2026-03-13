@@ -69,43 +69,6 @@ const buildEventosHead = (info, eventos) => {
     };
 }
 
-const buildStyles = (estilos) => {
-    const fuenteRegular = estilos?.["fuente-regular"] ?? "";
-    const fuenteBold = estilos?.["fuente-bold"] ?? "";
-    const fuenteTitulo = estilos?.["fuente-titulo"] ?? "";
-
-    const preload = [fuenteRegular, fuenteBold, fuenteTitulo]
-        .filter((name) => typeof name === "string" && name.trim().length > 0)
-        .map((name) => {
-            const fontName = extractFontName(name);
-            const weight = extractWeight(name);
-            return {
-                href: `/fonts/${name.trim()}`,
-                type: "font/woff2",
-                crossOrigin: "anonymous",
-                familyName: fontName,
-                weight: weight,
-            };
-        });
-
-    const fontFamilyRegular = extractFontName(fuenteRegular);
-    const fontFamilyBold = extractFontName(fuenteBold);
-    const fontFamilyTitulo = extractFontName(fuenteTitulo);
-    const fontFamily = preload.length
-        ? `"${fontFamilyRegular}", system-ui, -apple-system, Segoe UI, Roboto, sans-serif`
-        : "Verdana, Geneva, Tahoma, sans-serif";
-
-    return {
-        fonts: {
-            preload,
-        },
-        fontFamily,
-        fontFamilyRegular,
-        fontFamilyBold,
-        fontFamilyTitulo,
-    };
-}
-
 const extractWeight = (filename: string) => {
     const parts = filename.split('-');
     const weightPart = parts.find(part => /^\d+$/.test(part.replace('.woff2', '')));
@@ -125,7 +88,7 @@ const extractFontName = (filename: string) => {
     const fontNameParts = weightIndex > 0 ? fontParts.slice(0, weightIndex) : fontParts.slice(0, -2);
     
     // Eliminar palabras de estilo (regular, bold, medium, etc.)
-    const styleWords = ['regular', 'bold', 'medium', 'light', 'semibold', 'black'];
+    const styleWords = ['light', 'regular', 'medium', 'semibold', 'bold', 'black'];
     const familyParts = fontNameParts.filter(part => !styleWords.includes(part.toLowerCase()));
     
     // Convertir guiones a espacios y capitalizar cada palabra
@@ -137,6 +100,49 @@ const extractFontName = (filename: string) => {
     
     // Agregar comillas si es nombre compuesto (contiene espacios)
     return fontName;
+}
+
+const buildStyles = (estilos) => {
+    const fuenteRegular = estilos?.["fuente-regular"] ?? "";
+    const fuenteMedium = estilos?.["fuente-medium"] ?? "";
+    const fuenteSemibold = estilos?.["fuente-semibold"] ?? "";
+    const fuenteBold = estilos?.["fuente-bold"] ?? "";
+    const fuenteTitulo = estilos?.["fuente-titulo"] ?? "";
+
+    const preload = [fuenteRegular, fuenteMedium, fuenteSemibold, fuenteBold, fuenteTitulo]
+        .filter((name) => typeof name === "string" && name.trim().length > 0)
+        .map((name) => {
+            const fontName = extractFontName(name);
+            const weight = extractWeight(name);
+            return {
+                href: `/fonts/${name.trim()}`,
+                type: "font/woff2",
+                crossOrigin: "anonymous",
+                familyName: fontName,
+                weight: weight,
+            };
+        });
+
+    const fontFamilyRegular = extractFontName(fuenteRegular);
+    const fontFamilyMedium = extractFontName(fuenteMedium);
+    const fontFamilySemibold = extractFontName(fuenteSemibold);
+    const fontFamilyBold = extractFontName(fuenteBold);
+    const fontFamilyTitulo = extractFontName(fuenteTitulo);
+    const fontFamily = preload.length
+        ? `"${fontFamilyRegular}", system-ui, -apple-system, Segoe UI, Roboto, sans-serif`
+        : "Verdana, Geneva, Tahoma, sans-serif";
+
+    return {
+        fonts: {
+            preload,
+        },
+        fontFamily,
+        fontFamilyRegular,
+        fontFamilyMedium,
+        fontFamilySemibold,
+        fontFamilyBold,
+        fontFamilyTitulo,
+    };
 }
 
 const buildHeader = (info, reviews) => {
