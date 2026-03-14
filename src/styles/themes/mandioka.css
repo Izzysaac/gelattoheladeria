@@ -24,6 +24,10 @@ html[data-theme="mandioka"] {
     /* --color-on-secondary: color de iconos */
     --color-active-secondary:rgba(255, 255, 255, 0.3);
 
+        /* Menu Navigation */
+    --color-navmenu-category: white;
+    --color-navmenu-active: white;
+
     .btn-list { /* Must be white for 'multiply' */
         color: black;            /* Must be black for 'multiply' */
         mix-blend-mode: screen;  
