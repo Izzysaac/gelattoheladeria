@@ -2,7 +2,7 @@ html[data-theme="mandioka"] {
 
   /* Base */
     --brand: rgb(11, 205, 170);
-    --accent: #004007;
+    --accent: rgb(222, 176, 127);
 
     --neutral-0: #F3F1ED;
     --neutral-900: #131313;
@@ -10,7 +10,7 @@ html[data-theme="mandioka"] {
     /* Main */
     --main-text: var(--neutral-0);
     --main-buttons: var(--accent);
-    --main-buttons-text: var(--neutral-0);
+    --main-buttons-text: transparent;
 
     /* App */
     --color-background: var(--neutral-900);
@@ -23,4 +23,10 @@ html[data-theme="mandioka"] {
     --color-secondary: #323232;
     /* --color-on-secondary: color de iconos */
     --color-active-secondary:rgba(255, 255, 255, 0.3);
+
+    .btn-list { /* Must be white for 'multiply' */
+        color: black;            /* Must be black for 'multiply' */
+        mix-blend-mode: screen;  
+        opacity: 60;
+    }
 }
