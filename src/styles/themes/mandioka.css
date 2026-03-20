@@ -9,8 +9,8 @@ html[data-theme="mandioka"] {
 
     /* Main */
     --main-text: var(--neutral-0);
-    --main-buttons: var(--accent);
-    --main-buttons-text: transparent;
+    --main-buttons: rgb(78, 107, 86, 0.7);
+    --main-buttons-text: white;
 
     /* App */
     --color-background: var(--neutral-900);
@@ -28,9 +28,9 @@ html[data-theme="mandioka"] {
     --color-navmenu-category: white;
     --color-navmenu-active: white;
 
-    .btn-list { /* Must be white for 'multiply' */
-        color: black;            /* Must be black for 'multiply' */
+    /* .btn-list { 
+        color: black;           
         mix-blend-mode: screen;  
         opacity: 60;
-    }
+    } */
 }
