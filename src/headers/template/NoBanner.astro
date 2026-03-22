@@ -1,13 +1,10 @@
 ---
 import InfoIcon from "@assets/information.svg";
 import Informacion from "@components/sections/Informacion.astro";
-import ButtonList from "@components/sections/ButtonList.astro";
 
 const {
     titulo,
     descripcion,
-    mainLogo,
-    mainBanner,
     logo,
     banner,
     horario,
@@ -19,15 +16,13 @@ const {
 
 ---
 
-<img src={mainBanner} alt="" class="w-full h-full object-cover fixed top-0 left-0 -z-10" />
-
-
 <header
     id="mainHeader"
-    class="m-auto flex max-w-120 flex-col items-center text-(--main-text) mb-2"
+    class="m-auto mb-2 flex max-w-120 flex-col items-center text-(--main-text) pt-8 gap-5"
 >
-    <button id="infoBtn"
-        class="fixed top-3 right-3  rounded-full group"
+    <button
+        id="infoBtn"
+        class="group fixed top-3 right-3 rounded-full"
         aria-label="Más información"
     >
         <InfoIcon
@@ -39,18 +34,16 @@ const {
             aria-label="Más información"
         />
     </button>
-
+    <h1 class="visually-hidden">Restaurante Raíces Gourmet</h1>
     <img
-        id="banner"
-        src={mainLogo}
-        alt=`Imagen de presentacion de ${titulo}`
+        src={logo.logo}
+        alt=`Imagen de presentacion de ${logo.titulo}`
         fetchpriority="high"
         loading="eager"
-        width="600px"
-        class="w-60 h-20"
-
+        width="250px"
+        height="250px"
+        class="w-9/12"
     />
-
     <div>
         <p class="flex w-full px-2.5 items-center">
             <span id="statusLight"
@@ -59,15 +52,15 @@ const {
             data-horario={JSON.stringify(horario)}
             class="">Cargando ...</span>
         </p>
-        <p class="px-2.5">{descripcion}</p>
-
+        
+        <p class="px-2.5 mt-1.5">{descripcion}</p>
     </div>
     <Informacion {...Astro.props} />
 </header>
 
 <script src="../../scripts/modal.js"></script>
-<script src="../../scripts/header/information.js"></script>
-<script src="../../scripts/header/status/index.js"></script>
+<script src="../scripts/information.js"></script>
+<script src="../scripts/status/index.js"></script>
 
 <style>
     @import "tailwindcss";
@@ -98,5 +91,7 @@ const {
         position: absolute;
         bottom: 3px;
         right: 3px;
-    } */
+        /* position-anchor: --logo-image; */
+    /* bottom: calc(anchor(bottom) + 3px);
+        right: calc(anchor(right) + 3px); */
 </style>

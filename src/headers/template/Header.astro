@@ -21,7 +21,7 @@ const {
     class="m-auto flex max-w-120 flex-col items-center text-(--main-text) mb-2"
 >
     <button id="infoBtn"
-        class="fixed top-3 right-3  rounded-full group"
+        class="fixed top-3 right-3 rounded-full group"
         aria-label="Más información"
     >
         <InfoIcon
@@ -33,7 +33,6 @@ const {
             aria-label="Más información"
         />
     </button>
-
     <img
         id="banner"
         src={banner}
@@ -68,20 +67,20 @@ const {
             <p
                 id="statusMsg"
                 data-horario={JSON.stringify(horario)}
-                class="text-sm opacity-90"
+                class="text-sm opacity-90 header-status-message"
             >
                 Cargando ...
             </p>
         </div>
     </div>
 
-    <p class="px-2.5 opacity-95 text-sm">{descripcion}</p>
+    <p class="px-2.5 opacity-95 header-descripcion">{descripcion}</p>
     <Informacion {...Astro.props} />
 </header>
 
 <script src="../../scripts/modal.js"></script>
-<script src="../../scripts/header/information.js"></script>
-<script src="../../scripts/header/status/index.js"></script>
+<script src="../scripts/information.js"></script>
+<script src="../scripts/status/index.js"></script>
 
 <style>
     @import "tailwindcss";
@@ -102,12 +101,6 @@ const {
     .anchor-img {
         anchor-name: --logo-image;
     }
-    /* #statusLight {
-        position: absolute;
-        position-anchor: --logo-image;
-        bottom: calc(anchor(bottom) + 3px);
-        right: calc(anchor(right) + 3px);
-    } */
     #statusLight {
         position: absolute;
         bottom: 3px;

@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import HeaderRouter from "@src/routers/HeaderRouter.astro";
+import HeaderRouter from "@headers/HeaderRouter.astro";
 
 import InfoIcon from "@assets/information.svg";
 import Informacion from "@components/sections/Informacion.astro";
@@ -62,8 +62,8 @@ const bg = getCldImageUrl({ src: background });
     <!-- <Footer {...footer} class:list={"mt-26"} /> -->
 
     <script src="../../scripts/modal.js"></script>
-    <script src="../../scripts/header/information.js"></script>
-    <script src="../../scripts/header/status/index.js"></script>
+    <script src="../../headers/scripts/information.js"></script>
+    <script src="../../headers/scripts/status/index.js"></script>
 </BaseLayout>
 
 <style define:vars={{bg}}>

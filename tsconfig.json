@@ -16,6 +16,7 @@
       "@components/*": ["./src/components/*"],
       "@template/*": ["./src/components/template/*"],
       "@layouts*": ["./src/layouts/*"],
+      "@headers/*": ["./src/headers/*"],
       "@lib/*": ["./src/lib/*"],
       "@assets/*": ["./src/assets/*"],
       "@styles/*": ["./src/styles/*"],

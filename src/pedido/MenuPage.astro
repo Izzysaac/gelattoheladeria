@@ -1,43 +1,34 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Footer from "@layoutsFooter.astro";
+
+import Logo from "@components/ui/Logo.astro";
 import Menu from "@pedido/sections/Menu.astro";
 import CategoryNav from "@pedido/sections/CategoryNav.astro";
 import ImageViewer from "@components/sections/ImageViewer.astro";
 import StickyBar from "@components/sections/StickyBar.astro";
-import Modal from "@pedido/sections/Modal.astro";
-import Header from "@components/headers/Header.astro";
 import Badges from "@pedido/components/Badges.astro";
-import HeaderRouter from "@src/routers/HeaderRouter.astro";
+import HeaderRouter from "@headers/HeaderRouter.astro";
+import Header from "@headers/template/Header.astro";
 
-const { tenant, head, styles, header, badges, contact, logo, menu, categorias, footer } = Astro.props;
-const modo = "pedido";
+const { tenant, head, styles, header, contact, badges, logo, menu, categorias, footer } = Astro.props;
+
+const modo = "menu";
 ---
 
 <BaseLayout head={head} styles={styles}>
-    <div
-        id="datos"
-        data-direccionlocal={contact.direccion}
-        data-telefono={contact.telefono}
-        data-valorentrega={badges.valorEntrega}
-        hidden
-    >
-    </div>
-    <HeaderRouter tenant={tenant} header={header} page="pedido"/>
-
+    <HeaderRouter tenant={tenant} header={header} page="menu"/>
     <main class="flex flex-col items-center justify-center mb-26">
         <Badges {...badges} />
         <h1 class="invisible h-0">Menú</h1>
         <CategoryNav categorias={categorias} />
         <Menu menuPorCategoria={menu} modo={modo} />
         <ImageViewer />
-        <Modal mode={modo} />
         <StickyBar modo={modo} />
     </main>
 </BaseLayout>
 
 <script src="../../scripts/menu/viewimg.js" />
-<script src="../../scripts/order/init.js"></script>
 
 <style is:global>
     .cerrado {
@@ -46,5 +37,4 @@ const modo = "pedido";
     .ocultar {
         visibility: hidden;
     }
-    /* En tu CSS */
 </style>

@@ -1,4 +1,4 @@
-import { openModal, manualClose } from "../modal.js";
+import { openModal, manualClose } from "../../scripts/modal.js";
 
 const info = document.getElementById("informacion");
 const infoBtn = document.getElementById("infoBtn");
