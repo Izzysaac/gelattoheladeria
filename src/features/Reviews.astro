@@ -2,7 +2,8 @@
 import { getCldImageUrl } from "astro-cloudinary/helpers";
 import Image from "astro/components/Image.astro";
 import GoogleReviewImg from "@assets/google-review2.png";
-import RenderStars from "@components/ui/RenderStars.astro";
+
+import RenderStars from "./RenderStars.astro";
 import Icon from "@components/ui/Icon.astro";
 
 const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
@@ -175,4 +176,4 @@ const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
 </style>
 
 
-<script src="../../scripts/reviews/reviews.js"></script>
+<script src="./reviews.js"></script>

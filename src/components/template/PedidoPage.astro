@@ -1,14 +1,14 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Footer from "@layoutsFooter.astro";
-import Menu from "@components/sections/Menu.astro";
-import CategoryNav from "@components/sections/CategoryNav.astro";
+import Menu from "@pedido/sections/Menu.astro";
+import CategoryNav from "@pedido/sections/CategoryNav.astro";
 import ImageViewer from "@components/sections/ImageViewer.astro";
 import StickyBar from "@components/sections/StickyBar.astro";
-import Modal from "@components/sections/Modal.astro";
+import Modal from "@pedido/sections/Modal.astro";
 import Header from "@components/headers/Header.astro";
-import Badges from "@components/ui/Badges.astro";
-import HeaderRouter from "@components/routers/HeaderRouter.astro";
+import Badges from "@pedido/components/Badges.astro";
+import HeaderRouter from "@src/routers/HeaderRouter.astro";
 
 const { tenant, head, styles, header, badges, contact, logo, menu, categorias, footer } = Astro.props;
 const modo = "pedido";

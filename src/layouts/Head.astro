@@ -1,12 +1,11 @@
 ---
-import EventosPage from "@components/template/EventosPage.astro";
+import EventosPage from "@eventos/EventosPage.astro";
 import Analytics from "@vercel/analytics/astro";
 
 const { titulo, descripcion, logo, banner, ogimage, styles, eventos } =
     Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-console.log(eventos)
 ---
 
 {

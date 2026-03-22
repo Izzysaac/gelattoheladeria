@@ -1,6 +1,6 @@
-import { cargarState, state } from "../state.js";
+import { cargarState, state } from "@scripts/state.js";
 import { bindEventosCheckout } from "@scripts/order/events.js";
-import { renderCheckout } from "../order/render.js";
+import { renderCheckout } from "@scripts/order/render.js";
 
 const init = () => {
     cargarState();
@@ -15,7 +15,6 @@ const init = () => {
 };
 
 init();
-
 
 
 

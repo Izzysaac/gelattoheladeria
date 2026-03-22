@@ -7,6 +7,12 @@
     "paths": {
       "@public/*": ["./public/*"],
       "@ticket/*": ["./src/ticket/*"],
+      "@checkout/*": ["./src/checkout/*"],
+      "@eventos/*": ["./src/eventos/*"],
+      "@reserva/*": ["./src/reserva/*"],
+      "@main/*": ["./src/main/*"],
+      "@pedido/*": ["./src/pedido/*"],
+      "@features/*": ["./src/features/*"],
       "@components/*": ["./src/components/*"],
       "@template/*": ["./src/components/template/*"],
       "@layouts*": ["./src/layouts/*"],
@@ -14,7 +20,8 @@
       "@assets/*": ["./src/assets/*"],
       "@styles/*": ["./src/styles/*"],
       "@scripts/*": ["src/scripts/*"],
-      "@pages/*": ["./src/pages/*"]
+      "@pages/*": ["./src/pages/*"],
+      "@src/*": ["./src/*"]
     },
     "strict": false,
     "noImplicitAny": false

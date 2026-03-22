@@ -1,13 +1,13 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import HeaderRouter from "@components/routers/HeaderRouter.astro";
+import HeaderRouter from "@src/routers/HeaderRouter.astro";
 
 import InfoIcon from "@assets/information.svg";
 import Informacion from "@components/sections/Informacion.astro";
 
 import Footer from "@layoutsFooter.astro";
 import ButtonList from "@components/sections/ButtonList.astro";
-import Reviews from "@components/features/Reviews.astro";
+import Reviews from "@features/Reviews.astro";
 import { getCldImageUrl } from "node_modules/astro-cloudinary/src/helpers/getCldImageUrl";
 
 const { tenant, head, styles, header, buttonsList, footer, reviews } =

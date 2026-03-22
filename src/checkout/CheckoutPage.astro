@@ -3,10 +3,10 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import ModalTopBar from "@components/ui/ModalTopBar.astro";
 import StickyBar from "@components/sections/StickyBar.astro";
 
-import ResumenPedido from "@components/checkout/ResumenPedido.astro";
+import ResumenPedido from "@checkout/components/ResumenPedido.astro";
 
-import DataForm from "@components/checkout/DataForm.astro";
-import NewResumen from "@components/checkout/NewResumen.astro";
+import DataForm from "@checkout/components/DataForm.astro";
+import NewResumen from "@checkout/components/NewResumen.astro";
 
 const { tenant, head, styles, contact, metodosPago } = Astro.props;
 
@@ -31,4 +31,4 @@ const modo = "checkout";
     <StickyBar modo={modo} />
 </BaseLayout>
 
-<script src="../../scripts/checkout/init.js" />
+<script src="./init.js" />
