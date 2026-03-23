@@ -209,7 +209,7 @@ const buildHorario = (horario) => {
                         specialText: horarioText,
                     };
                 }
-                
+
                 // Procesar rangos de tiempo normales
                 for (const range of horarioText.split(",")) {
                     const parts = range.trim().split("-");
