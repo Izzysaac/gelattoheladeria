@@ -42,7 +42,13 @@ export const buildEventosPageData = ({ tenant, info, eventos, estilos }) => {
         eventos: buildEvents(eventos),
         footer: buildFooter(info),
     };
-}
+};
+
+export const buildTicketPageData = ({ tenant, info, menu }) => {
+    return {
+        menu: buildTicket(menu, info),
+    };
+};
 
 // ==========================
 // COMPONENT BUILDERS
@@ -70,10 +76,12 @@ const buildEventosHead = (info, eventos) => {
 }
 
 const extractWeight = (filename: string) => {
-    const parts = filename.split('-');
-    const weightPart = parts.find(part => /^\d+$/.test(part.replace('.woff2', '')));
-    return weightPart ? weightPart.replace('.woff2', '') : '400';
-}
+    const parts = filename.split("-");
+    const weightPart = parts.find((part) =>
+        /^\d+$/.test(part.replace(".woff2", "")),
+    );
+    return weightPart ? weightPart.replace(".woff2", "") : "400";
+};
 
 const extractFontName = (filename: string) => {
     // "poppins-regular-400.woff2" → "Poppins"
@@ -82,15 +90,29 @@ const extractFontName = (filename: string) => {
     if (!filename) return "System Font";
     
     // Extraer todo hasta el primer número (peso de la fuente)
-    const fontParts = filename.split('-');
-    const weightIndex = fontParts.findIndex(part => /^\d+$/.test(part.replace('.woff2', '')));
-    
-    const fontNameParts = weightIndex > 0 ? fontParts.slice(0, weightIndex) : fontParts.slice(0, -2);
-    
+    const fontParts = filename.split("-");
+    const weightIndex = fontParts.findIndex((part) =>
+        /^\d+$/.test(part.replace(".woff2", "")),
+    );
+
+    const fontNameParts =
+        weightIndex > 0
+            ? fontParts.slice(0, weightIndex)
+            : fontParts.slice(0, -2);
+
     // Eliminar palabras de estilo (regular, bold, medium, etc.)
-    const styleWords = ['light', 'regular', 'medium', 'semibold', 'bold', 'black'];
-    const familyParts = fontNameParts.filter(part => !styleWords.includes(part.toLowerCase()));
-    
+    const styleWords = [
+        "light",
+        "regular",
+        "medium",
+        "semibold",
+        "bold",
+        "black",
+    ];
+    const familyParts = fontNameParts.filter(
+        (part) => !styleWords.includes(part.toLowerCase()),
+    );
+
     // Convertir guiones a espacios y capitalizar cada palabra
     const fontName = familyParts
         .join(' ')
@@ -109,7 +131,13 @@ const buildStyles = (estilos) => {
     const fuenteBold = estilos?.["fuente-bold"] ?? "";
     const fuenteTitulo = estilos?.["fuente-titulo"] ?? "";
 
-    const preload = [fuenteRegular, fuenteMedium, fuenteSemibold, fuenteBold, fuenteTitulo]
+    const preload = [
+        fuenteRegular,
+        fuenteMedium,
+        fuenteSemibold,
+        fuenteBold,
+        fuenteTitulo,
+    ]
         .filter((name) => typeof name === "string" && name.trim().length > 0)
         .map((name) => {
             const fontName = extractFontName(name);
@@ -302,6 +330,23 @@ const buildMenu = (menu) => {
     });
 
     return grouped;
+};
+
+const buildTicket = (menu, info) => {
+    const valorEntrega = info.valorEntrega;
+    return menu.reduce((acc, item) => {
+        // Extraemos el nombre para usarlo como clave y el resto como valor
+        const { nombre, activo, ...rest } = item;
+
+        // Solo agregamos el producto si está activo (opcional, basado en tu data)
+        if (activo) {
+            acc[nombre] = {
+                ...rest,
+            };
+        }
+
+        return acc;
+    }, {valorEntrega});
 };
 
 const buildCategorias = (menu) => {

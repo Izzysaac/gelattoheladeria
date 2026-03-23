@@ -3,7 +3,7 @@ import { buildTenantData } from "@lib/buildTenantData";
 
 import TicketPage from "@ticket/TicketPage.astro";
 
-const { tenant, data } = await buildTenantData("menu");
+const { tenant, data } = await buildTenantData("ticket");
 
 if (!tenant.pages.ticket) return Astro.redirect("/");
 ---
