@@ -182,8 +182,9 @@ export const PRODUCTOS_CONFIG = productos;
 //         descripcion: "",
 //     },
 // };
+const pagoExterno = !isNaN(valorEntrega);
 
-export const DELIVERY = valorEntrega;
+export const DELIVERY = pagoExterno ? 0 : valorEntrega;
 
 // Metadata
 export const PRODUCTS_METADATA = {
