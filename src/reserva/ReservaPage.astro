@@ -5,7 +5,6 @@ import StickyBar from "@components/sections/StickyBar.astro";
 import ReservaForm from "./components/ReservaForm.astro";
 
 const { tenant, head, styles, contact, metodosPago } = Astro.props;
-
 const modo = "reserva";
 
 ---
@@ -30,6 +29,115 @@ const modo = "reserva";
     <StickyBar modo={modo} />
 </BaseLayout>
 
+<script>
+    //Validad Formulario
+    const reservaForm = document.getElementById('reservaForm') as HTMLFormElement;
+    const realizarReserva = document.getElementById('btn-hacer-reserva') as HTMLButtonElement;
+
+
+    reservaForm?.addEventListener('change', () => {
+        const isValid = reservaForm.checkValidity();
+        if (isValid) {
+            realizarReserva.disabled = false;
+        } else {
+            realizarReserva.disabled = true;
+        }
+    });
+
+    const formatearFecha = (fechaString) => {
+        // Dividimos la fecha (YYYY-MM-DD) para evitar desfases de zona horaria
+        const [anio, mes, dia] = fechaString.split('-').map(Number);
+        const fecha = new Date(anio, mes - 1, dia);
+
+        // Configuramos para que NO incluya el año
+        const opciones: Intl.DateTimeFormatOptions = { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'long' 
+        };
+        const resultado = fecha.toLocaleDateString("es-Co", opciones);
+        // Opcional: Poner la primera letra en mayúscula (ej: "Martes...")
+        return resultado.charAt(0).toUpperCase() + resultado.slice(1);
+    }
+
+    function formatearHora(horaString) {
+        // El input suele venir como "14:30" o "14:30:00"
+        // Creamos una fecha ficticia para usar las herramientas de formateo de JS
+        const [horas, minutos] = horaString.split(':');
+        const fechaTemporal = new Date();
+        fechaTemporal.setHours(parseInt(horas), parseInt(minutos));
+
+        // Formateamos a 12 horas con AM/PM
+        return fechaTemporal.toLocaleTimeString('es-ES', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        }).toUpperCase(); // Para que salga AM en mayúsculas
+    }
+
+    const generarMensaje = (valores) => {
+
+        const lineas = ["Hola, quiero realizar una reserva por favor:\n"];
+        lineas.push(`*Nombre:* ${valores.nombreCliente}`);
+        lineas.push(`*Fecha:* ${formatearFecha(valores.fechaReserva)}`);
+        lineas.push(`*Hora:* ${formatearHora(valores.horaReserva)}`);
+        lineas.push(`*Nº Personas:* ${valores.numeroPersonas}`);
+        if (valores.notas) lineas.push(`*Notas:* ${valores.notas}`);
+        return lineas.join("\n");
+    };
+
+    const whatsapp = document.getElementById('datos')?.getAttribute('data-whatsapp');
+
+    realizarReserva?.addEventListener('click', (e) => {
+
+        const datos = new FormData(reservaForm);
+
+        // Convertirlo a un objeto simple de JS (Fácil de leer)
+        const valores = Object.fromEntries(datos.entries());
+
+        const mensaje = generarMensaje(valores);
+        const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(mensaje)}`;
+        window.open(url, "_blank");
+    });
+</script>
+
 <!-- <script src="./init.js" /> -->
 
 
+<!-- const formulario = document.querySelector('#formReserva');
+const campos = ['nombre', 'fechaReserva', 'horaReserva', 'personas', 'notas'];
+
+// 1. Al cargar la página: Recuperar datos si existen
+window.addEventListener('DOMContentLoaded', () => {
+    campos.forEach(campo => {
+        const valorGuardado = localStorage.getItem(campo);
+        if (valorGuardado) {
+            const input = document.getElementsByName(campo)[0];
+            if (input) input.value = valorGuardado;
+        }
+    });
+});
+
+// 2. Mientras escribe: Guardar en tiempo real
+formulario.addEventListener('input', (e) => {
+    const { name, value } = e.target;
+    if (campos.includes(name)) {
+        localStorage.setItem(name, value);
+    }
+});
+
+// 3. Al enviar con éxito: Limpiar la persistencia
+formulario.addEventListener('submit', () => {
+    // Solo borramos si el envío fue exitoso
+    campos.forEach(campo => localStorage.removeItem(campo));
+}); -->
+
+<!-- // Al guardar
+const datos = { valor: value, fecha: new Date().getTime() };
+localStorage.setItem(name, JSON.stringify(datos));
+
+// Al recuperar, checas si han pasado más de 24 horas
+const unDia = 24 * 60 * 60 * 1000;
+if (new Date().getTime() - datos.fecha > unDia) {
+    localStorage.removeItem(name);
+} -->

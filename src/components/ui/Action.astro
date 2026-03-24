@@ -48,7 +48,7 @@ const { action } = Astro.props;
 {
     action == "reserva" && (
         <div class="flex w-full flex-col gap-2">
-            <button disabled id="btn-hacer-pedido" class="stickybarBtn text-nowrap active:opacity-80 w-full flex flex-col">
+            <button disabled id="btn-hacer-reserva" class="stickybarBtn text-nowrap active:opacity-80 w-full flex flex-col">
                 Reservar por Whatsapp
             </button>
         </div>
@@ -56,7 +56,8 @@ const { action } = Astro.props;
 }
 
 <style>
-    #btn-hacer-pedido[disabled] {
+    #btn-hacer-pedido[disabled],
+    #btn-hacer-reserva[disabled] {
         opacity: 0.5;
         cursor: not-allowed;
     }

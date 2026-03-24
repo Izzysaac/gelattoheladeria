@@ -216,7 +216,7 @@ export const renderSingleModal = (nombre) => {
     if (!dom.listaPedido) return;
     
     const item = state.items[nombre];
- 
+
     // 🔄 Usar cache en lugar de querySelector directo
     const itemEnDOM = getModalItem(nombre);
     // CASO 1: El producto ya no existe en el estado (cantidad 0)

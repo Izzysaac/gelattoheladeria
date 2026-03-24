@@ -1,6 +1,6 @@
 ---
-
-
+import Plus from "@assets/plus-svgrepo-com.svg"
+import Minus from "@assets/minus-svgrepo-com.svg"
 ---
 
 <section id="reservaSection" class="">
@@ -9,21 +9,10 @@
     <div class="flex flex-col gap-2.5">
 
         <h2 class="text-lg text-bold">Opciones de reserva</h2>
-    
-        <label class="field">
-            <small>Selecciona el día y la hora:</small>
-            <input
-                id="fechaReservaForm"
-                name="fechaReserva"
-                type="datetime-local"
-                autocomplete="date"
-                required
-            />
-        </label>
 
-        <div class="flex gap-4">
+        <div class="flex gap-2.5">
             <label class="field grow">
-                <small>Selecciona el día:</small>
+                <small>Fecha: <span id="dia-semana" class="text-inherit font-bold"></span></small>
                 <input
                     id="fechaReservaForm"
                     name="fechaReserva"
@@ -33,10 +22,10 @@
                 />
             </label>
             <label class="field grow">
-                <small>Selecciona la hora:</small>
+                <small>Hora:</small>
                 <input
-                    id="fechaReservaForm"
-                    name="fechaReserva"
+                    id="horaReservaForm"
+                    name="horaReserva"
                     type="time"
                     autocomplete="date"
                     required
@@ -47,13 +36,20 @@
     
         <label class="field">
             <small>Número de personas:</small>
-            <input
-                id="numeroPersonasForm"
-                name="numeroPersonas"
-                type="number"
-                autocomplete="number"
-                required
-            />
+            <div class="flex border border-gray-600 rounded">
+                <input
+                    id="numeroPersonasForm"
+                    name="numeroPersonas"
+                    type="number"
+                    autocomplete="number"
+                    min="1"
+                    value="1"
+                    required
+                    class="border-none grow"
+                />
+                <button id="decrementarPersonas" type="button" ><Minus width={25} height={25} fill="inherit" /></button>
+                <button id="incrementarPersonas" type="button"><Plus width={25} height={25} fill="inherit" /></button>
+            </div>
         </label>
 
     </div>
@@ -83,11 +79,46 @@
 
 </section>
 
+<script>
+    const fechaReservaInput = document.getElementById('fechaReservaForm') as HTMLInputElement;
+    const diaSemanaSpan = document.getElementById('dia-semana') as HTMLSpanElement;
+    const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    
+    const actualizarDia = (fechaString: string) => {
+        if (!fechaString) return;
+        const fecha = new Date(fechaString + "T00:00:00");
+        const nombreDia = dias[fecha.getDay()];
+        
+        diaSemanaSpan.textContent = nombreDia;
+    }
+    
+    fechaReservaInput?.addEventListener('change', () => actualizarDia(fechaReservaInput.value));
+
+
+    const numeroPersonasForm = document.getElementById('numeroPersonasForm') as HTMLInputElement;
+    const minus = document.getElementById('decrementarPersonas') as HTMLButtonElement;
+    const plus = document.getElementById('incrementarPersonas') as HTMLButtonElement;
+    
+    minus?.addEventListener('click', () => {if (numeroPersonasForm.valueAsNumber > 1) numeroPersonasForm.valueAsNumber--;});
+    plus?.addEventListener('click', () => {numeroPersonasForm.valueAsNumber++;});
+
+    // Obtener la fecha de hoy en formato ISO (YYYY-MM-DD)
+    const hoy = new Date();
+    // Extraemos año, mes y día localmente
+    const anio = hoy.getFullYear();
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11
+    const dia = String(hoy.getDate()).padStart(2, '0');
+    const fechaFormateada = `${anio}-${mes}-${dia}`;
+    // Aplicamos el límite mínimo
+    document.getElementById("fechaReservaForm").setAttribute('min', fechaFormateada);
+
+</script>
+
 <style>
     @import "tailwindcss";
 
     .field {
-        @apply flex flex-col gap-1.5 w-full;
+        @apply flex flex-col gap-1.5;
     }
 
     input {
@@ -99,6 +130,9 @@
     input[type="time"]::-webkit-calendar-picker-indicator {
         filter: invert(1);
         cursor: pointer;
+    }
+    button {
+        @apply border-l border-gray-600 px-4 active:bg-(--color-active-secondary);
     }
 
 </style>

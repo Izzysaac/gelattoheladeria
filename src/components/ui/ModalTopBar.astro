@@ -4,7 +4,6 @@ import Trash from "@assets/trash-svgrepo-com.svg";
 
 const { mode } = Astro.props
 
-
 ---
 
 { mode == "pedido" && (
@@ -51,18 +50,19 @@ const { mode } = Astro.props
 { mode == "reserva" && (
 
 <div class="sticky top-0 flex items-center bg-(--color-background) py-2.5">
-    <button
-        id="btn-cerrar-checkout"
+    <a
+        id="btn-cerrar-reserva"
         class="w-fit rounded-full bg-(--color-secondary) p-2"
         aria-label="Volver a pedido"
+        href="/"
     >
         <ArrowLeftIcon
             width={20}
             height={20}
             class:list={"pointer-events-none"}
         />
-    </button>
-    <p class="absolute left-6/12 m-0 transform -translate-x-1/2 text-lg text-bold">Realizar reserva</p>
+    </a>
+    <p class="absolute left-6/12 m-0 transform -translate-x-1/2 text-lg text-bold">Reserva</p>
 </div>
 )}
 
