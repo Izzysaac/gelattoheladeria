@@ -3,10 +3,10 @@ import { buildTenantData } from "@lib/buildTenantData";
 
 import ReservaPage from "@reserva/ReservaPage.astro";
 
-// const { tenant, data } = await buildTenantData("pedido");
+const { tenant, data } = await buildTenantData("pedido");
 
-// if (!tenant.pages.reserva) return Astro.redirect("/")
-return Astro.redirect("/");
+if (!tenant.pages.reserva) return Astro.redirect("/")
+
 ---
 
-<h1>reserva</h1>
+<ReservaPage {...data} tenant={tenant}/>

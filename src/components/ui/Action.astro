@@ -45,6 +45,15 @@ const { action } = Astro.props;
         </div>
     )
 }
+{
+    action == "reserva" && (
+        <div class="flex w-full flex-col gap-2">
+            <button disabled id="btn-hacer-pedido" class="stickybarBtn text-nowrap active:opacity-80 w-full flex flex-col">
+                Reservar por Whatsapp
+            </button>
+        </div>
+    )
+}
 
 <style>
     #btn-hacer-pedido[disabled] {

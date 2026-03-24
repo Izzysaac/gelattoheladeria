@@ -1,0 +1,104 @@
+---
+
+
+---
+
+<section id="reservaSection" class="">
+    <form id="reservaForm" novalidate class="flex flex-col gap-5">
+
+    <div class="flex flex-col gap-2.5">
+
+        <h2 class="text-lg text-bold">Opciones de reserva</h2>
+    
+        <label class="field">
+            <small>Selecciona el día y la hora:</small>
+            <input
+                id="fechaReservaForm"
+                name="fechaReserva"
+                type="datetime-local"
+                autocomplete="date"
+                required
+            />
+        </label>
+
+        <div class="flex gap-4">
+            <label class="field grow">
+                <small>Selecciona el día:</small>
+                <input
+                    id="fechaReservaForm"
+                    name="fechaReserva"
+                    type="date"
+                    autocomplete="date"
+                    required
+                />
+            </label>
+            <label class="field grow">
+                <small>Selecciona la hora:</small>
+                <input
+                    id="fechaReservaForm"
+                    name="fechaReserva"
+                    type="time"
+                    autocomplete="date"
+                    required
+                />
+            </label>
+        </div>
+
+    
+        <label class="field">
+            <small>Número de personas:</small>
+            <input
+                id="numeroPersonasForm"
+                name="numeroPersonas"
+                type="number"
+                autocomplete="number"
+                required
+            />
+        </label>
+
+    </div>
+    <div class="flex flex-col gap-2.5">
+
+        <h2 class="text-lg text-bold">Datos de contacto</h2>
+    
+        <label class="field">
+            <small>Nombre</small>
+            <input
+            id="nombreClienteForm"
+            name="nombreCliente"
+            type="text"
+            autocomplete="name"
+            required
+            placeholder="Nombre completo"
+            />
+        </label>
+    
+        <label class="field">
+            <small>Notas / Alergias <span>(opcional)</span></small>
+            <textarea id="notasForm" name="notas" class="field-sizing-content border border-gray-600 rounded p-2" placeholder="Indica algún comentario a tener en cuenta"></textarea>
+        </label>
+
+    </div>
+    </form>
+
+</section>
+
+<style>
+    @import "tailwindcss";
+
+    .field {
+        @apply flex flex-col gap-1.5 w-full;
+    }
+
+    input {
+        @apply rounded border border-gray-600 p-2;
+    }
+
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+        cursor: pointer;
+    }
+
+</style>

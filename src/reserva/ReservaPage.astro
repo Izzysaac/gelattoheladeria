@@ -1,12 +1,35 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import ModalTopBar from "@components/ui/ModalTopBar.astro";
+import StickyBar from "@components/sections/StickyBar.astro";
+import ReservaForm from "./components/ReservaForm.astro";
 
-const { titulo, descripcion, logo } = Astro.props;
+const { tenant, head, styles, contact, metodosPago } = Astro.props;
+
+const modo = "reserva";
+
 ---
 
-<BaseLayout>
-    <h1>Página de reserva</h1>
-    <h2>{titulo}</h2>
-    <h3>{descripcion}</h3>
-    <img src={logo} alt="" />
+<BaseLayout head={head} styles={styles}>
+    <div
+        id="datos"
+        data-direccionlocal={contact.direccion}
+        data-telefono={contact.telefono}
+        data-whatsapp={contact.whatsapp}
+        hidden
+    >
+    </div>
+    <main id="reservaMain" class="max-w-125 m-auto flex flex-col gap-8 px-2.5 pb-26">
+        <ModalTopBar mode={modo} />
+        <ReservaForm/>
+        <p class="flex flex-col opacity-80">
+            <small>La reserva no tiene ningún coste</small>
+            <small>Para decoraciones consultar disponibilidad y precios</small>
+        </p>
+    </main>
+    <StickyBar modo={modo} />
 </BaseLayout>
+
+<!-- <script src="./init.js" /> -->
+
+

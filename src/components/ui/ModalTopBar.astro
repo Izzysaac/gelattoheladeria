@@ -48,6 +48,24 @@ const { mode } = Astro.props
 </div>
 )}
 
+{ mode == "reserva" && (
+
+<div class="sticky top-0 flex items-center bg-(--color-background) py-2.5">
+    <button
+        id="btn-cerrar-checkout"
+        class="w-fit rounded-full bg-(--color-secondary) p-2"
+        aria-label="Volver a pedido"
+    >
+        <ArrowLeftIcon
+            width={20}
+            height={20}
+            class:list={"pointer-events-none"}
+        />
+    </button>
+    <p class="absolute left-6/12 m-0 transform -translate-x-1/2 text-lg text-bold">Realizar reserva</p>
+</div>
+)}
+
 
 <style>
     @import "tailwindcss";
