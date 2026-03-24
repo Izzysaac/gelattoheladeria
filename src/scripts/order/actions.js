@@ -102,7 +102,15 @@ export const setNotas = (notas) => {
 
 
 export const getShipping = () => {
-    return state.tipoEntrega === "domicilio" ? state.valorEntrega : 0;
+    // Si no es domicilio, el costo es 0
+    if (state.tipoEntrega !== "domicilio") return 0;
+
+    // Intentamos convertir el valor a número
+    const valor = Number(state.valorEntrega);
+
+    // Si no es un número (es "Adicional", "Variable", etc.), devolvemos 0 para la suma
+    // Si es un número, devolvemos el valor (ej. 5000 o 0)
+    return isNaN(valor) ? 0 : valor;
 }
 
 export const computeTotal = (items) => {

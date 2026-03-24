@@ -3,38 +3,94 @@ import StarIcon from "@assets/Star.svg";
 import DeliveryIcon from "@assets/motorbike.svg";
 import DeliveryTimeIcon from "@assets/deliveryTime.svg";
 
+const { rating, userRatingCount, tiempoEntrega, valorEntrega } = Astro.props;
 
-const {rating, userRatingCount, tiempoEntrega, valorEntrega} = Astro.props;
+const formatEntrega = (valor) => {
+    const num = Number(valor);
+    if (valor === "" || isNaN(num)) return valor; // Retorna el texto tal cual ("Adicional", etc.)
+    if (num === 0) return "Gratis";
+    return `$${num.toLocaleString("es-CO")}`; // Ejemplo: $5.000
+};
 
+const pagoExterno = isNaN(Number(valorEntrega));
+const textoParaMostrarValorEntrega = formatEntrega(valorEntrega);
 ---
 
-<div class="badges box-shadow-bages text-sm border border-(--color-border) rounded-2xl py-3 flex justify-evenly items-end w-[calc(100%-20px)] max-w-125 my-3 select-none bg-(--bg-badge)/58">
+<div
+    class="badges box-shadow-bages my-3 flex w-[calc(100%-20px)] max-w-125 items-end justify-evenly rounded-2xl border border-(--color-border) bg-(--bg-badge)/58 py-3 text-sm select-none"
+>
     <p>
-        <StarIcon width={20} height={20} fill="var(--color-background)" class:list={"inline text-center"}/>
+        <StarIcon
+            width={20}
+            height={20}
+            fill="var(--color-background)"
+            class:list={"inline text-center"}
+        />
         <span>{rating} ({userRatingCount})</span>
         <span>Valoración</span>
     </p>
     <p>
-        <DeliveryTimeIcon width={20} height={20} fill="var(--color-background)" class:list={"inline text-center"}/>
+        <DeliveryTimeIcon
+            width={20}
+            height={20}
+            fill="var(--color-background)"
+            class:list={"inline text-center"}
+        />
         <span>{tiempoEntrega}</span>
         <span>Entrega</span>
     </p>
     <p>
-        <DeliveryIcon width={25} height={25} fill="var(--color-background)" class:list={"inline text-center"}/>
-        <span id="valor-entrega" class="mt-1!">{valorEntrega == 0 ? "Gratis" : `$${valorEntrega}`}</span>
+        <DeliveryIcon
+            width={25}
+            height={25}
+            fill="var(--color-background)"
+            class:list={"inline text-center"}
+        />
+        <span id="valor-entrega" class="mt-1!">
+            {textoParaMostrarValorEntrega}
+            <button id="info-btn" class={`relative ${pagoExterno ? '' : 'visually-hidden'}`} aria-label="Información de envío">
+                ⓘ
+            <div id="tooltip"
+                class="pointer-events-none absolute bottom-full right-1/2 z-50 mb-2 hidden w-48 translate-x-1/12 rounded bg-gray-800 p-2 text-xs text-white shadow-lg">
+                    El valor del domicilio es adicional, debe ser cancelado directamente al domiciliario y puede variar según su ubicación.
+        <div class="absolute top-full left-11/12 -translate-x-1/2 border-8 border-transparent border-t-gray-800"></div>
+    </div>
+            
+            </button>
+            
+        </span>
         <span>Envío</span>
     </p>
 </div>
 
+
+<script is:inline>
+    const infoBtn = document.getElementById("info-btn");
+    const tooltip = document.getElementById("tooltip");
+
+    if (infoBtn && tooltip) {
+        // Mostrar / Ocultar al tocar el icono
+        infoBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // Evita que el click suba al document
+            tooltip.classList.toggle("hidden");
+        });
+
+        // Cerrar si el usuario toca en cualquier otra parte de la pantalla
+        document.addEventListener("click", () => {
+            tooltip.classList.add("hidden");
+        });
+    }
+</script>
+
 <style>
     @import "tailwindcss";
-    p{
-        @apply text-center w-full 
+    p {
+        @apply w-full text-center;
     }
     span {
-        @apply block not-last:mt-2 last:opacity-80
+        @apply block not-last:mt-2 last:opacity-80;
     }
-    .box-shadow-bages{
+    .box-shadow-bages {
         box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     }
 </style>

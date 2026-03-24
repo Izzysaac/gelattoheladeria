@@ -166,11 +166,26 @@ export const generarMensaje = () => {
 
     // 4. Totales
     const esDomicilio = tipoEntrega === "domicilio";
+    const numEnvio = Number(valorEntrega);
+    const esEnvioNumerico = !isNaN(numEnvio);
+
     lineas.push(``);
     if (esDomicilio) {
-        const total = Number(totalProductos) + Number(valorEntrega);
-        lineas.push(`*Envío:* $${valorEntrega.toLocaleString()}`);
-        lineas.push(`*Total:* $${total.toLocaleString()}`);
+        // Si es un número, sumamos. Si es texto (Adicional), el total es solo el de productos.
+        const totalSuma = Number(totalProductos) + (esEnvioNumerico ? numEnvio : 0);
+
+        // Mostramos el valor tal cual (si es "Adicional" sale "Adicional", si es 5000 sale con formato)
+        const envioTexto = esEnvioNumerico ? `$${numEnvio.toLocaleString()}` : valorEntrega;
+
+        lineas.push(`*Envío:* ${envioTexto}`);
+        lineas.push(`*Total:* $${totalSuma.toLocaleString()}`);
+
+        if (!esEnvioNumerico) {
+            lineas.push(`_Nota: El costo de envío se paga al domiciliario_`);
+        }
+        // const total = Number(totalProductos) + Number(valorEntrega);
+        // lineas.push(`*Envío:* $${valorEntrega.toLocaleString()}`);
+        // lineas.push(`*Total:* $${total.toLocaleString()}`);
     }else {
         lineas.push(`*Total:* $${totalProductos.toLocaleString()}`);
     }

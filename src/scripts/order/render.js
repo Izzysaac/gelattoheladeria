@@ -331,7 +331,7 @@ export const renderValidar = (estado) => {
 export const renderResumen = () => {
     
     const {tipoEntrega, items , valorEntrega, totalProductos } = state;
-
+    const isDomicilio = tipoEntrega === "domicilio";
     let total = 0;
 
     const html = Object.values(items).map(item => {
@@ -371,14 +371,29 @@ export const renderResumen = () => {
     // checkoutDom.resumenPedido.innerHTML = html;
     checkoutDom.orderSummaryItems.innerHTML = html;
 
+    // Cálculo matemático
     const subtotal = computeTotal(items);
 	const shipping = getShipping(items);
 	const grandTotal = Number(subtotal) + Number(shipping);
 
     checkoutDom.orderSummaryProductsTotal.textContent = `${formatPrice(subtotal)}`;
-    checkoutDom.orderSummaryShipping.textContent = `${formatPrice(shipping)}`;
+
+    if (isNaN(valorEntrega)) {
+        checkoutDom.orderSummaryShipping.textContent = "El costo de envío se paga al domiciliario";
+    }
+    else {
+        checkoutDom.orderSummaryShipping.textContent = `${formatPrice(shipping)}`;
+    }
+
     checkoutDom.orderSummaryGrandTotal.textContent = `${formatPrice(grandTotal)}`;
     checkoutDom.orderSummaryFinalTotal.textContent = `${formatPrice(grandTotal)}`;
+
+    // Opcional: Mostrar/Ocultar contenedor de envío según el tipo
+    if (isDomicilio) {
+        checkoutDom.orderSummaryShipping?.parentElement?.classList.remove("visually-hidden");
+    } else {
+        checkoutDom.orderSummaryShipping?.parentElement?.classList.add("visually-hidden");
+    }
 
     // if (tipoEntrega === "domicilio") {
     //     checkoutDom.envioPedido.textContent = `$${valorEntrega.toLocaleString()}`;
