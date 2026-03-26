@@ -10,8 +10,7 @@ const stars = Array.from({ length: num });
 
 
 
-{ (style === "classic") ? (
-    stars.map((_, i) => <StarClassic width={width} height={height} />)
-) : (
-    stars.map((_, i) => <StarIcon width={width} height={height} />)
-) }
+{ (style === "classic") && stars.map((_, i) => <StarClassic width={width} height={height} />)}
+{ (style === "one-classic") && <StarClassic width={width} height={height} />}
+{ (style === "default") && stars.map((_, i) => <StarIcon width={width} height={height} />)}
+

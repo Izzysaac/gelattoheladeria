@@ -90,7 +90,7 @@ const { userRatingCount, rating, reviewsUrl, reviews, style } = Astro.props;
                 target="_blank"
                 class="mt-5 flex items-center rounded-full bg-(--color-primary) text-(--color-on-primary) px-4 py-3 active:opacity-80 text-bold"
             >
-                Dejar valoración
+                Escribir reseña
                 <Icon
                     name="external"
                     width={15}
@@ -101,14 +101,14 @@ const { userRatingCount, rating, reviewsUrl, reviews, style } = Astro.props;
     }
     {
         (style == "classic") && 
-            <header id="google-reviews" class="pointer-events-auto mb-2 flex gap-4 items-center">
+            <header id="google-reviews" class="pointer-events-auto mb-2 flex flex-col items-center border-b-2 border-b-(--brand) pb-2">
                 <h2 class="text-xl">Reseñas</h2>
-                <p class="h-fit flex flex-col items-center justify-center rounded-xl border-2 border-(--color-border) p-2 text-center">
-                    <span class="text-xl">{rating}</span>
+                <p class="h-fit flex gap-1 items-center justify-center text-center">
+                    <span class="text-bold">{rating}</span>
                     <span class="flex gap-0.5">
-                        <RenderStars rating={rating} width="10" height="10" />
+                        <RenderStars rating={rating} width="18" height="18" style="one-classic"/>
                     </span>
-                    <span class="opacity-90 text-xs"> {userRatingCount} opiniones</span>
+                    <span class=""> {userRatingCount} opiniones</span>
                 </p>
             </header>
         
@@ -165,7 +165,7 @@ const { userRatingCount, rating, reviewsUrl, reviews, style } = Astro.props;
                 target="_blank"
                 class="mt-5 flex items-center rounded-full bg-(--color-primary) text-(--color-on-primary) px-4 py-3 active:opacity-80 text-bold"
             >
-                Dejar valoración
+                Escribir reseña
                 <Icon
                     name="external"
                     width={15}
