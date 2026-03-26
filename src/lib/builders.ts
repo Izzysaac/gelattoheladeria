@@ -374,6 +374,7 @@ const buildReviews = (reviews) => {
         rating: Number(reviews.meta?.rating) || 0,
         reviewsUrl: reviews.meta?.reviewsUrl || "",
         reviews: reviews.reviews || [],
+        style: reviews.style?.design || "default",
     };
 };
 

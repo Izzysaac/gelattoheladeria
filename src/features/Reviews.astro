@@ -6,143 +6,174 @@ import GoogleReviewImg from "@assets/google-review2.png";
 import RenderStars from "./RenderStars.astro";
 import Icon from "@components/ui/Icon.astro";
 
-const { userRatingCount, rating, reviewsUrl, reviews } = Astro.props;
+const { userRatingCount, rating, reviewsUrl, reviews, style } = Astro.props;
 
 //authorName, publishTime, rating, text, authorPhoto, reference
 ---
 
-<section class="m-auto flex max-w-125 flex-col items-center gap-2 text-sm px-2.5">
-    <header id="google-reviews" class="pointer-events-auto mb-2 flex gap-2 items-center">
-        <Image src={GoogleReviewImg} width={150} alt="google reviews" />
-        <h2 class="h-fit flex flex-col items-center justify-center rounded-xl border-2 border-(--color-border) p-2 text-center">
-            <span class="text-xl">{rating}</span>
-            <span class="flex gap-0.5">
-                <RenderStars rating={rating} width="10" height="10" />
-            </span>
-            <span class="opacity-90 text-xs"> {userRatingCount} reseñas</span>
-        </h2>
-    </header>
-    <!-- {
-        reviews.map((review: any, i) => (
-            <article class="flex w-full flex-col gap-2 border-b border-b-(--color-border) px-3 py-4">
-                <header class="flex gap-2">
-                    <img
-                        src={getCldImageUrl({ src: review.authorPhoto, width: 64, height: 64 })}
-                        width="32"
-                        height="32"
-                        loading="lazy"
-                        class="h-fit"
-                        alt={`Foto de perfil de ${review.authorName}`}
-                    />
-                    <p class="flex flex-col">
-                        <span>{review.authorName}</span>
-                        <time
-                            datetime={review.publishTime}
-                            data-time={review.publishTime}
-                            class="text-xs opacity-80"
-                        >
-                            {review.publishTime}
-                        </time>
-                    </p>
-                    <div
-                        role="img"
-                        aria-label={`Calificación ${review.rating} de 5`}
-                        class="stars ms-auto flex gap-0.5"
-                    >
-                        <RenderStars rating={review.rating} />
-                    </div>
-                </header>
-
-                <p class="line-clamp-3 leading-relaxed text-pretty" data-clamp>
-                    {review.text}
-                </p>
-
-                <button
-                    type="button"
-                    class="w-fit self-end font-medium opacity-80"
-                    data-toggle
-                    hidden
-                    aria-expanded="false"
-                >
-                    Ver más
-                </button>
-            </article>
-        ))
-    } -->
-
-    <div class="wrapper flex w-full max-w-125 snap-x snap-mandatory gap-5 overflow-x-scroll">
-        {
-            reviews.map((review: any, i) => (
-                <article class="card snap-center w-10/12 max-w-125 shrink-0 box-border flex flex-col text-center items-center gap-2.5 rounded-lg border-2 border-(--color-border) px-1.5 py-4 bg-">
-                    <header class="contents">
-                        <div class="order-last flex flex-col justify-center gap-0.5 items-center mt-auto">
-                            <img
-                                src={getCldImageUrl({
-                                    src: review.authorPhoto || "",
-                                    width: 64,
-                                    height: 64,
-                                })}
-                                width="32"
-                                height="32"
-                                loading="lazy"
-                                class="h-fit"
-                                alt={`Foto de perfil de ${review.authorName}`}
-                            />
-                            <p class="flex flex-col">
-                                <span>{review.authorName}</span>
-                                <time
-                                    datetime={review.publishTime}
-                                    data-time={review.publishTime}
-                                    class="text-xs opacity-80"
+<section class={`m-auto flex max-w-125 flex-col items-center gap-2 text-sm px-2.5 py-8 ${style === 'classic' ? 'px-8' : ''}`}>
+    {
+        (style == "default") && 
+            <header id="google-reviews" class="pointer-events-auto mb-2 flex gap-2 items-center">
+                <Image src={GoogleReviewImg} width={150} alt="google reviews" />
+                <h2 class="h-fit flex flex-col items-center justify-center rounded-xl border-2 border-(--color-border) p-2 text-center">
+                    <span class="text-xl">{rating}</span>
+                    <span class="flex gap-0.5">
+                        <RenderStars rating={rating} width="10" height="10" />
+                    </span>
+                    <span class="opacity-90 text-xs"> {userRatingCount} reseñas</span>
+                </h2>
+            </header>
+        
+            <div class="wrapper flex w-full max-w-125 snap-x snap-mandatory gap-5 overflow-x-scroll">
+                {
+                    reviews.map((review: any, i) => (
+                        <article class="card snap-center w-10/12 max-w-125 shrink-0 box-border flex flex-col text-center items-center gap-2.5 rounded-lg border-2 border-(--color-border) px-1.5 py-4 bg-">
+                            <header class="contents">
+                                <div class="order-last flex flex-col justify-center gap-0.5 items-center mt-auto">
+                                    <img
+                                        src={getCldImageUrl({
+                                            src: review.authorPhoto || "",
+                                            width: 64,
+                                            height: 64,
+                                        })}
+                                        width="32"
+                                        height="32"
+                                        loading="lazy"
+                                        class="h-fit"
+                                        alt={`Foto de perfil de ${review.authorName}`}
+                                    />
+                                    <p class="flex flex-col">
+                                        <span>{review.authorName}</span>
+                                        <time
+                                            datetime={review.publishTime}
+                                            data-time={review.publishTime}
+                                            class="text-xs opacity-80"
+                                        >
+                                            {review.publishTime}
+                                        </time>
+                                    </p>
+                                </div>
+                                <div
+                                    role="img"
+                                    aria-label={`Calificación ${review.rating} de 5`}
+                                    class="stars flex gap-0.5 order-first"
                                 >
-                                    {review.publishTime}
-                                </time>
-                            </p>
-                        </div>
-                        <div
-                            role="img"
-                            aria-label={`Calificación ${review.rating} de 5`}
-                            class="stars flex gap-0.5 order-first"
-                        >
-                            <RenderStars rating={review.rating} width="15" height="15" />
-                        </div>
-                    </header>
-
-                    <div class="flex flex-col gap-2 relative">
-                        <p
-                            class="line-clamp-5 leading-relaxed text-pretty"
-                            data-clamp
-                        >
-                            {review.text}
-                        </p>
-
-                        <button
-                            type="button"
-                            class="w-fit self-end font-medium opacity-80 absolute -bottom-5 right-2"
-                            data-toggle
-                            hidden
-                            aria-expanded="false"
-                        >
-                            Ver más
-                        </button>
-                    </div>
-                </article>
-            ))
-        }
-    </div>
-    <a
-        href={reviewsUrl}
-        target="_blank"
-        class="mt-5 flex items-center rounded-full bg-(--color-primary) text-(--color-on-primary) px-4 py-3 active:opacity-80 text-bold"
-    >
-        Dejar valoración
-        <Icon
-            name="external"
-            width={15}
-            height={15}
-            class:list={"inline opacity-80"}
-        />
-    </a>
+                                    <RenderStars rating={review.rating} width="15" height="15" />
+                                </div>
+                            </header>
+        
+                            <div class="flex flex-col gap-2 relative">
+                                <p
+                                    class="line-clamp-5 leading-relaxed text-pretty"
+                                    data-clamp
+                                >
+                                    {review.text}
+                                </p>
+        
+                                <button
+                                    type="button"
+                                    class="w-fit self-end font-medium opacity-80 absolute -bottom-5 right-2"
+                                    data-toggle
+                                    hidden
+                                    aria-expanded="false"
+                                >
+                                    Ver más
+                                </button>
+                            </div>
+                        </article>
+                    ))
+                }
+            </div>
+            <a
+                href={reviewsUrl}
+                target="_blank"
+                class="mt-5 flex items-center rounded-full bg-(--color-primary) text-(--color-on-primary) px-4 py-3 active:opacity-80 text-bold"
+            >
+                Dejar valoración
+                <Icon
+                    name="external"
+                    width={15}
+                    height={15}
+                    class:list={"inline opacity-80"}
+                />
+            </a>
+    }
+    {
+        (style == "classic") && 
+            <header id="google-reviews" class="pointer-events-auto mb-2 flex gap-4 items-center">
+                <h2 class="text-xl">Reseñas</h2>
+                <p class="h-fit flex flex-col items-center justify-center rounded-xl border-2 border-(--color-border) p-2 text-center">
+                    <span class="text-xl">{rating}</span>
+                    <span class="flex gap-0.5">
+                        <RenderStars rating={rating} width="10" height="10" />
+                    </span>
+                    <span class="opacity-90 text-xs"> {userRatingCount} opiniones</span>
+                </p>
+            </header>
+        
+            <div class="wrapper flex w-full max-w-125 snap-x snap-mandatory gap-5 overflow-x-scroll">
+                {
+                    reviews.map((review: any, i) => (
+                        <article class="card snap-center w-12/12 max-w-125 shrink-0 box-border flex flex-col text-left items-start gap-5 rounded-lg px-8 py-4 bg-(--brand) text-[13px] h-fit">
+                            <header class="contents">
+                                <div class="order-last flex flex-col justify-center gap-0.5 items-center">
+                                    <p class="flex flex-col">
+                                        <span>{review.authorName}</span>
+                                        <time
+                                            datetime={review.publishTime}
+                                            data-time={review.publishTime}
+                                            class="text-xs opacity-80"
+                                        >
+                                            {review.publishTime}
+                                        </time>
+                                    </p>
+                                </div>
+                                <div
+                                    role="img"
+                                    aria-label={`Calificación ${review.rating} de 5`}
+                                    class="stars flex gap-2 order-first"
+                                >
+                                    <RenderStars rating={review.rating} width="15" height="15" style="classic" />
+                                </div>
+                            </header>
+        
+                            <div class="flex flex-col gap-2 relative">
+                                <p
+                                    class="line-clamp-5 leading-relaxed text-pretty"
+                                    data-clamp
+                                >
+                                    {review.text}
+                                </p>
+        
+                                <button
+                                    type="button"
+                                    class="w-fit self-end font-medium opacity-80 absolute -bottom-5 right-2"
+                                    data-toggle
+                                    hidden
+                                    aria-expanded="false"
+                                >
+                                    Ver más
+                                </button>
+                            </div>
+                        </article>
+                    ))
+                }
+            </div>
+            <a
+                href={reviewsUrl}
+                target="_blank"
+                class="mt-5 flex items-center rounded-full bg-(--color-primary) text-(--color-on-primary) px-4 py-3 active:opacity-80 text-bold"
+            >
+                Dejar valoración
+                <Icon
+                    name="external"
+                    width={15}
+                    height={15}
+                    class:list={"inline opacity-80"}
+                />
+            </a>
+    }
 </section>
 
 

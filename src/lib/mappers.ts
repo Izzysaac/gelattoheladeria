@@ -104,10 +104,14 @@ const mapReviews = (reviewsRaw: any[]) => {
                     referencia: row.referencia || null,
                 });
             }
-
+            if (tipo == "style") {
+                
+                acc.style[row.clave] = row.valor || "default";
+            }
+            console.log(acc)
             return acc;
         },
-        { meta: {}, reviews: [] },
+        { meta: {}, reviews: [], style: {} },
     );
 };
 

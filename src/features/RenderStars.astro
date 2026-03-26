@@ -1,10 +1,17 @@
 ---
 import StarIcon from "./StarIcon.astro";
+import StarClassic from "../assets/star-classic.svg";
 
-const { rating = 0, width, height } = Astro.props;
+const { rating = 0, width, height, style } = Astro.props;
 
 const num = Math.round(Number(rating));
 const stars = Array.from({ length: num });
 ---
 
-{stars.map((_, i) => <StarIcon width={width} height={height} />)}
+
+
+{ (style === "classic") ? (
+    stars.map((_, i) => <StarClassic width={width} height={height} />)
+) : (
+    stars.map((_, i) => <StarIcon width={width} height={height} />)
+) }
