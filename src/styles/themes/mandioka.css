@@ -1,7 +1,8 @@
 html[data-theme="mandioka"] {
 
   /* Base */
-    --brand: rgb(11, 205, 170);
+    /* --brand: rgb(11, 205, 170); */
+    --brand: rgb(78, 107, 86);
     --accent: rgb(222, 176, 127);
 
     --neutral-0: #F3F1ED;
@@ -19,7 +20,7 @@ html[data-theme="mandioka"] {
 
     /* Acciones */
     --color-primary: var(--brand);
-    --color-on-primary: var(--neutral-900);
+    --color-on-primary: var(--neutral-0);
     --color-secondary: #323232;
     /* --color-on-secondary: color de iconos */
     --color-active-secondary:rgba(255, 255, 255, 0.3);

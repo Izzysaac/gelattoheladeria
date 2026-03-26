@@ -1,0 +1,20 @@
+---
+import InfoIcon from "@assets/information.svg";
+import Informacion from "@components/sections/Informacion.astro";
+---
+
+<button id="infoBtn"
+        class="fixed top-3 right-3 rounded-full group"
+        aria-label="Más información"
+    >
+        <InfoIcon
+            width={35}
+            height={35}
+            fill="var(--color-background)"
+            stroke="var(--color-text)"
+            class:list={"pointer-events-none group-active:fill-(--color-active-secondary)"}
+            aria-label="Más información"
+        />
+</button>
+
+<Informacion />
