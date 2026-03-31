@@ -184,7 +184,7 @@ export const PRODUCTOS_CONFIG = productos;
 // };
 const pagoExterno = !isNaN(valorEntrega);
 
-export const DELIVERY = pagoExterno ? 0 : valorEntrega;
+export const DELIVERY = pagoExterno ? valorEntrega : 0;
 
 // Metadata
 export const PRODUCTS_METADATA = {
