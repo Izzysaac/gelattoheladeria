@@ -34,6 +34,8 @@ export async function buildTenantData(page: PageType) {
         return { tenant, data: {} };
     }
 
+    // console.log(mappedCMS);
+
     const pageData = builderStrategy({ tenant, ...mappedCMS, estilos: mappedCMS.estilos });
 
 

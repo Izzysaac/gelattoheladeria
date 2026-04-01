@@ -1,9 +1,66 @@
 ---
 const { categorias } = Astro.props;
 
+// 🔹 Grupos hardcodeados
+const GRUPOS = {
+    bebidas: [
+        'Ensaladas Gelattos',
+        'Copas de Helado',
+        'Otras Delicias',
+        'Bebidas'
+    ],
+    comidas: [
+        'Hamburgesas',
+        'Patacones',
+        'Salchichapapas',
+        'Hot Dog',
+        'Sandwiches',
+        'Picadas',
+        'Menú Infantil'
+    ]
+};
+
+// 🔹 Grupo activo (default)
+const activeGroup = "bebidas";
+
+// 🔹 Filtrado
+const categoriasFiltradas = categorias.filter(cat =>
+    GRUPOS[activeGroup].includes(cat)
+);
+
 ---
 
-<nav id="navMenu" class="category-nav max-w-200 sm:top-0!" aria-label="Categorías del menú">
+<div id="menuGroupsContainer" class="sticky top-0 z-10 bg-(--color-background)">
+<!-- 🔘 Botones de grupo -->
+    <div class="menu-groups flex gap-4 items-center justify-center" >
+        <button data-group="bebidas" class="group-btn active">
+            Helados y Bebidas
+        </button>
+        <button data-group="comidas" class="group-btn">
+            Comidas Rápidas
+        </button>
+    </div>
+<!-- 📌 NavMenu -->
+    <nav id="navMenu" class="category-nav max-w-200 sm:top-0!" aria-label="Categorías del menú">
+        <ul class="m-0 flex gap-0">
+            {
+                categoriasFiltradas.map((categoria: string) => (
+                    <li>
+                        <button
+                        data-category={categoria}
+                        data-scroll
+                        >
+                            {categoria}
+                        </button>
+                        <div class="linea" />
+                    </li>
+                ))
+            }
+        </ul>
+    </nav>
+</div>
+
+<!-- <nav id="navMenu" class="category-nav max-w-200 sm:top-0!" aria-label="Categorías del menú">
     <ul class="m-0 flex gap-0">
         {
             categorias.map((categoria: string) => (
@@ -19,15 +76,11 @@ const { categorias } = Astro.props;
             ))
         }
     </ul>
-</nav>
+</nav> -->
 
-<style>
+<style is:global>
     .category-nav {
-        position: sticky;
-        top: 0px;
-        z-index: 10;
         width: 100vw;
-        background-color: var(--color-background);
     }
 
     .category-nav ul {
@@ -73,6 +126,11 @@ const { categorias } = Astro.props;
         background-color: var(--color-navmenu-active);
         border-radius: 999px;
     }
+
+    .active {
+        color: purple;
+        font-weight: 700;
+    }
 </style>
 
-<script src="src/scripts/menu/navigation.js"></script>
+<script src="src/scripts/menu/newNavigation.js"></script>

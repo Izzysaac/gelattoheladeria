@@ -2,8 +2,8 @@ import { state } from "../state.js";
 import { dom, checkoutDom } from "./dom.js";
 import { resetModals } from "../modal.js";
 import { debugLog } from "../debug.js";
-
 import { getShipping, computeTotal, validarFormulario } from "./actions.js";
+import { getCloudinaryImageUrl } from "../imgHelper.js";
 
 
 const formatPrice = (value) => {
@@ -264,6 +264,168 @@ export const renderSingleModal = (nombre) => {
     dom.listaPedido.appendChild(row);
     // 🔄 Cacheamos el nuevo elemento para futuras actualizaciones
     modalItemsCache.set(nombre, row);
+};
+
+const getProductById = (id) => {
+    return MENU_PRODUCTS.find((p) => p.id === id);
+};
+
+const renderGroupSelect = (group) => {
+    const { id, nombre, min, max, required, allow_repetition, options } = group;
+    
+    // 🔹 construir options HTML una sola vez
+    const optionsHTML = options
+        .filter(opt => opt.activo)
+        .map(opt => `
+            <option 
+                value="${opt.option_id}" 
+                data-precio="${opt.precio_extra}"
+            >
+                ${opt.nombre}${opt.precio_extra ? ` (+$${opt.precio_extra})` : ""}
+            </option>
+        `)
+        .join("");
+
+    // 🔹 construir selects según min
+    const selectsHTML = Array.from({ length: min }, (_, index) => `
+        <div class="variant-select">
+            <select
+                name="group-${id}-option-${index}"
+                data-group-id="${id}" 
+                data-index="${index}"
+                ${required ? "required" : ""}
+            >
+                <option value="">Selecciona un sabor</option>
+                ${optionsHTML}
+            </select>
+        </div>
+    `).join("");
+
+    // 🔹 contenedor del grupo
+    return `
+        <div class="variant-group">
+            <h3>${nombre} ${required ? "*" : ""}</h3>
+            <div class="variant-options">
+                ${selectsHTML}
+            </div>
+        </div>
+    `;
+
+};
+
+const renderGroupSingle = (group) => {
+    const { id, nombre, required, options } = group;
+
+    const optionsHTML = options
+        .filter(opt => opt.activo)
+        .map((opt, index) => `
+            <label class="variant-option">
+                <input 
+                    type="radio"
+                    name="group-${id}"
+                    value="${opt.option_id}"
+                    data-group-id="${id}"
+                    data-precio="${opt.precio_extra}"
+                    ${required && index === 0 ? "checked" : ""}
+                />
+                <span>
+                    ${opt.nombre}
+                    ${opt.precio_extra ? ` (+$${opt.precio_extra})` : ""}
+                </span>
+            </label>
+        `)
+        .join("");
+
+    return `
+        <div class="variant-group">
+            <h3>${nombre} ${required ? "*" : ""}</h3>
+            <div class="variant-options">
+                ${optionsHTML}
+            </div>
+        </div>
+    `;
+};
+
+const renderGroupCheckbox = (group) => {
+    const { id, nombre, required, min, max, options } = group;
+
+    const optionsHTML = options
+        .filter(opt => opt.activo)
+        .map(opt => `
+            <label class="variant-option">
+                <input 
+                    type="checkbox"
+                    value="${opt.option_id}"
+                    data-group-id="${id}"
+                    data-precio="${opt.precio_extra}"
+                />
+                <span>
+                    ${opt.nombre}
+                    ${opt.precio_extra ? ` (+$${opt.precio_extra})` : ""}
+                </span>
+            </label>
+        `)
+        .join("");
+
+    return `
+        <div 
+            class="variant-group"
+            data-group-id="${id}"
+            data-min="${min}"
+            data-max="${max}"
+            data-required="${required}"
+        >
+            <h3>
+                ${nombre} 
+                ${required ? "*" : ""}
+                ${max ? `(máx ${max})` : ""}
+            </h3>
+
+            <div class="variant-options">
+                ${optionsHTML}
+            </div>
+
+            <p class="variant-error hidden"></p>
+        </div>
+    `;
+};
+
+const renderGroup = (group) => {
+    const tipo = group.tipo;
+    switch (tipo) {
+        case "select":
+            return renderGroupSelect(group);
+            break;
+        case "single":
+            return renderGroupSingle(group);
+            break;
+        case "checkbox":
+            return renderGroupCheckbox(group);
+            break;
+        default:
+            return "";
+    }
+};
+
+export const renderVariantModal = (productId) => {
+
+    /* Información del producto*/
+    const product = getProductById(productId);
+
+    dom.variantsProductName.textContent = product.nombre;
+    dom.variantsProductDescription.textContent = product.descripcion;
+    dom.variantsProductImage.src = getCloudinaryImageUrl(product.imagen);
+    dom.variantsProductPrice.textContent = `$${product.precio.toLocaleString()}`;
+    dom.variantsAddButton.dataset.productId = product.id;
+
+    /* Información de grupos*/
+    const html = product.groups
+        .map(group => renderGroup(group))
+        .join("");
+
+    dom.variantsForm.innerHTML = html;
+    dom.variantsAddButton.disabled = !dom.variantsForm.checkValidity();
+    dom.variantsDialog.showModal();
 };
 
 export const renderTodo = () => {

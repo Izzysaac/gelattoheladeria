@@ -24,12 +24,22 @@ export const dom = {
     imageViewerCloseBtn: document.getElementById("imageViewerCloseBtn"),
 
     /* Datos */
-    datos: document.getElementById("datos")
+    datos: document.getElementById("datos"),
+
+    /* Variants */
+    variantsDialog: document.getElementById("variants-dialog"),
+    variantsProductName: document.getElementById("variants-product-name"),
+    variantsProductDescription: document.getElementById("variants-product-description"),
+    variantsProductImage: document.getElementById("variants-product-image"),
+    variantsProductPrice: document.getElementById("variants-product-price"),
+    variantsForm: document.getElementById("variants-form"),
+    variantsBackButton: document.getElementById("variants-back-button"),
+    variantsAddButton: document.getElementById("variants-add-button"),
 };
 
 
 export const checkoutDom = {
-     /* Seleccion de tipo de entrega*/
+    /* Seleccion de tipo de entrega*/
     checkoutMain: document.getElementById("checkoutMain"),
     entregaProducto: document.getElementById("entrega-producto"),
     radios: document.querySelectorAll('input[name="entrega"]'),

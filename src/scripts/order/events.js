@@ -13,6 +13,7 @@ import {
 import { dom ,  checkoutDom } from "./dom.js";
 import { state } from "../state.js";
 import { openModal, manualClose } from "../modal.js";
+import { renderVariantModal } from "./render.js";
 
 const extraerProductoDesdeElemento = (el) => {
     const productEl = el.closest("article");
@@ -38,6 +39,10 @@ const controlAction = (action, element, closeModal) => {
         case "remove-product":
             updateCantidad(producto, -1, closeModal);
             break;
+        case "open-variants":
+            const productId = element.dataset.productid;
+            renderVariantModal(productId);
+            break;
         default:
             return;
     }
@@ -46,8 +51,6 @@ const controlAction = (action, element, closeModal) => {
 export const bindEventosProductos = () => {
     //* Abrir modal de pedido
     dom.btnVerPedido.addEventListener("click", () => {
-        // document.body.classList.add("no-scroll");
-        // console.log("antiguo añadiro")
         openModal("pedido", dom.modalVerPedido);
     });
 
@@ -80,6 +83,19 @@ export const bindEventosProductos = () => {
     });
 
     setValorEntrega(dom.datos.dataset.valorentrega);
+};
+
+export const bindEventosVariants = () => {
+
+    dom.variantsDialog.addEventListener("click", (e) => {
+        if (e.target === dom.variantsDialog) {
+            dom.variantsDialog.close();
+        }
+    });
+
+    dom.variantsBackButton.addEventListener("click", () => {
+        dom.variantsDialog.close();
+    });
 };
 
 export const hacerCheckout = () => {
@@ -142,6 +158,7 @@ export const bindEventosModal = () => {
 export const bindEventosPedido = () => {
     bindEventosProductos();
     bindEventosModal();
+    bindEventosVariants();
 };
 
 // !Generar mensaje de pedido WhatsApp

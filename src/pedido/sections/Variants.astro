@@ -1,0 +1,42 @@
+---
+
+
+---
+
+<dialog id="variants-dialog">
+    <div>
+        <img id="variants-product-image" src="" alt="">
+        <div>
+            <h2 id="variants-product-name"></h2>
+            <p id="variants-product-description"></p>
+            <p id="variants-product-price"></p>
+        </div>
+        <form id="variants-form">
+        </form>
+        <div>
+            <button id="variants-back-button"
+                class="border border-pink-900"
+            
+            >Volver</button>
+            <button id="variants-add-button"
+                aria-label="Añadir al carrito"
+                data-product-id=""
+                type="submit" 
+                form="variants-form"  
+                class="disabled:opacity-50"
+                disabled
+            >Añadir</button>
+        </div>
+    </div>
+</dialog>
+
+<script src="../../scripts/order/variants.js"></script>
+
+<style>
+    @import "tailwindcss";
+
+    button{
+        @apply px-4 py-2 rounded-lg bg-pink-900 text-white;
+    }
+
+</style>

@@ -2,11 +2,15 @@ import { background } from "@cloudinary/url-gen/qualifiers/focusOn";
 
 export const mapCMS = (cms) => {
 
+    const menu = mapMenu(cms.menu);
+    const groups = mapGroups(cms.groups);
+    const options = mapOptions(cms.options);
 
+    const products = normalizeProducts(menu, groups, options);
 
     return {
         info: cms.info ? mapInfo(cms.info) : null,
-        menu: cms.menu ? mapMenu(cms.menu) : null,
+        menu: products,
         reviews: cms.reviews ? mapReviews(cms.reviews) : null,
         eventos: cms.eventos ? mapEventos(cms.eventos) : null,
         estilos: cms.estilos ? mapEstilos(cms.estilos) : null,
@@ -64,11 +68,108 @@ const mapInfo = (infoRaw: any[]) => {
 };
 
 //* [menu{categoia, nombre, descripcion, precio, imagen, activo}]
+
+type MenuItem = {
+    id: string;
+    nombre: string;
+    categoria: string;
+    descripcion?: string;
+    precio: number;
+    imagen?: string;
+    activo: boolean;
+    group_ids?: string[];
+};
+
+type Group = {
+    group_id: string;
+    nombre: string;
+    descripcion?: string;
+    tipo: "single" | "multiple";
+    min: number;
+    max: number;
+    required: boolean;
+    allow_repetition: boolean;
+};
+
+type Option = {
+    option_id: string;
+    group_id: string;
+    nombre: string;
+    descripcion?: string;
+    precio_extra: number;
+    activo: boolean;
+};
+
+export function normalizeProducts(
+    menu: MenuItem[],
+    groups: Group[],
+    options: Option[]
+) {
+
+    // 🔹 1. indexar grupos
+    const groupsMap: Record<string, Group> = {};
+    groups.forEach(g => {
+        groupsMap[g.group_id] = g;
+    });
+
+    // 🔹 2. agrupar opciones por group_id
+    const optionsByGroup: Record<string, Option[]> = {};
+    options.forEach(opt => {
+        if (!opt.activo) return;
+
+        if (!optionsByGroup[opt.group_id]) {
+            optionsByGroup[opt.group_id] = [];
+        }
+
+        optionsByGroup[opt.group_id].push({
+            ...opt,
+            precio_extra: Number(opt.precio_extra || 0),
+        });
+    });
+
+    // 🔹 3. construir productos finales (🔥 cambio aquí)
+    const products = menu
+        .filter(p => p.activo)
+        .map(p => {
+            const groupIds = p.group_ids || [];
+            const groupsFinal = groupIds
+                .map((gid: string) => {
+                    const g = groupsMap[gid];
+                    if (!g) return null;
+
+                    return {
+                        id: g.group_id,
+                        nombre: g.nombre,
+                        tipo: g.tipo,
+                        min: Number(g.min),
+                        max: Number(g.max),
+                        required: Boolean(g.required),
+                        allow_repetition: Boolean(g.allow_repetition),
+                        options: optionsByGroup[g.group_id] || [],
+                    };
+                })
+                .filter(Boolean); // elimina nulls
+
+            return {
+                ...p,
+                precio: Number(p.precio || 0),
+
+                groups: groupsFinal,
+
+                hasVariants: groupsFinal.length > 0,
+            };
+        });
+
+    return products;
+}
+
 const mapMenu = (menuRaw: any[]) => {
     return menuRaw
         .filter((row) => row.nombre) // evita filas vacías
         .map((row) => ({
             categoria: row.categoria?.trim() || "Sin categoría",
+
+            id: row.id?.trim() || "",
 
             nombre: row.nombre?.trim() || "",
 
@@ -79,8 +180,52 @@ const mapMenu = (menuRaw: any[]) => {
             imagen: row.imagen?.trim() || "",
 
             activo: Boolean(row.activo && String(row.activo).trim() !== ""),
+
+            group_ids: row.group_ids
+                ? row.group_ids.split(";").map((g: string) => g.trim())
+                : [],
         }));
 };
+
+const mapGroups = (groupsRaw: any[]) => {
+    return groupsRaw
+        .filter((row) => row.nombre) // evita filas vacías
+        .map((row) => ({
+
+            group_id: row.group_id?.trim() || "",
+
+            nombre: row.nombre?.trim() || "",
+
+            descripcion: row.descripcion?.trim() || "",
+
+            tipo: row.tipo?.trim() || "",
+
+            min: Number(row.min) || 0,
+
+            max: Number(row.max) || 0,
+
+            required: Boolean(row.required && String(row.required).trim() !== ""),
+
+            allow_repetition: Boolean(row.allow_repetition && String(row.allow_repetition).trim() !== ""),
+
+            // activo: Boolean(row.activo && String(row.activo).trim() !== ""),
+        }));
+};
+
+const mapOptions = (optionsRaw: any[]) => {
+    return optionsRaw
+        .filter((row) => row.nombre) // evita filas vacías
+        .map((row) => ({
+            option_id: row.option_id?.trim() || "",
+            group_id: row.group_id?.trim() || "",
+            nombre: row.nombre?.trim() || "",
+            descripcion: row.descripcion?.trim() || "",
+            precio_extra: Number(row.precio_extra) || 0,
+            activo: Boolean(row.activo && String(row.activo).trim() !== ""),
+        }));
+};
+
+
 
 // * meta{total, promedio}, [reseña{nombre, fecha, puntuacion, perfil, texto, referencia}]
 const mapReviews = (reviewsRaw: any[]) => {
@@ -108,7 +253,7 @@ const mapReviews = (reviewsRaw: any[]) => {
                 
                 acc.style[row.clave] = row.valor || "default";
             }
-            console.log(acc)
+            // console.log(acc)
             return acc;
         },
         { meta: {}, reviews: [], style: {} },

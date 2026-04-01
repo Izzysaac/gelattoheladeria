@@ -21,6 +21,7 @@ export const buildMenuPageData = ({ tenant, info, menu, reviews, estilos }) => {
         badges: buildBadges(info, reviews),
         contact: buildContact(info),
         menu: buildMenu(menu),
+        menuRaw: menu,
         categorias: buildCategorias(menu),
         footer: buildFooter(info),
     };
@@ -317,6 +318,7 @@ const buildLogo = (info) => {
 };
 
 const buildMenu = (menu) => {
+
     const grouped = {};
 
     menu.forEach((item) => {

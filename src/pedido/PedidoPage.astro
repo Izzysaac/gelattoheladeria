@@ -10,8 +10,9 @@ import Header from "@headers/template/Header.astro";
 import Badges from "@pedido/components/Badges.astro";
 import HeaderRouter from "@headers/HeaderRouter.astro";
 
-const { tenant, head, styles, header, badges, contact, logo, menu, categorias, footer } = Astro.props;
+const { tenant, head, styles, header, badges, contact, logo, menu, menuRaw, categorias, footer } = Astro.props;
 const modo = "pedido";
+
 ---
 
 <BaseLayout head={head} styles={styles}>
@@ -25,7 +26,7 @@ const modo = "pedido";
     </div>
     <HeaderRouter tenant={tenant} header={header} page="pedido"/>
 
-    <main class="flex flex-col items-center justify-center mb-26">
+    <main id="main-menu" class="flex flex-col items-center justify-center mb-26" data-menu={JSON.stringify(menuRaw)}>
         <Badges {...badges} />
         <h1 class="invisible h-0">Menú</h1>
         <CategoryNav categorias={categorias} />
@@ -35,6 +36,11 @@ const modo = "pedido";
         <StickyBar modo={modo} />
     </main>
 </BaseLayout>
+
+<script is:inline>
+    const menuData = document.getElementById('main-menu')?.getAttribute('data-menu');
+    const MENU_PRODUCTS = menuData ? JSON.parse(menuData) : {};
+</script>
 
 <script src="../scripts/menu/viewimg.js" />
 <script src="../scripts/order/init.js"></script>

@@ -2,6 +2,7 @@
 import { formatFromThousands, formatPrice } from "@scripts/utils.js";
 import Plus from "@assets/plus-svgrepo-com.svg";
 import Minus from "@assets/minus-svgrepo-com.svg";
+import Variants from "./Variants.astro";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
 const { menuPorCategoria, modo } = Astro.props;
 ---
@@ -32,10 +33,23 @@ const { menuPorCategoria, modo } = Astro.props;
                                         <p class="pr-8 text-sm text-pretty opacity-90">
                                             {item.descripcion}
                                         </p>
-                                        {modo != "menu" && (
+                                        {modo != "menu" && item.hasVariants == true && (
                                             <div class="controles mt-auto flex w-fit items-center self-end rounded-full bg-(--color-secondary) select-none">
-                                                <button
-                                                    data-action="add-product"
+                                                <button data-action="open-variants"
+                                                    class="add"
+                                                    aria-label="Configurar variantes"
+                                                    data-productid={item.id}
+                                                >
+                                                    <Plus
+                                                        width={25}
+                                                        height={25}
+                                                    />
+                                                </button>
+                                            </div>
+                                        )}
+                                        {modo != "menu" && item.hasVariants == false && (    
+                                            <div class="controles mt-auto flex w-fit items-center self-end rounded-full bg-(--color-secondary) select-none">
+                                                <button data-action="add-product"
                                                     class="add-product"
                                                     aria-label="Agregar al pedido"
                                                 >
@@ -98,12 +112,13 @@ const { menuPorCategoria, modo } = Astro.props;
             </div>
         ))
     }
+<Variants />
 </section>
 
 <style>
     @import "tailwindcss";
     .grupo {
-        scroll-margin-top: 4rem; /* altura del nav */
+        scroll-margin-top: 5rem; /* altura del nav */
     }
     button {
         @apply px-1.5 py-1.5 cursor-pointer rounded-full active:bg-(--color-active-secondary);

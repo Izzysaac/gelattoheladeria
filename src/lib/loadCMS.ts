@@ -8,7 +8,7 @@ export async function loadCMS(tenant: TenantConfig) {
         return CMS_CACHE.get(tenant.nameId);
     }
 
-    const hojas = ["info", "menu", "estilos"];
+    const hojas = ["info", "menu", "groups", "options", "estilos"];
     if (tenant.features.reviews) hojas.push("reviews");
     if (tenant.pages.eventos) hojas.push("eventos");
 
