@@ -13,7 +13,7 @@ export const buildMainPageData = ({ tenant, info, reviews, estilos }) => {
     };
 };
 
-export const buildMenuPageData = ({ tenant, info, menu, reviews, estilos }) => {
+export const buildMenuPageData = ({ tenant, info, menu, menuMap, reviews, estilos }) => {
     return {
         head: buildHead(info),
         styles: buildStyles(estilos),
@@ -21,7 +21,7 @@ export const buildMenuPageData = ({ tenant, info, menu, reviews, estilos }) => {
         badges: buildBadges(info, reviews),
         contact: buildContact(info),
         menu: buildMenu(menu),
-        menuRaw: menu,
+        menuMap: menuMap,
         categorias: buildCategorias(menu),
         footer: buildFooter(info),
     };

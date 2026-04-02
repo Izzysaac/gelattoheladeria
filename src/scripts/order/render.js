@@ -266,8 +266,8 @@ export const renderSingleModal = (nombre) => {
     modalItemsCache.set(nombre, row);
 };
 
-const getProductById = (id) => {
-    return MENU_PRODUCTS.find((p) => p.id === id);
+export const getProductById = (id) => {
+    return PRODUCTS_MAP[id] || null;
 };
 
 const renderGroupSelect = (group) => {
@@ -416,7 +416,7 @@ export const renderVariantModal = (productId) => {
     dom.variantsProductDescription.textContent = product.descripcion;
     dom.variantsProductImage.src = getCloudinaryImageUrl(product.imagen);
     dom.variantsProductPrice.textContent = `$${product.precio.toLocaleString()}`;
-    dom.variantsAddButton.dataset.productId = product.id;
+    dom.variantsAddButton.dataset.productid = product.id;
 
     /* Información de grupos*/
     const html = product.groups

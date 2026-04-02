@@ -33,47 +33,27 @@ const { menuPorCategoria, modo } = Astro.props;
                                         <p class="pr-8 text-sm text-pretty opacity-90">
                                             {item.descripcion}
                                         </p>
-                                        {modo != "menu" && item.hasVariants == true && (
+                                        {modo !== "menu" && (    
                                             <div class="controles mt-auto flex w-fit items-center self-end rounded-full bg-(--color-secondary) select-none">
-                                                <button data-action="open-variants"
-                                                    class="add"
-                                                    aria-label="Configurar variantes"
-                                                    data-productid={item.id}
-                                                >
-                                                    <Plus
-                                                        width={25}
-                                                        height={25}
-                                                    />
-                                                </button>
-                                            </div>
-                                        )}
-                                        {modo != "menu" && item.hasVariants == false && (    
-                                            <div class="controles mt-auto flex w-fit items-center self-end rounded-full bg-(--color-secondary) select-none">
-                                                <button data-action="add-product"
-                                                    class="add-product"
-                                                    aria-label="Agregar al pedido"
-                                                >
-                                                    <Plus
-                                                        width={25}
-                                                        height={25}
-                                                        fill="inherit"
-                                                    />
-                                                </button>
-                                                <button data-action="remove-product"
-                                                    class="remove cerrado"
-                                                    aria-label="Quitar del pedido"
-                                                >
-                                                    <Minus
-                                                        width={25}
-                                                        height={25}
-                                                    />
-                                                </button>
+                                                {item.hasVariants == false && (
+                                                    <button data-action="remove-product"
+                                                        class="remove cerrado"
+                                                        aria-label="Quitar del pedido"
+                                                        data-productid={item.id}
+                                                    >
+                                                        <Minus
+                                                            width={25}
+                                                            height={25}
+                                                        />
+                                                    </button>
+                                                )}
                                                 <output class="cantidad cerrado mx-1">
                                                     0
                                                 </output>
                                                 <button data-action="add-product"
                                                     class="add cerrado"
                                                     aria-label="Agregar al pedido"
+                                                    data-productid={item.id}
                                                 >
                                                     <Plus
                                                         width={25}

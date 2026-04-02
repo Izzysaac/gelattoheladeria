@@ -7,10 +7,13 @@ export const mapCMS = (cms) => {
     const options = mapOptions(cms.options);
 
     const products = normalizeProducts(menu, groups, options);
+    const productsMap = Object.fromEntries(products.map(p => [p.id, p])
+);
 
     return {
         info: cms.info ? mapInfo(cms.info) : null,
         menu: products,
+        menuMap: productsMap,
         reviews: cms.reviews ? mapReviews(cms.reviews) : null,
         eventos: cms.eventos ? mapEventos(cms.eventos) : null,
         estilos: cms.estilos ? mapEstilos(cms.estilos) : null,

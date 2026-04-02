@@ -2,17 +2,17 @@ import { loadTenant } from "./loadTenant";
 import { loadCMS } from "./loadCMS";
 import { mapCMS } from "./mappers";
 import { buildMenuPageData, buildMainPageData, buildCheckoutPageData, buildEventosPageData, buildTicketPageData } from "./builders";
-
+// import {data} from "./datagelattos.js";
 import type { PageType } from "./types";
 
 // relaciona nombre de pagina con funcion constructora
 const PAGE_BUILDERS: Record<PageType, (params: any) => any> = {
     main: ({ tenant, info, reviews, estilos }) =>
         buildMainPageData({ tenant, info, reviews, estilos }),
-    menu: ({ tenant, info, menu, reviews, estilos }) =>
-        buildMenuPageData({ tenant, info, menu, reviews, estilos }),
-    pedido: ({ tenant, info, menu, reviews, estilos }) =>
-        buildMenuPageData({ tenant, info, menu, reviews, estilos }),
+    menu: ({ tenant, info, menu, menuMap, reviews, estilos }) =>
+        buildMenuPageData({ tenant, info, menu, menuMap, reviews, estilos }),
+    pedido: ({ tenant, info, menu, menuMap, reviews, estilos }) =>
+        buildMenuPageData({ tenant, info, menu, menuMap, reviews, estilos }),
     checkout: ({ tenant, info, estilos }) => buildCheckoutPageData({ tenant, info, estilos }),
     eventos: ({ tenant, info, eventos, estilos  }) =>
         buildEventosPageData({ tenant, info, eventos, estilos }),
@@ -24,7 +24,7 @@ export async function buildTenantData(page: PageType) {
     const tenant = loadTenant();
 
     const cms = await loadCMS(tenant);
-
+    // console.log(cms);
     const mappedCMS = mapCMS(cms);
 
     const builderStrategy = PAGE_BUILDERS[page];
