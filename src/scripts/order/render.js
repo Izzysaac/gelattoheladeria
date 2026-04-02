@@ -2,7 +2,7 @@ import { state } from "../state.js";
 import { dom, checkoutDom } from "./dom.js";
 import { resetModals } from "../modal.js";
 import { debugLog } from "../debug.js";
-import { getShipping, computeTotal, validarFormulario } from "./actions.js";
+import { getShipping, computeTotal, validarFormulario, getProductById, getTotalQuantityByProductId } from "./actions.js";
 import { getCloudinaryImageUrl } from "../imgHelper.js";
 
 
@@ -16,7 +16,7 @@ const formatPrice = (value) => {
 		} catch {
 			return `$${Math.round(Number(value) || 0).toLocaleString("es-CO")}`;
 		}
-	};
+};
 
 
 const direccionLocal = document.getElementById("datos").dataset.direccionlocal;
@@ -25,13 +25,12 @@ const telefono = document.getElementById("datos").dataset.telefono;
 // Fuera del render, mapeamos los elementos una sola vez
 const productosMap = Array.from(dom.productos).map((productoEl) => ({
     el: productoEl,
-    nombre: productoEl.dataset.nombre,
+    productId: productoEl.dataset.productid,
     // Guardamos las referencias fijas
     refs: {
         cantidad: productoEl.querySelector(".cantidad"),
         add: productoEl.querySelector(".add"),
         remove: productoEl.querySelector(".remove"),
-        addBtn: productoEl.querySelector(".add-product"),
     },
 }));
 
@@ -44,73 +43,58 @@ export const clearModalCache = () => {
 };
 
 // Función para obtener elemento del modal con cache
-const getModalItem = (nombre) => {
-    // Si ya está en cache, retornarlo
-    if (modalItemsCache.has(nombre)) {
-        return modalItemsCache.get(nombre);
+const getModalItem = (id) => {
+    const cached = modalItemsCache.get(id);
+
+    // 🔹 1. Validar cache (muy importante)
+    if (cached && document.body.contains(cached)) {
+        return cached;
     }
 
-    // Si no, buscarlo y cachearlo
-    const item = dom.listaPedido.querySelector(`[data-nombre="${nombre}"]`);
+    // 🔹 2. Si no existe o está muerto → limpiar
+    modalItemsCache.delete(id);
+
+    // 🔹 3. Buscar en DOM
+    const item = dom.listaPedido.querySelector(`[data-id="${id}"]`);
+
     if (item) {
-        modalItemsCache.set(nombre, item);
+        modalItemsCache.set(id, item);
     }
+
     return item;
 };
 
-// Función para eliminar de cache cuando se elimina del DOM
-const removeFromModalCache = (nombre) => {
-    modalItemsCache.delete(nombre);
-};
-
-// 🔄 Performance monitoring - Para debug y análisis
-export const getModalCacheStats = () => {
-    return {
-        cacheSize: modalItemsCache.size,
-        cachedItems: Array.from(modalItemsCache.keys()),
-        memoryUsage: modalItemsCache.size * 200, // Estimación: ~200 bytes por elemento cacheado
-    };
-};
-
-// Función para limpiar cache manualmente (útil para debugging)
-export const forceClearModalCache = () => {
-    clearModalCache();
-    console.log("Modal cache cleared manually");
-};
-
 export const renderProductos = () => {
-    productosMap.forEach(({ nombre, refs }) => {
-        const cantidad = state.items[nombre]?.cantidad || 0;
+    productosMap.forEach(({ productId, refs }) => {
+        const cantidad = getTotalQuantityByProductId(productId);
         const hasItems = cantidad > 0;
 
         // 1. Actualizar texto (operación más barata)
         refs.cantidad.textContent = cantidad;
 
         // 2. Sincronizar clases (usando el segundo parámetro de toggle)
-        // Esto es mucho más limpio que if/else
-        refs.add.classList.toggle("cerrado", !hasItems);
         refs.remove.classList.toggle("cerrado", !hasItems);
         refs.cantidad.classList.toggle("cerrado", !hasItems);
-        refs.addBtn.classList.toggle("cerrado", hasItems);
     });
 };
 
 // Actualiza solo el producto que cambió en la carta
-export const renderSingleProducto = (nombre) => {
-    // Buscamos el elemento en nuestro caché (productosMap que creamos antes)
-    const itemCache = productosMap.find((p) => p.nombre === nombre);
+export const renderSingleProducto = (productId) => {
+    const itemCache = productosMap.find((p) => p.productId === productId);
     if (!itemCache) return;
 
-    const cantidad = state.items[nombre]?.cantidad || 0;
+    const cantidad = getTotalQuantityByProductId(productId);
     const hasItems = cantidad > 0;
+
     const { refs } = itemCache;
 
-    // Solo actualizamos este nodo específico
+    // 🔹 actualizar cantidad total (sumando variantes)
     refs.cantidad.textContent = cantidad;
-    refs.add.classList.toggle("cerrado", !hasItems);
+
+    // 🔹 comportamiento UI (igual que antes)
+    // refs.add.classList.toggle("cerrado", !hasItems);
     refs.remove.classList.toggle("cerrado", !hasItems);
     refs.cantidad.classList.toggle("cerrado", !hasItems);
-    refs.addBtn.classList.toggle("cerrado", hasItems);
 };
 
 export const renderBarra = () => {
@@ -143,116 +127,66 @@ const closeModalUI = () => {
     clearModalCache();
 };
 
-export const renderModal = () => {
-    debugLog("renderModal called");
-
+export const renderSingleModal = (productId) => {
     if (!dom.listaPedido) return;
-    // 1. Usar el estado ya calculado (Evitamos recalcular el total aquí)
-    const { totalItems, items } = state;
-    const itemsArray = Object.values(items);
 
-    if (totalItems === 0) {
-        // 🔄 Si no hay items, limpiamos el modal pero NO lo cerramos
-        // Así el usuario ve que el pedido está vacío
-        dom.listaPedido.replaceChildren();
-        clearModalCache();
-        closeModalUI();
-        // resetModals();
-        return;
+    // 🔹 1. obtener todos los cartItems de ese producto
+    const items = Object.values(state.items).filter(
+        item => item.product_id === productId
+    );
+
+    // 🔹 2. IDs actuales en estado
+    const currentIds = new Set(items.map(item => item.id));
+
+    // 🔹 3. eliminar del DOM los que ya no existen
+    for (const [id, el] of modalItemsCache.entries()) {
+        if (!currentIds.has(id)) {
+            el.remove();
+            modalItemsCache.delete(id);
+        }
     }
 
-    // 2. Limpiar la lista y cache (replaceChildren es eficiente)
-    dom.listaPedido.replaceChildren();
-    clearModalCache(); // 🔄 Limpiar cache al reconstruir modal
+    // 🔹 4. renderizar / actualizar los actuales
+    items.forEach((item) => {
+    let row = getModalItem(item.id);
 
-    // 3. Crear el fragmento (Memoria volátil, súper rápido)
-    const fragment = document.createDocumentFragment();
+    // 🔹 CASO 1: ya existe → actualizar
+    if (row) {
+        row.querySelector(".cantidad").textContent = item.quantity;
 
-    itemsArray.forEach((item) => {
-        // Clonamos el template
-        const row =
-            dom.templatePedidoProducto.content.firstElementChild.cloneNode(
-                true,
-            );
-
-        // Sincronizamos datasets
-        Object.assign(row.dataset, {
-            nombre: item.nombre,
-            precio: item.precio,
-            imagen: item.imagen,
-            descripcion: item.descripcion,
-        });
-
-        // 4. Selección optimizada (Buscamos solo lo necesario)
-        row.querySelector(".nombre").textContent = item.nombre;
-        row.querySelector(".cantidad").textContent = item.cantidad;
-        // row.querySelector(".descripcion").textContent = item.descripcion;
-
-        const precioTotal = item.precio * item.cantidad;
         row.querySelector(".precio").textContent =
-            `$${precioTotal.toLocaleString()}`;
+            `$${(item.total_price * item.quantity).toLocaleString()}`;
 
-        const imgEl = row.querySelector(".imagen-producto");
-        if (item.imagen) {
-            imgEl.src = item.imagen;
-            imgEl.alt = item.nombre;
-        } else {
-            row.querySelector("figure")?.remove();
-        }
-
-        // Añadimos al fragmento, NO al DOM real todavía
-        fragment.appendChild(row);
-    });
-
-    // 5. Inserción única (Solo 1 reflow de diseño)
-    dom.listaPedido.appendChild(fragment);
-
-    // Reset de pagina o renderall (modales a 0)
-    resetModals();
-};
-
-
-export const renderSingleModal = (nombre) => {
-    if (!dom.listaPedido) return;
-    
-    const item = state.items[nombre];
-
-    // 🔄 Usar cache en lugar de querySelector directo
-    const itemEnDOM = getModalItem(nombre);
-    // CASO 1: El producto ya no existe en el estado (cantidad 0)
-    if (!item || item.cantidad <= 0) {
-        if (itemEnDOM) {
-            itemEnDOM.remove(); // Lo eliminamos físicamente
-            removeFromModalCache(nombre); // 🔄 Limpiar de cache
-        }
-     // Si era el último desde el modal, cerramos
-        if (state.totalItems === 0 && history.state?.modal === "pedido") {
-            closeModal();
-        }
         return;
     }
 
-    // CASO 2: El producto ya está en el DOM (Actualizamos solo sus textos)
+    // 🔹 CASO 2: nuevo → crear
+    row = dom.templatePedidoProducto.content.firstElementChild.cloneNode(true);
 
-    if (itemEnDOM) {
-        itemEnDOM.querySelector(".cantidad").textContent = item.cantidad;
-        const precioTotal = item.precio * item.cantidad;
-        itemEnDOM.querySelector(".precio").textContent =
-            `$${precioTotal.toLocaleString()}`;
-        return;
-    }
+    // 🔥 IDs IMPORTANTES
+    row.dataset.id = item.id;
+    row.dataset.productid = item.product_id;
 
-    // CASO 3: Es un producto nuevo (Lo añadimos al final)
-    const row =
-        dom.templatePedidoProducto.content.firstElementChild.cloneNode(true);
-
-    // Configuración inicial de la fila
-    row.dataset.nombre = item.nombre;
+    // 🔹 básicos
     row.querySelector(".nombre").textContent = item.nombre;
-    row.querySelector(".cantidad").textContent = item.cantidad;
-    row.querySelector(".precio").textContent =
-        `$${(item.precio * item.cantidad).toLocaleString()}`;
+    row.querySelector(".cantidad").textContent = item.quantity;
 
+    row.querySelector(".precio").textContent =
+        `$${(item.total_price * item.quantity).toLocaleString()}`;
+
+    // 🔹 variantes
+    const variantsEl = row.querySelector(".variantes");
+    if (variantsEl) {
+        if (item.groups.length > 0) {
+            variantsEl.textContent = item.groups
+                .map(g => `${g.nombre}: ${g.selections.map(s => s.nombre).join(", ")}`)
+                .join(" • ");
+        } else {
+            variantsEl.remove();
+        }
+    }
+
+    // 🔹 imagen
     const imgEl = row.querySelector(".imagen-producto");
     if (item.imagen) {
         imgEl.src = item.imagen;
@@ -261,15 +195,97 @@ export const renderSingleModal = (nombre) => {
         row.querySelector("figure")?.remove();
     }
 
+    // 🔥 BOTONES → cartItem.id
+    row.querySelectorAll("[data-action]").forEach(btn => {
+        btn.dataset.id = item.id;
+    });
+
+    // 🔹 insertar y cachear
     dom.listaPedido.appendChild(row);
-    // 🔄 Cacheamos el nuevo elemento para futuras actualizaciones
-    modalItemsCache.set(nombre, row);
+    modalItemsCache.set(item.id, row);
+});
+
+    // 🔹 5. cerrar modal si no hay items
+    if (Object.keys(state.items).length === 0 && history.state?.modal === "pedido") {
+        closeModal();
+    }
 };
 
-export const getProductById = (id) => {
-    return PRODUCTS_MAP[id] || null;
+export const renderModal = () => {
+    debugLog("renderModal called");
+
+    if (!dom.listaPedido) return;
+
+    const { totalItems, items } = state;
+    const itemsArray = Object.values(items);
+
+    // 🔹 1. estado vacío
+    if (totalItems === 0) {
+        dom.listaPedido.replaceChildren();
+        clearModalCache();
+        closeModalUI();
+        return;
+    }
+
+    // 🔹 2. limpiar DOM + cache
+    dom.listaPedido.replaceChildren();
+    clearModalCache();
+
+    const fragment = document.createDocumentFragment();
+
+    itemsArray.forEach((item) => {
+    const row =
+        dom.templatePedidoProducto.content.firstElementChild.cloneNode(true);
+
+    // 🔥 IDs clave
+    row.dataset.id = item.id;
+    row.dataset.productid = item.product_id;
+
+    // 🔹 básicos
+    row.querySelector(".nombre").textContent = item.nombre;
+    row.querySelector(".cantidad").textContent = item.quantity;
+
+    row.querySelector(".precio").textContent =
+        `$${(item.total_price * item.quantity).toLocaleString()}`;
+
+    // 🔹 variantes
+    const variantsEl = row.querySelector(".variantes");
+    if (variantsEl) {
+        if (item.groups.length > 0) {
+            variantsEl.textContent = item.groups
+                .map(g => `${g.nombre}: ${g.selections.map(s => s.nombre).join(", ")}`)
+                .join(" • ");
+        } else {
+            variantsEl.remove();
+        }
+    }
+
+    // 🔹 imagen
+    const imgEl = row.querySelector(".imagen-producto");
+    if (item.imagen) {
+        imgEl.src = item.imagen;
+        imgEl.alt = item.nombre;
+    } else {
+        row.querySelector("figure")?.remove();
+    }
+
+    // 🔥 MUY IMPORTANTE: botones usan cartItem.id
+    row.querySelectorAll("[data-action]").forEach(btn => {
+        btn.dataset.id = item.id;
+    });
+
+    // 🔹 cache inmediato
+    modalItemsCache.set(item.id, row);
+
+    fragment.appendChild(row);
+    });
+
+    dom.listaPedido.appendChild(fragment);
+
+    resetModals();
 };
 
+// ===== VARIANTES ===== //
 const renderGroupSelect = (group) => {
     const { id, nombre, min, max, required, allow_repetition, options } = group;
     
@@ -407,11 +423,9 @@ const renderGroup = (group) => {
     }
 };
 
-export const renderVariantModal = (productId) => {
-
+export const renderVariantModal = (product) => {
     /* Información del producto*/
-    const product = getProductById(productId);
-
+    console.log(product);
     dom.variantsProductName.textContent = product.nombre;
     dom.variantsProductDescription.textContent = product.descripcion;
     dom.variantsProductImage.src = getCloudinaryImageUrl(product.imagen);
@@ -428,6 +442,7 @@ export const renderVariantModal = (productId) => {
     dom.variantsDialog.showModal();
 };
 
+// ===== Init Render ===== //
 export const renderTodo = () => {
     renderBarra();
     renderProductos();
@@ -436,7 +451,6 @@ export const renderTodo = () => {
 
 /* ========== CHECKOUT ========== */
 
-// Render de contacto
 export const renderNombreCliente = () => {
     if (state.nombreCliente) {
         checkoutDom.nombreCliente.value = state.nombreCliente;
@@ -449,7 +463,6 @@ export const renderTelefono = () => {
     }
 }
 
-// Render de entrega
 export const renderEntrega = () => {
     // 1. Sincronizar Radios
     checkoutDom.radios.forEach((radio) => {
@@ -468,21 +481,19 @@ export const renderEntrega = () => {
     renderResumen();
 };
 
-// Render de método de pago
 export const renderMetodoPago = () => {
     if (state.metodoPago) {
         checkoutDom.metodoPago.querySelector((`option[value="${state.metodoPago}"]`)).selected = true;
     }
 }
 
-// Render de notas
 export const renderNotas = () => {
     if (state.notas) {
         checkoutDom.notas.value = state.notas;
     }
 }
 
-// Validad datos para botón
+// Validar datos para botón
 export const renderValidar = (estado) => {
     const isValid = estado;
     checkoutDom.btnHacerPedido.disabled = !isValid;

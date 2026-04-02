@@ -13,35 +13,18 @@ import {
 import { dom ,  checkoutDom } from "./dom.js";
 import { state } from "../state.js";
 import { openModal, manualClose } from "../modal.js";
-import { renderVariantModal } from "./render.js";
 
-const extraerProductoDesdeElemento = (el) => {
-    const productEl = el.closest("article");
-    if (!productEl) return null;
-    return {
-        nombre: productEl.dataset.nombre,
-        precio: Number(productEl.dataset.precio),
-        imagen: productEl.dataset.imagen,
-        descripcion: productEl.dataset.descripcion,
-    };
-};
 
-const controlAction = (action, element, closeModal) => {
-    // 1. Extraemos el producto UNA sola vez
-    const producto = extraerProductoDesdeElemento(element);
-    if (!producto) return;
+const controlAction = (action, productId) => {
 
-    // 2. Ejecutamos según la acción
+    if (!productId) return;
+
     switch (action) {
         case "add-product":
-            updateCantidad(producto, 1);
+            updateCantidad(productId, 1);
             break;
         case "remove-product":
-            updateCantidad(producto, -1, closeModal);
-            break;
-        case "open-variants":
-            const productId = element.dataset.productid;
-            renderVariantModal(productId);
+            updateCantidad(productId, -1);
             break;
         default:
             return;
@@ -50,36 +33,24 @@ const controlAction = (action, element, closeModal) => {
 
 export const bindEventosProductos = () => {
     //* Abrir modal de pedido
-    dom.btnVerPedido.addEventListener("click", () => {
-        openModal("pedido", dom.modalVerPedido);
-    });
+    dom.btnVerPedido.addEventListener("click", () => openModal("pedido", dom.modalVerPedido));
 
-    //* Acciones de producto (carta y pedido)
-    // Listener para el Menú Principal
+    //* Acciones de producto (menu)
     dom.menu.addEventListener("click", (e) => {
-        /* ! Flujo ideal: (se saca factor común)
-		delegación menú
-		|--filtrar clicks irrevelantes
-		|--determinar intención (imagen/accion)
-		|--resolver producto/contexto
-		|--ejecutar acción negocio
-		|--actualizar UI necesaria
-		*/
         const target = e.target;
         const action = target.getAttribute("data-action");
         if (!action) return;
-
-        // * Acciones de negocio (producto)
-        controlAction(action, target);
+        const productId = target.getAttribute("data-productid");
+        controlAction(action, productId);
     });
 
-    // Listener para el Modal de Pedido
+    //* Acciones de producto (cart)
     dom.listaPedido.addEventListener("click", (e) => {
-        // Usamos closest para asegurar que pillamos el botón aunque pinchen en el icono
         const target = e.target;
         const action = target.getAttribute("data-action");
         if (!action) return;
-        controlAction(action, target);
+        const productId = target.getAttribute("data-productid");
+        controlAction(action, productId);
     });
 
     setValorEntrega(dom.datos.dataset.valorentrega);
@@ -88,27 +59,12 @@ export const bindEventosProductos = () => {
 export const bindEventosVariants = () => {
 
     dom.variantsDialog.addEventListener("click", (e) => {
-        if (e.target === dom.variantsDialog) {
-            dom.variantsDialog.close();
-        }
+        if (e.target === dom.variantsDialog) dom.variantsDialog.close();
     });
-
-    dom.variantsBackButton.addEventListener("click", () => {
-        dom.variantsDialog.close();
-    });
+    dom.variantsBackButton.addEventListener("click", dom.variantsDialog.close());
 };
 
-export const hacerCheckout = () => {
-    // 1. Validación usando el estado derivado (O(1) vs O(n))
-    if (state.totalItems === 0) {
-        // En lugar de alert, podrías usar un toast o un mensaje en el DOM
-        alert("Pedido vacío. Agrega algún producto antes de continuar.");
-        return;
-    }
-	window.location.href = "/checkout";
-};
-
-export const bindEventosModal = () => {
+export const bindEventosCart = () => {
     // Delegación de eventos dentro del modal
     dom.modalVerPedido.addEventListener("click", (e) => {
         const target = e.target;
@@ -128,7 +84,11 @@ export const bindEventosModal = () => {
         }
         // Hacer pedido
         if (target.id === "btn-hacer-checkout") {
-            hacerCheckout();
+            if (state.totalItems === 0) {
+                alert("Pedido vacío. Agrega algún producto antes de continuar.");
+                return;
+            }
+            window.location.href = "/checkout";
         }
     });
 
@@ -144,12 +104,8 @@ export const bindEventosModal = () => {
         }
         // Borrar pedido completamente
         if (target.id === "btn-borrar-pedido") {
-            // document.body.classList.remove("no-scroll");
-            // console.log("antiguo removido")
             borrarPedido(); // primero vacías estado
-
             history.go(-2); // luego navegas correctamente
-
             return;
         }
     });
@@ -157,11 +113,15 @@ export const bindEventosModal = () => {
 
 export const bindEventosPedido = () => {
     bindEventosProductos();
-    bindEventosModal();
+    bindEventosCart();
     bindEventosVariants();
 };
 
-// !Generar mensaje de pedido WhatsApp
+
+/* ========== CHECKOUT ========== */
+
+const whatsapp = document.querySelector("#datos").dataset.whatsapp;
+
 export const generarMensaje = () => {
     // 1. Usar totales ya calculados en el estado (Evitamos el bucle de cálculo)
     const { items, totalProductos, tipoEntrega, valorEntrega, direccion, metodoPago, notas, nombreCliente, telefono } = state;
@@ -224,8 +184,6 @@ export const generarMensaje = () => {
     return lineas.join("\n");
 };
 
-const whatsapp = document.querySelector("#datos").dataset.whatsapp;
-
 export const hacerPedido = () => {
     // 1. Validación usando el estado derivado (O(1) vs O(n))
     if (state.totalItems === 0) {
@@ -236,22 +194,6 @@ export const hacerPedido = () => {
     // 2.0 Validación de formulario
     const isValid = validarFormulario();
     if (!isValid) return;
-
-    // // 2. Validación de dirección (Lógica de estado)
-    // const esDomicilio = state.tipoEntrega === "domicilio";
-    // const direccionVacia =
-    //     !state.direccion || state.direccion.trim().length === 0;
-
-    // if (esDomicilio && direccionVacia) {
-    //     // Feedback visual inmediato
-    //     checkoutDom.inputDireccion.focus(); // Mejor que scroll si es un input
-    //     checkoutDom.inputDireccion.classList.add("invalid");
-    //     checkoutDom.inputDireccion.scrollIntoView({
-    //         behavior: "smooth",
-    //         block: "center",
-    //     });
-    //     return;
-    // }
 
     // 3. Generación de mensaje y envío
     const mensaje = generarMensaje();
@@ -294,13 +236,8 @@ export const bindCheckout = () => {
         }
         validarFormulario();
     });
-	checkoutDom.btnHacerPedido.addEventListener("click", () => {
-		hacerPedido();
-	});
-
+	checkoutDom.btnHacerPedido.addEventListener("click", hacerPedido());
     document.getElementById("btn-cerrar-checkout").addEventListener("click", () => history.back());
 };
 
-export const bindEventosCheckout = () => {
-    bindCheckout();
-};
+export const bindEventosCheckout = () => bindCheckout();

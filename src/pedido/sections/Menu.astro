@@ -18,6 +18,7 @@ const { menuPorCategoria, modo } = Astro.props;
                             <li>
                                 <article
                                     class="producto flex min-h-25 justify-start gap-2.5 border-b border-(--color-border) py-4"
+                                    data-productid={item.id}
                                     data-nombre={item.nombre}
                                     data-precio={item.precio}
                                     data-descripcion={item.descripcion}
@@ -35,23 +36,24 @@ const { menuPorCategoria, modo } = Astro.props;
                                         </p>
                                         {modo !== "menu" && (    
                                             <div class="controles mt-auto flex w-fit items-center self-end rounded-full bg-(--color-secondary) select-none">
-                                                {item.hasVariants == false && (
-                                                    <button data-action="remove-product"
-                                                        class="remove cerrado"
-                                                        aria-label="Quitar del pedido"
-                                                        data-productid={item.id}
-                                                    >
-                                                        <Minus
-                                                            width={25}
-                                                            height={25}
-                                                        />
-                                                    </button>
-                                                )}
-                                                <output class="cantidad cerrado mx-1">
+
+                                                <button data-action="remove-product"
+                                                    class="remove"
+                                                    aria-label="Quitar del pedido"
+                                                    data-productid={item.id}
+                                                    style={{ display: item.hasVariants == true ? "none" : "block" }}
+                                                >
+                                                    <Minus
+                                                        width={25}
+                                                        height={25}
+                                                    />
+                                                </button>
+
+                                                <output class="cantidad mx-1">
                                                     0
                                                 </output>
                                                 <button data-action="add-product"
-                                                    class="add cerrado"
+                                                    class="add"
                                                     aria-label="Agregar al pedido"
                                                     data-productid={item.id}
                                                 >

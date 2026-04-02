@@ -1,81 +1,56 @@
 import { dom } from "./dom.js";
-import { getProductById } from "./render.js";
+import { getProductById, buildCartItemWithVariants, addToCart } from "./actions.js";
 
+/**
+ * Convierte un objeto con claves tipo:
+ *  'group-<group_id>-option-<index>': '<optionId>'
+ * a un array de selecciones:
+ *  [{ group_id, options: [optionId,...] }, ...]
+ *
+ * Si se pasa `currentSelections` los grupos existentes se actualizan,
+ * y los nuevos grupos del `raw` se añaden al final.
+ */
+const normalizeVariantSelections = (raw, currentSelections = []) => {
+    const fromRaw = Object.create(null);
 
-const buildCartItem = (product, selectedOptions) => {
+    for (const [key, optionId] of Object.entries(raw || {})) {
+        const m = key.match(/^group-(.+?)-option-(\d+)$/);
+        if (!m) continue;
+        const [, group_id, idxStr] = m;
+        const idx = Number(idxStr);
+        if (!fromRaw[group_id]) fromRaw[group_id] = [];
+        fromRaw[group_id][idx] = optionId;
+    }
 
-    // 1) Parseas keys y agrupas por group_id (preservando orden por option index)
-    // key: group-{groupId}-option-{n}  value: {optionId}
-    const groupedSelections = Object.entries(selectedOptions).reduce((acc, [key, optionId]) => {
-        const match = key.match(/^group-(.+)-option-(\d+)$/);
-        if (!match) return acc;
+    // Convert to array form, removing holes
+    const rawGroups = Object.entries(fromRaw).map(([group_id, arr]) => ({
+        group_id,
+        options: (arr || []).filter((v) => v !== undefined && v !== null),
+    }));
 
-        const groupId = match[1];
-        const index = Number(match[2]);
+    if (!Array.isArray(currentSelections) || currentSelections.length === 0) {
+        return rawGroups;
+    }
 
-        if (!acc[groupId]) acc[groupId] = [];
-        acc[groupId].push({ index, optionId: String(optionId) });
-        return acc;
-    }, {});
-
-    Object.keys(groupedSelections).forEach((groupId) => {
-        groupedSelections[groupId].sort((a, b) => a.index - b.index);
+    const used = new Set();
+    const result = currentSelections.map((s) => {
+        if (fromRaw[s.group_id]) {
+            used.add(s.group_id);
+            return {
+                group_id: s.group_id,
+                options: fromRaw[s.group_id].filter((v) => v != null),
+            };
+        }
+        return s;
     });
 
-    // 2) Resuelves contra product.groups y construyes groups[]
-    const groups = (product.groups || []).map((group) => {
-        const selections = groupedSelections[group.id] || [];
+    for (const g of rawGroups) {
+        if (!used.has(g.group_id)) result.push(g);
+    }
 
-        // Importante: preservamos el orden (y repetición si allow_repetition)
-        const selectedOptionsResolved = selections
-            .map(({ optionId }) => group.options.find((opt) => opt.option_id === optionId))
-            .filter(Boolean);
-
-        return {
-            group_id: group.id,
-            nombre: group.nombre,
-            selections: selectedOptionsResolved.map((opt) => ({
-                option_id: opt.option_id,
-                nombre: opt.nombre,
-                precio_extra: Number(opt.precio_extra) || 0,
-            })),
-        };
-    });
-
-    // 3) Calculas precio
-    const basePrice = Number(product.precio) || 0;
-    const extrasPrice = groups.reduce((total, group) => {
-        return (
-            total +
-            group.selections.reduce((groupTotal, selection) => {
-                return groupTotal + (Number(selection.precio_extra) || 0);
-            }, 0)
-        );
-    }, 0);
-    const totalPrice = basePrice + extrasPrice;
-
-    // 4) Generas id único (estable: incluye orden por grupo)
-    const optionsSignature = groups
-        .map((group) => {
-            const optionIds = group.selections.map((s) => s.option_id).join(",");
-            return `${group.group_id}:${optionIds}`;
-        })
-        .join("|");
-
-    const uniqueId = `${product.id}|${optionsSignature}`;
-
-    return {
-        id: uniqueId,
-        product_id: product.id,
-        nombre: product.nombre,
-        imagen: product.imagen,
-        base_price: basePrice,
-        extras_price: extrasPrice,
-        total_price: totalPrice,
-        quantity: 1,
-        groups,
-    };
+    return result;
 }
+
 
 // Validar en change
 dom.variantsForm.addEventListener("change", (e) => {
@@ -86,10 +61,11 @@ dom.variantsForm.addEventListener("change", (e) => {
 dom.variantsForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const formData = new FormData(dom.variantsForm);
-    const selectedOptions = Object.fromEntries(formData.entries());
+    const selectionsRaw = Object.fromEntries(formData.entries());
+    const selections = normalizeVariantSelections(selectionsRaw);
     const product = getProductById(dom.variantsAddButton.dataset.productid);
 
-    const cartItem = buildCartItem(product, selectedOptions);
+    const cartItem = buildCartItemWithVariants(product, selections);
+    addToCart(cartItem);
+    dom.variantsDialog.close();
 });
-
-

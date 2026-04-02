@@ -44,7 +44,6 @@ export const resetModals = async () => {
     while (history.state?.modal) {
 
         if (history.state.modal === "pedido") {
-            console.log("modal pedido, no cierro y salgo");
             dom.modalVerPedido.showModal();
             // scrollLock.enable();
             modalStack.push(dom.modalVerPedido);
