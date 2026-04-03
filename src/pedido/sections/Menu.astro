@@ -4,6 +4,7 @@ import Plus from "@assets/plus-svgrepo-com.svg";
 import Minus from "@assets/minus-svgrepo-com.svg";
 import Variants from "./Variants.astro";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
+import { left } from "@cloudinary/url-gen/qualifiers/textAlignment";
 const { menuPorCategoria, modo } = Astro.props;
 ---
 <section id="menu" class="menu w-full max-w-200 px-3">
@@ -49,7 +50,7 @@ const { menuPorCategoria, modo } = Astro.props;
                                                     />
                                                 </button>
 
-                                                <output class="cantidad mx-1">
+                                                <output class="cantidad mx-1" style={`padding-left: ${item.hasVariants == true ? "12px" : "0"}`}>
                                                     0
                                                 </output>
                                                 <button data-action="add-product"

@@ -226,7 +226,7 @@ export function parseWhatsAppMessage(message) {
         // Consolidar productos duplicados
         const consolidated = {};
         allItems.forEach(item => {
-            const key = normalizeText(item.producto);
+            const key = normalizeText(item.producto) + "|" + JSON.stringify(item.variants || []);
             if (consolidated[key]) {
                 consolidated[key].cantidad += item.cantidad;
             } else {
@@ -273,20 +273,35 @@ export function validateOrderItem(item) {
         errors.push('Cantidad debe ser un número mayor a 0');
     }
 
-    // precio es opcional, pero si viene debe ser válido
     if (item.precio !== undefined && (isNaN(item.precio) || item.precio < 0)) {
         errors.push('Precio debe ser un número mayor o igual a 0');
     }
-    
+
+    // 🔹 NORMALIZAR VARIANTS (nuevo)
+    let variants = [];
+
+    if (Array.isArray(item.variants)) {
+        variants = item.variants
+            .filter(v => v && v.grupo) // limpieza básica
+            .map(v => ({
+                grupo: String(v.grupo).trim(),
+                opciones: Array.isArray(v.opciones)
+                    ? v.opciones.map(o => String(o).trim()).filter(Boolean)
+                    : []
+            }));
+    }
+
     return {
         isValid: errors.length === 0,
         errors: errors,
         item: {
             producto: String(item.producto).trim(),
             cantidad: parseFloat(item.cantidad) || 0,
-            // Mantener compatibilidad: algunas partes del UI pueden esperar estas props
             unidad: 'unidad',
-            precio: parseFloat(item.precio) || 0
+            precio: parseFloat(item.precio) || 0,
+
+            // 🔥 NUEVO
+            variants
         }
     };
 }

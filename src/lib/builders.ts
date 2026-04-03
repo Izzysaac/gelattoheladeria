@@ -45,9 +45,10 @@ export const buildEventosPageData = ({ tenant, info, eventos, estilos }) => {
     };
 };
 
-export const buildTicketPageData = ({ tenant, info, menu }) => {
+export const buildTicketPageData = ({ tenant, info, menu, menuMap }) => {
     return {
         menu: buildTicket(menu, info),
+        menuMap: menuMap,
     };
 };
 

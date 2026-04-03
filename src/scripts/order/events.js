@@ -73,7 +73,7 @@ export const bindEventosVariants = () => {
     dom.variantsDialog.addEventListener("click", (e) => {
         if (e.target === dom.variantsDialog) dom.variantsDialog.close();
     });
-    dom.variantsBackButton.addEventListener("click", dom.variantsDialog.close());
+    dom.variantsBackButton.addEventListener("click", (e) => dom.variantsDialog.close());
 };
 
 export const bindEventosCart = () => {
@@ -273,7 +273,7 @@ export const bindCheckout = () => {
         }
         validarFormulario();
     });
-	checkoutDom.btnHacerPedido.addEventListener("click", hacerPedido());
+	checkoutDom.btnHacerPedido.addEventListener("click", () => hacerPedido());
     document.getElementById("btn-cerrar-checkout").addEventListener("click", () => history.back());
 };
 

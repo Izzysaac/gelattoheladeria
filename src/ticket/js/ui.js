@@ -163,6 +163,7 @@ function createTableRow(item, index) {
             <select class="editable producto-select">
                 ${productOptions}
             </select>
+            ${item.variants && item.variants.length ? `<div class="variants" style="font-size: 0.8em; color: #666; margin-top: 4px;">${item.variants.map(v => `${v.grupo}: ${v.opciones.join(', ')}`).join('<br>')}</div>` : ''}
         </td>
         <td>
             <input 

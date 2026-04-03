@@ -124,7 +124,6 @@ export const renderSingleModal = (productId) => {
 
     // 🔹 2. IDs actuales en estado
     const currentIds = new Set(items.map((item) => String(item.id)));
-    console.log("IDs actuales en estado para productId", productId, currentIds);
     // 🔹 3. eliminar del DOM los que ya no existen
     for (const [id, el] of Array.from(modalItemsCache.entries())) {
         const elProductId = el.dataset.productid;
@@ -402,6 +401,7 @@ const renderGroupCheckbox = (group) => {
             (opt) => `
             <label class="variant-option">
                 <input 
+                    name="group-${id}"
                     type="checkbox"
                     value="${opt.option_id}"
                     data-group-id="${id}"
@@ -456,14 +456,36 @@ const renderGroup = (group) => {
     }
 };
 
+// variantsState.js, se contruye el mapa de opciones cada vez que se abre el modal, a partir del producto actual
+// variantsState.js
+export const variantsState = {
+    currentProduct: null,
+    optionsMap: null,
+};
+
+const buildOptionsMap = (product) => {
+    const map = {};
+
+    product.groups.forEach(group => {
+        group.options.forEach(opt => {
+            map[opt.option_id] = opt;
+        });
+    });
+
+    return map;
+};
+
 export const renderVariantModal = (product) => {
     /* Información del producto*/
-    console.log(product);
     dom.variantsProductName.textContent = product.nombre;
     dom.variantsProductDescription.textContent = product.descripcion;
     dom.variantsProductImage.src = getCloudinaryImageUrl(product.imagen);
     dom.variantsProductPrice.textContent = `$${product.precio.toLocaleString()}`;
     dom.variantsAddButton.dataset.productid = product.id;
+
+    // Map de opciones y de producto que se usa para recuperar precios extra al seleccionar variantes
+    variantsState.currentProduct = product;
+    variantsState.optionsMap = buildOptionsMap(product);
 
     /* Información de grupos*/
     const html = product.groups.map((group) => renderGroup(group)).join("");

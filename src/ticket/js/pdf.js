@@ -100,7 +100,7 @@ async function loadAndPopulateTemplate(orderData) {
         
             row.innerHTML = `
                 <td class="cantidad">${item.cantidad}</td>
-                <td class="product-name">${item.producto.toUpperCase()}</td>
+                <td class="product-name">${item.producto.toUpperCase()}${item.variants && item.variants.length ? `<br><small style="color: #666;">${item.variants.map(v => `${v.grupo}: ${v.opciones.join(', ')}`).join('<br>')}</small>` : ''}</td>
                 <td class="precio-unitario">
                     <div>
                         <span>$</span>

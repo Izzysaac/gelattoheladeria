@@ -2,7 +2,6 @@ const menuData = document.getElementById('menu-container');
 const menu = JSON.parse(menuData.dataset.menu);
 
 const { valorEntrega, ...productos } = menu;
-
 // Import dinámico de productos
 export const PRODUCTOS_CONFIG = productos;
 
@@ -186,10 +185,3 @@ const pagoExterno = !isNaN(valorEntrega);
 
 export const DELIVERY = pagoExterno ? valorEntrega : 0;
 
-// Metadata
-export const PRODUCTS_METADATA = {
-    generated_at: "2026-03-04T02:42:30.201Z",
-    total_products: 22,
-    source: "Google Sheets via OpenSheet",
-    version: "1.0",
-};

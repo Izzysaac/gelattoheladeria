@@ -16,8 +16,8 @@ const PAGE_BUILDERS: Record<PageType, (params: any) => any> = {
     checkout: ({ tenant, info, estilos }) => buildCheckoutPageData({ tenant, info, estilos }),
     eventos: ({ tenant, info, eventos, estilos  }) =>
         buildEventosPageData({ tenant, info, eventos, estilos }),
-    ticket: ({ tenant, info, menu  }) =>
-        buildTicketPageData({ tenant, info, menu })
+    ticket: ({ tenant, info, menu, menuMap  }) =>
+        buildTicketPageData({ tenant, info, menu, menuMap })
 };
 
 export async function buildTenantData(page: PageType) {

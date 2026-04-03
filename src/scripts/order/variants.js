@@ -1,6 +1,6 @@
 import { dom } from "./dom.js";
 import { getProductById, buildCartItemWithVariants, addToCart } from "./actions.js";
-
+import { variantsState } from "./render.js";
 /**
  * Convierte un objeto con claves tipo:
  *  'group-<group_id>-option-<index>': '<optionId>'
@@ -13,33 +13,46 @@ import { getProductById, buildCartItemWithVariants, addToCart } from "./actions.
 const normalizeVariantSelections = (raw, currentSelections = []) => {
     const fromRaw = Object.create(null);
 
-    for (const [key, optionId] of Object.entries(raw || {})) {
-        const m = key.match(/^group-(.+?)-option-(\d+)$/);
-        if (!m) continue;
-        const [, group_id, idxStr] = m;
-        const idx = Number(idxStr);
-        if (!fromRaw[group_id]) fromRaw[group_id] = [];
-        fromRaw[group_id][idx] = optionId;
+    for (const [key, value] of Object.entries(raw || {})) {
+        // 🔹 CASO 1: select indexado
+        let match = key.match(/^group-(.+?)-option-(\d+)$/);
+
+        if (match) {
+            const [, group_id, idxStr] = match;
+            const idx = Number(idxStr);
+
+            if (!fromRaw[group_id]) fromRaw[group_id] = [];
+            fromRaw[group_id][idx] = value;
+            continue;
+        }
+
+        // 🔹 CASO 2: radio / single
+        match = key.match(/^group-(.+)$/);
+
+        if (match) {
+            const [, group_id] = match;
+
+            fromRaw[group_id] = [value]; // 👈 SIEMPRE array
+        }
     }
 
-    // Convert to array form, removing holes
+    // 🔹 limpiar y convertir
     const rawGroups = Object.entries(fromRaw).map(([group_id, arr]) => ({
         group_id,
-        options: (arr || []).filter((v) => v !== undefined && v !== null),
+        options: (arr || []).filter(v => v != null && v !== "")
     }));
 
+    // 🔹 merge con currentSelections (igual que ya haces)
     if (!Array.isArray(currentSelections) || currentSelections.length === 0) {
         return rawGroups;
     }
 
     const used = new Set();
+
     const result = currentSelections.map((s) => {
         if (fromRaw[s.group_id]) {
             used.add(s.group_id);
-            return {
-                group_id: s.group_id,
-                options: fromRaw[s.group_id].filter((v) => v != null),
-            };
+            return rawGroups.find(g => g.group_id === s.group_id);
         }
         return s;
     });
@@ -49,13 +62,39 @@ const normalizeVariantSelections = (raw, currentSelections = []) => {
     }
 
     return result;
-}
+};
 
+const calculateExtrasPrice = (form, optionsMap) => {
+    let total = 0;
+
+    const formData = new FormData(form);
+
+    for (const value of formData.values()) {
+        const option = optionsMap[value];
+        if (option) {
+            total += Number(option.precio_extra || 0);
+        }
+    }
+
+    return total;
+};
+
+const updateVariantPriceUI = (product, form, optionsMap) => {
+    const extras = calculateExtrasPrice(form, optionsMap);
+    const total = Number(product.precio) + extras;
+
+    dom.variantsProductPrice.textContent =
+        `$${total.toLocaleString()}`;
+};
 
 // Validar en change
 dom.variantsForm.addEventListener("change", (e) => {
+    // 🔹 1. validación
     dom.variantsAddButton.disabled = !dom.variantsForm.checkValidity();
+    // 🔹 2. precio dinámico
+    updateVariantPriceUI(variantsState.currentProduct, dom.variantsForm, variantsState.optionsMap);
 });
+
 
 // Validar en submit
 dom.variantsForm.addEventListener("submit", (e) => {
