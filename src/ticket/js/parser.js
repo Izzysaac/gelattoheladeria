@@ -73,6 +73,70 @@ function identifyProduct(text) {
     return null;
 }
 
+function isProductLine(line) {
+    return line.trim().startsWith("•");
+}
+
+function isVariantLine(line) {
+    return line.trim().startsWith("-");
+}
+
+function parseBlocks(lines) {
+    const blocks = [];
+    let current = null;
+
+    lines.forEach(line => {
+        if (isProductLine(line)) {
+            if (current) blocks.push(current);
+
+            current = {
+                main: line,
+                variants: [],
+                priceLine: null
+            };
+        } 
+        else if (isVariantLine(line) && current) {
+            current.variants.push(line);
+        } 
+        else if (line.includes("(") && current) {
+            current.priceLine = line;
+        }
+    });
+
+    if (current) blocks.push(current);
+
+    return blocks;
+}
+
+function parseBlock(block) {
+    const items = [];
+
+    // 🔹 parse línea principal
+    const base = parseLine(block.main);
+    if (!base.length) return items;
+
+    const item = base[0];
+
+    // 🔥 añadir variantes
+    if (block.variants.length > 0) {
+        item.variants = block.variants.map(line => {
+            const clean = line.replace(/^-+\s*/, "");
+            const [grupo, opciones] = clean.split(":");
+
+            return {
+                grupo: grupo?.trim(),
+                opciones: opciones
+                    ? opciones.split(",").map(o => o.trim())
+                    : []
+            };
+        });
+    } else {
+        item.variants = [];
+    }
+
+    return [item];
+}
+
 /*
  * Parsea una línea de WhatsApp estilo:
  * "• 1 x Familiar ($43,000)" => { cantidad: 1, producto: "Familiar" }
@@ -141,16 +205,23 @@ export function parseWhatsAppMessage(message) {
         const allItems = [];
         const errors = [];
         
-        for (const line of lines) {
-            // Saltar líneas que parecen saludos o despedidas
-            const normalized = normalizeText(line);
-            if (normalized.match(/^(hola|buenos|buenas|gracias|saludos|hasta|chao|bye)/)) {
-                continue;
-            }
+        const blocks = parseBlocks(lines);
+
+        blocks.forEach(block => {
+            const parsed = parseBlock(block);
+            allItems.push(...parsed);
+        });
+
+        // for (const line of lines) {
+        //     // Saltar líneas que parecen saludos o despedidas
+        //     const normalized = normalizeText(line);
+        //     if (normalized.match(/^(hola|buenos|buenas|gracias|saludos|hasta|chao|bye)/)) {
+        //         continue;
+        //     }
             
-            const lineItems = parseLine(line);
-            allItems.push(...lineItems);
-        }
+        //     const lineItems = parseLine(line);
+        //     allItems.push(...lineItems);
+        // }
         
         // Consolidar productos duplicados
         const consolidated = {};

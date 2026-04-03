@@ -120,20 +120,33 @@ export const recalculateTotals = () => {
 
 const renderAfterCartChange = (productId) => {
     renderSingleProducto(productId); // menú
-    renderBarra();                   // totales
-    // renderCart();                    // carrito completo (si aplica)
-    renderSingleModal(productId);
+    renderSingleModal(productId);    // cart
+    renderBarra();                   // barra
+};
 
-    // --- RENDERIZADO GRANULAR ---
+export const updateCantidad = (productId, delta) => {
+    const product = getProductById(productId);
+    if (!product) return;
 
-    // 1. Actualiza solo el producto clickeado en la carta (Súper rápido)
-    // renderSingleProducto(nombre);
+    // 🔹 CASO 1: producto con variantes
+    if (product.hasVariants) {
+        // 👉 solo tiene sentido abrir modal si es suma
+        if (delta > 0) {
+            renderVariantModal(product);
+        }
+        return;
+    }
 
-    // // 2. La barra siempre debe actualizarse (Totales cambiaron)
-    // renderBarra();
+    // 🔹 CASO 2: producto simple
+    const cartItem = buildSimpleCartItem(product);
 
-    // // 3. El modal solo se re-renderiza si está abierto
-    // renderSingleModal(nombre);
+    addToCart(cartItem, delta);
+};
+
+export const updateCartItemQuantity = (id, delta) => {
+    const item = state.items[id];
+    if (!item) return;
+    addToCart(item, delta);
 };
 
 export const addToCart = (cartItem, delta = 1) => {
@@ -165,27 +178,15 @@ export const addToCart = (cartItem, delta = 1) => {
     // 🔹 4. Persistir
     guardarState();
 
-    // 🔹 5. Render granular
-    renderAfterCartChange(cartItem.product_id);
-};
+    // 🔹 5. Renderizar
+    // 🔥 5. Resolver productId de forma segura
+    const productId =
+        cartItem.product_id || existingItem?.product_id;
 
-export const updateCantidad = (productId, delta) => {
-    const product = getProductById(productId);
-    if (!product) return;
-
-    // 🔹 CASO 1: producto con variantes
-    if (product.hasVariants) {
-        // 👉 solo tiene sentido abrir modal si es suma
-        if (delta > 0) {
-            renderVariantModal(product);
-        }
-        return;
-    }
-
-    // 🔹 CASO 2: producto simple
-    const cartItem = buildSimpleCartItem(product);
-
-    addToCart(cartItem, delta);
+    if (productId) {
+        console.log(`Actualizando UI para productId: ${productId}`);
+        renderAfterCartChange(productId)
+    };
 };
 
 export const borrarPedido = () => {
@@ -250,10 +251,11 @@ export const getShipping = () => {
 };
 
 export const computeTotal = (items) => {
-    return Object.values(items).reduce(
-        (total, item) => total + item.precio * item.cantidad,
-        0,
-    );
+    return Object.values(items).reduce((total, item) => {
+        const price = Number(item.total_price || 0);
+        const qty = Number(item.quantity || 0);
+        return total + price * qty;
+    }, 0);
 };
 
 export const validarFormulario = () => {

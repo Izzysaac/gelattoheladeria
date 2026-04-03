@@ -9,6 +9,7 @@ import {
     setMetodoPago,
     setNotas,
     validarFormulario,
+    updateCartItemQuantity
 } from "./actions.js";
 import { dom ,  checkoutDom } from "./dom.js";
 import { state } from "../state.js";
@@ -16,15 +17,26 @@ import { openModal, manualClose } from "../modal.js";
 
 
 const controlAction = (action, productId) => {
-
     if (!productId) return;
-
     switch (action) {
         case "add-product":
             updateCantidad(productId, 1);
             break;
         case "remove-product":
             updateCantidad(productId, -1);
+            break;
+        default:
+            return;
+    }
+};
+const controlCartAction = (action, cartItemId) => {
+    if (!cartItemId) return;
+    switch (action) {
+        case "add-cart-item":
+            updateCartItemQuantity(cartItemId, 1);
+            break;
+        case "remove-cart-item":
+            updateCartItemQuantity(cartItemId, -1);
             break;
         default:
             return;
@@ -44,13 +56,13 @@ export const bindEventosProductos = () => {
         controlAction(action, productId);
     });
 
-    //* Acciones de producto (cart)
+    //* Acciones de producto (cart) funcion por id del cart item, no del producto
     dom.listaPedido.addEventListener("click", (e) => {
         const target = e.target;
         const action = target.getAttribute("data-action");
         if (!action) return;
-        const productId = target.getAttribute("data-productid");
-        controlAction(action, productId);
+        const cartItemId = target.getAttribute("data-id");
+        controlCartAction(action, cartItemId);
     });
 
     setValorEntrega(dom.datos.dataset.valorentrega);
@@ -123,64 +135,89 @@ export const bindEventosPedido = () => {
 const whatsapp = document.querySelector("#datos").dataset.whatsapp;
 
 export const generarMensaje = () => {
-    // 1. Usar totales ya calculados en el estado (Evitamos el bucle de cálculo)
-    const { items, totalProductos, tipoEntrega, valorEntrega, direccion, metodoPago, notas, nombreCliente, telefono } = state;
-    const itemsArray = Object.values(items);
+    const {
+        items,
+        totalProductos,
+        tipoEntrega,
+        valorEntrega,
+        direccion,
+        metodoPago,
+        notas,
+        nombreCliente,
+        telefono,
+    } = state;
 
+    const itemsArray = Object.values(items);
     if (itemsArray.length === 0) return "";
 
-    // 2. Acumulador de líneas
     const lineas = ["Hola, quiero realizar un pedido por favor:\n"];
 
-    // 3. Generar cuerpo del mensaje
     itemsArray.forEach((item) => {
-        if (item.cantidad <= 0) return;
-        const subtotal = item.cantidad * item.precio;
+        if (item.quantity <= 0) return;
+
+        const subtotal = item.quantity * item.total_price;
+
+        // 🔹 línea principal
         lineas.push(
-            `• ${item.cantidad} x ${item.nombre} ($${subtotal.toLocaleString()})`,
+            `• ${item.quantity} x ${item.nombre}`
+        );
+
+        // 🔥 variantes (clave)
+        if (item.groups?.length > 0) {
+            item.groups.forEach((g) => {
+                const opciones = g.selections.map(s => s.nombre).join(", ");
+                lineas.push(`  - ${g.nombre}: ${opciones}`);
+            });
+        }
+
+        // 🔹 precio
+        lineas.push(
+            `  ($${subtotal.toLocaleString()})`
         );
     });
 
-    // 4. Totales
+    // 🔹 Totales
     const esDomicilio = tipoEntrega === "domicilio";
     const numEnvio = Number(valorEntrega);
     const esEnvioNumerico = !isNaN(numEnvio);
 
-    lineas.push(``);
-    if (esDomicilio) {
-        // Si es un número, sumamos. Si es texto (Adicional), el total es solo el de productos.
-        const totalSuma = Number(totalProductos) + (esEnvioNumerico ? numEnvio : 0);
+    lineas.push("");
 
-        // Mostramos el valor tal cual (si es "Adicional" sale "Adicional", si es 5000 sale con formato)
-        const envioTexto = esEnvioNumerico ? `$${numEnvio.toLocaleString()}` : valorEntrega;
+    if (esDomicilio) {
+        const totalSuma =
+            Number(totalProductos) + (esEnvioNumerico ? numEnvio : 0);
+
+        const envioTexto = esEnvioNumerico
+            ? `$${numEnvio.toLocaleString()}`
+            : valorEntrega;
 
         lineas.push(`*Envío:* ${envioTexto}`);
         lineas.push(`*Total:* $${totalSuma.toLocaleString()}`);
 
         if (!esEnvioNumerico) {
-            lineas.push(`_Nota: El costo de envío se paga al domiciliario_`);
+            lineas.push(
+                `_Nota: El costo de envío se paga al domiciliario_`
+            );
         }
-        // const total = Number(totalProductos) + Number(valorEntrega);
-        // lineas.push(`*Envío:* $${valorEntrega.toLocaleString()}`);
-        // lineas.push(`*Total:* $${total.toLocaleString()}`);
-    }else {
+    } else {
         lineas.push(`*Total:* $${totalProductos.toLocaleString()}`);
     }
-    // 5. Pago y entrega
-    lineas.push(`\n*Método de pago:* ${metodoPago}`);
-    if(esDomicilio){
-        lineas.push(`*Entrega:* Domicilio`);
-    }else {
-        lineas.push(`*Entrega:* Recogida en local`);
-    }
 
-    // 6. Datos entrega
-    if(esDomicilio) lineas.push(`\n*Dirección:* ${direccion}`);
+    // 🔹 Pago y entrega
+    lineas.push(`\n*Método de pago:* ${metodoPago}`);
+    lineas.push(
+        esDomicilio
+            ? `*Entrega:* Domicilio`
+            : `*Entrega:* Recogida en local`
+    );
+
+    // 🔹 Datos
+    if (esDomicilio) lineas.push(`\n*Dirección:* ${direccion}`);
     lineas.push(`*Nombre:* ${nombreCliente}`);
     lineas.push(`*Teléfono:* ${telefono}`);
+
     if (notas) lineas.push(`*Notas:* ${notas}`);
 
-    // 5. El "Único" String final
     return lineas.join("\n");
 };
 

@@ -2,22 +2,37 @@ import { state } from "../state.js";
 import { dom, checkoutDom } from "./dom.js";
 import { resetModals } from "../modal.js";
 import { debugLog } from "../debug.js";
-import { getShipping, computeTotal, validarFormulario, getProductById, getTotalQuantityByProductId } from "./actions.js";
+import {
+    getShipping,
+    computeTotal,
+    validarFormulario,
+    getProductById,
+    getTotalQuantityByProductId,
+} from "./actions.js";
 import { getCloudinaryImageUrl } from "../imgHelper.js";
 
-
 const formatPrice = (value) => {
-		try {
-			return new Intl.NumberFormat("es-CO", {
-				style: "currency",
-				currency: "COP",
-				maximumFractionDigits: 0,
-			}).format(Number(value) || 0);
-		} catch {
-			return `$${Math.round(Number(value) || 0).toLocaleString("es-CO")}`;
-		}
+    try {
+        return new Intl.NumberFormat("es-CO", {
+            style: "currency",
+            currency: "COP",
+            maximumFractionDigits: 0,
+        }).format(Number(value) || 0);
+    } catch {
+        return `$${Math.round(Number(value) || 0).toLocaleString("es-CO")}`;
+    }
 };
 
+const closeModal = () => {
+    clearModalCache();
+    history.back();
+};
+
+const closeModalUI = () => {
+    // document.body.classList.remove("no-scroll");
+    // console.log("antiguo removido")
+    clearModalCache();
+};
 
 const direccionLocal = document.getElementById("datos").dataset.direccionlocal;
 const telefono = document.getElementById("datos").dataset.telefono;
@@ -80,9 +95,10 @@ export const renderProductos = () => {
 
 // Actualiza solo el producto que cambió en la carta
 export const renderSingleProducto = (productId) => {
-    const itemCache = productosMap.find((p) => p.productId === productId);
+    const itemCache = productosMap.find(
+        (p) => String(p.productId) === String(productId),
+    );
     if (!itemCache) return;
-
     const cantidad = getTotalQuantityByProductId(productId);
     const hasItems = cantidad > 0;
 
@@ -97,6 +113,105 @@ export const renderSingleProducto = (productId) => {
     refs.cantidad.classList.toggle("cerrado", !hasItems);
 };
 
+// Actualiza solo el producto que cambió en el cartmodal
+export const renderSingleModal = (productId) => {
+    if (!dom.listaPedido) return;
+
+    // 🔹 1. obtener todos los cartItems de ese producto
+    const items = Object.values(state.items).filter(
+        (item) => item.product_id === productId,
+    );
+
+    // 🔹 2. IDs actuales en estado
+    const currentIds = new Set(items.map((item) => String(item.id)));
+    console.log("IDs actuales en estado para productId", productId, currentIds);
+    // 🔹 3. eliminar del DOM los que ya no existen
+    for (const [id, el] of Array.from(modalItemsCache.entries())) {
+        const elProductId = el.dataset.productid;
+
+        if (elProductId !== String(productId)) continue;
+
+        if (!currentIds.has(String(id))) {
+            el.remove();
+            modalItemsCache.delete(id);
+        }
+    }
+
+    // 🔹 4. renderizar / actualizar los actuales
+    items.forEach((item) => {
+        let row = getModalItem(item.id);
+
+        // 🔹 CASO 1: ya existe → actualizar
+        if (row) {
+            row.querySelector(".cantidad").textContent = item.quantity;
+
+            row.querySelector(".precio").textContent =
+                `$${(item.total_price * item.quantity).toLocaleString()}`;
+
+            return;
+        }
+
+        // 🔹 CASO 2: nuevo → crear
+        row =
+            dom.templatePedidoProducto.content.firstElementChild.cloneNode(
+                true,
+            );
+
+        // 🔥 IDs IMPORTANTES
+        row.dataset.id = item.id;
+        row.dataset.productid = item.product_id;
+
+        // 🔹 básicos
+        row.querySelector(".nombre").textContent = item.nombre;
+        row.querySelector(".cantidad").textContent = item.quantity;
+
+        row.querySelector(".precio").textContent =
+            `$${(item.total_price * item.quantity).toLocaleString()}`;
+
+        // 🔹 variantes
+        const variantsEl = row.querySelector(".variantes");
+        if (variantsEl) {
+            if (item.groups.length > 0) {
+                variantsEl.textContent = item.groups
+                    .map(
+                        (g) =>
+                            `${g.nombre}: ${g.selections.map((s) => s.nombre).join(", ")}`,
+                    )
+                    .join(" • ");
+            } else {
+                variantsEl.remove();
+            }
+        }
+
+        // 🔹 imagen
+        const imgEl = row.querySelector(".imagen-producto");
+        if (item.imagen) {
+            imgEl.src = item.imagen;
+            imgEl.alt = item.nombre;
+        } else {
+            row.querySelector("figure")?.remove();
+        }
+
+        // 🔥 BOTONES → cartItem.id
+        row.querySelectorAll("[data-action]").forEach((btn) => {
+            btn.dataset.id = item.id;
+        });
+
+        // 🔹 insertar y cachear
+        dom.listaPedido.appendChild(row);
+        modalItemsCache.set(item.id, row);
+    });
+
+    // 🔹 5. cerrar modal si no hay items
+    if (
+        Object.keys(state.items).length === 0 &&
+        history.state?.modal === "pedido"
+    ) {
+        closeModal();
+    }
+};
+
+// Actualiza el resumen el producto que cambió en la barra
 export const renderBarra = () => {
     // 1. Usamos valores ya calculados en el state
     const { totalItems, totalProductos } = state;
@@ -114,101 +229,6 @@ export const renderBarra = () => {
     // 4. Pintar (Actualización masiva del DOM)
     dom.resumenTotal.forEach((el) => (el.textContent = totalStr));
     dom.resumenCantidad.forEach((el) => (el.textContent = cantidadStr));
-};
-
-const closeModal = () => {
-    clearModalCache();
-    history.back();
-};
-
-const closeModalUI = () => {
-    // document.body.classList.remove("no-scroll");
-    // console.log("antiguo removido")
-    clearModalCache();
-};
-
-export const renderSingleModal = (productId) => {
-    if (!dom.listaPedido) return;
-
-    // 🔹 1. obtener todos los cartItems de ese producto
-    const items = Object.values(state.items).filter(
-        item => item.product_id === productId
-    );
-
-    // 🔹 2. IDs actuales en estado
-    const currentIds = new Set(items.map(item => item.id));
-
-    // 🔹 3. eliminar del DOM los que ya no existen
-    for (const [id, el] of modalItemsCache.entries()) {
-        if (!currentIds.has(id)) {
-            el.remove();
-            modalItemsCache.delete(id);
-        }
-    }
-
-    // 🔹 4. renderizar / actualizar los actuales
-    items.forEach((item) => {
-    let row = getModalItem(item.id);
-
-    // 🔹 CASO 1: ya existe → actualizar
-    if (row) {
-        row.querySelector(".cantidad").textContent = item.quantity;
-
-        row.querySelector(".precio").textContent =
-            `$${(item.total_price * item.quantity).toLocaleString()}`;
-
-        return;
-    }
-
-    // 🔹 CASO 2: nuevo → crear
-    row = dom.templatePedidoProducto.content.firstElementChild.cloneNode(true);
-
-    // 🔥 IDs IMPORTANTES
-    row.dataset.id = item.id;
-    row.dataset.productid = item.product_id;
-
-    // 🔹 básicos
-    row.querySelector(".nombre").textContent = item.nombre;
-    row.querySelector(".cantidad").textContent = item.quantity;
-
-    row.querySelector(".precio").textContent =
-        `$${(item.total_price * item.quantity).toLocaleString()}`;
-
-    // 🔹 variantes
-    const variantsEl = row.querySelector(".variantes");
-    if (variantsEl) {
-        if (item.groups.length > 0) {
-            variantsEl.textContent = item.groups
-                .map(g => `${g.nombre}: ${g.selections.map(s => s.nombre).join(", ")}`)
-                .join(" • ");
-        } else {
-            variantsEl.remove();
-        }
-    }
-
-    // 🔹 imagen
-    const imgEl = row.querySelector(".imagen-producto");
-    if (item.imagen) {
-        imgEl.src = item.imagen;
-        imgEl.alt = item.nombre;
-    } else {
-        row.querySelector("figure")?.remove();
-    }
-
-    // 🔥 BOTONES → cartItem.id
-    row.querySelectorAll("[data-action]").forEach(btn => {
-        btn.dataset.id = item.id;
-    });
-
-    // 🔹 insertar y cachear
-    dom.listaPedido.appendChild(row);
-    modalItemsCache.set(item.id, row);
-});
-
-    // 🔹 5. cerrar modal si no hay items
-    if (Object.keys(state.items).length === 0 && history.state?.modal === "pedido") {
-        closeModal();
-    }
 };
 
 export const renderModal = () => {
@@ -234,50 +254,55 @@ export const renderModal = () => {
     const fragment = document.createDocumentFragment();
 
     itemsArray.forEach((item) => {
-    const row =
-        dom.templatePedidoProducto.content.firstElementChild.cloneNode(true);
+        const row =
+            dom.templatePedidoProducto.content.firstElementChild.cloneNode(
+                true,
+            );
 
-    // 🔥 IDs clave
-    row.dataset.id = item.id;
-    row.dataset.productid = item.product_id;
+        // 🔥 IDs clave
+        row.dataset.id = item.id;
+        row.dataset.productid = item.product_id;
 
-    // 🔹 básicos
-    row.querySelector(".nombre").textContent = item.nombre;
-    row.querySelector(".cantidad").textContent = item.quantity;
+        // 🔹 básicos
+        row.querySelector(".nombre").textContent = item.nombre;
+        row.querySelector(".cantidad").textContent = item.quantity;
 
-    row.querySelector(".precio").textContent =
-        `$${(item.total_price * item.quantity).toLocaleString()}`;
+        row.querySelector(".precio").textContent =
+            `$${(item.total_price * item.quantity).toLocaleString()}`;
 
-    // 🔹 variantes
-    const variantsEl = row.querySelector(".variantes");
-    if (variantsEl) {
-        if (item.groups.length > 0) {
-            variantsEl.textContent = item.groups
-                .map(g => `${g.nombre}: ${g.selections.map(s => s.nombre).join(", ")}`)
-                .join(" • ");
-        } else {
-            variantsEl.remove();
+        // 🔹 variantes
+        const variantsEl = row.querySelector(".variantes");
+        if (variantsEl) {
+            if (item.groups.length > 0) {
+                variantsEl.textContent = item.groups
+                    .map(
+                        (g) =>
+                            `${g.nombre}: ${g.selections.map((s) => s.nombre).join(", ")}`,
+                    )
+                    .join(" • ");
+            } else {
+                variantsEl.remove();
+            }
         }
-    }
 
-    // 🔹 imagen
-    const imgEl = row.querySelector(".imagen-producto");
-    if (item.imagen) {
-        imgEl.src = item.imagen;
-        imgEl.alt = item.nombre;
-    } else {
-        row.querySelector("figure")?.remove();
-    }
+        // 🔹 imagen
+        const imgEl = row.querySelector(".imagen-producto");
+        if (item.imagen) {
+            imgEl.src = item.imagen;
+            imgEl.alt = item.nombre;
+        } else {
+            row.querySelector("figure")?.remove();
+        }
 
-    // 🔥 MUY IMPORTANTE: botones usan cartItem.id
-    row.querySelectorAll("[data-action]").forEach(btn => {
-        btn.dataset.id = item.id;
-    });
+        // 🔥 MUY IMPORTANTE: botones usan cartItem.id
+        row.querySelectorAll("[data-action]").forEach((btn) => {
+            btn.dataset.id = item.id;
+        });
 
-    // 🔹 cache inmediato
-    modalItemsCache.set(item.id, row);
+        // 🔹 cache inmediato
+        modalItemsCache.set(item.id, row);
 
-    fragment.appendChild(row);
+        fragment.appendChild(row);
     });
 
     dom.listaPedido.appendChild(fragment);
@@ -288,22 +313,26 @@ export const renderModal = () => {
 // ===== VARIANTES ===== //
 const renderGroupSelect = (group) => {
     const { id, nombre, min, max, required, allow_repetition, options } = group;
-    
+
     // 🔹 construir options HTML una sola vez
     const optionsHTML = options
-        .filter(opt => opt.activo)
-        .map(opt => `
+        .filter((opt) => opt.activo)
+        .map(
+            (opt) => `
             <option 
                 value="${opt.option_id}" 
                 data-precio="${opt.precio_extra}"
             >
                 ${opt.nombre}${opt.precio_extra ? ` (+$${opt.precio_extra})` : ""}
             </option>
-        `)
+        `,
+        )
         .join("");
 
     // 🔹 construir selects según min
-    const selectsHTML = Array.from({ length: min }, (_, index) => `
+    const selectsHTML = Array.from(
+        { length: min },
+        (_, index) => `
         <div class="variant-select">
             <select
                 name="group-${id}-option-${index}"
@@ -315,7 +344,8 @@ const renderGroupSelect = (group) => {
                 ${optionsHTML}
             </select>
         </div>
-    `).join("");
+    `,
+    ).join("");
 
     // 🔹 contenedor del grupo
     return `
@@ -326,15 +356,15 @@ const renderGroupSelect = (group) => {
             </div>
         </div>
     `;
-
 };
 
 const renderGroupSingle = (group) => {
     const { id, nombre, required, options } = group;
 
     const optionsHTML = options
-        .filter(opt => opt.activo)
-        .map((opt, index) => `
+        .filter((opt) => opt.activo)
+        .map(
+            (opt, index) => `
             <label class="variant-option">
                 <input 
                     type="radio"
@@ -349,7 +379,8 @@ const renderGroupSingle = (group) => {
                     ${opt.precio_extra ? ` (+$${opt.precio_extra})` : ""}
                 </span>
             </label>
-        `)
+        `,
+        )
         .join("");
 
     return `
@@ -366,8 +397,9 @@ const renderGroupCheckbox = (group) => {
     const { id, nombre, required, min, max, options } = group;
 
     const optionsHTML = options
-        .filter(opt => opt.activo)
-        .map(opt => `
+        .filter((opt) => opt.activo)
+        .map(
+            (opt) => `
             <label class="variant-option">
                 <input 
                     type="checkbox"
@@ -380,7 +412,8 @@ const renderGroupCheckbox = (group) => {
                     ${opt.precio_extra ? ` (+$${opt.precio_extra})` : ""}
                 </span>
             </label>
-        `)
+        `,
+        )
         .join("");
 
     return `
@@ -433,9 +466,7 @@ export const renderVariantModal = (product) => {
     dom.variantsAddButton.dataset.productid = product.id;
 
     /* Información de grupos*/
-    const html = product.groups
-        .map(group => renderGroup(group))
-        .join("");
+    const html = product.groups.map((group) => renderGroup(group)).join("");
 
     dom.variantsForm.innerHTML = html;
     dom.variantsAddButton.disabled = !dom.variantsForm.checkValidity();
@@ -455,13 +486,13 @@ export const renderNombreCliente = () => {
     if (state.nombreCliente) {
         checkoutDom.nombreCliente.value = state.nombreCliente;
     }
-}
+};
 
 export const renderTelefono = () => {
     if (state.telefono) {
         checkoutDom.telefono.value = state.telefono;
     }
-}
+};
 
 export const renderEntrega = () => {
     // 1. Sincronizar Radios
@@ -483,78 +514,112 @@ export const renderEntrega = () => {
 
 export const renderMetodoPago = () => {
     if (state.metodoPago) {
-        checkoutDom.metodoPago.querySelector((`option[value="${state.metodoPago}"]`)).selected = true;
+        checkoutDom.metodoPago.querySelector(
+            `option[value="${state.metodoPago}"]`,
+        ).selected = true;
     }
-}
+};
 
 export const renderNotas = () => {
     if (state.notas) {
         checkoutDom.notas.value = state.notas;
     }
-}
+};
 
 // Validar datos para botón
 export const renderValidar = (estado) => {
     const isValid = estado;
     checkoutDom.btnHacerPedido.disabled = !isValid;
-    checkoutDom.estadoFormulario.textContent = isValid ? "" : "Por favor, completa todos los campos correctamente.";
-}
+    checkoutDom.estadoFormulario.textContent = isValid
+        ? ""
+        : "Por favor, completa todos los campos correctamente.";
+};
 
 // Render del resumen
 export const renderResumen = () => {
-    
-    const {tipoEntrega, items , valorEntrega, totalProductos } = state;
+    const { tipoEntrega, items, valorEntrega, totalProductos } = state;
     const isDomicilio = tipoEntrega === "domicilio";
     let total = 0;
 
-    const html = Object.values(items).map(item => {
-        const hasImage = item.imagen && item.imagen.trim() !== '';
-        
-        return hasImage ? 
-            // Template con imagen
-            `<li class="product-item flex gap-2 items-center con-img">
+    const html = Object.values(items)
+    .map((item) => {
+        const hasImage = item.imagen && item.imagen.trim() !== "";
+
+        // 🔥 variantes
+        const variantes = item.groups?.length
+            ? `<p class="product-variants text-sm text-gray-500">
+                ${item.groups
+                    .map(g => `${g.nombre}: ${g.selections.map(s => s.nombre).join(", ")}`)
+                    .join(" • ")}
+               </p>`
+            : "";
+
+        return hasImage
+            ? `
+            <li class="product-item flex gap-2 items-center con-img">
                 <div class="flex relative w-fit">
                     <figure class="h-16 w-16 aspect-square">
                         <img src="${item.imagen}" alt="${item.nombre}" class="rounded object-cover h-full w-full"/>
                     </figure>
-                    <span class="product-badge self-end absolute -top-1 -right-1 bg-black text-white rounded px-2 py-0.5 text-xs text-bold">${item.cantidad}</span>
+                    <span class="product-badge absolute -top-1 -right-1 bg-black text-white rounded px-2 py-0.5 text-xs text-bold">
+                        ${item.quantity}
+                    </span>
                 </div>
+
                 <div>
                     <p class="product-name">${item.nombre}</p>
-                    <p class="product-price text-gray-700">${formatPrice(item.precio)}</p>
+                    ${variantes}
+                    <p class="product-price text-gray-700">
+                        ${formatPrice(item.total_price)}
+                    </p>
                 </div>
-                <p class="product-subtotal ms-auto text-nowrap">${formatPrice(item.precio * item.cantidad)}</p>
-            </li>` :
-            // Template sin imagen
-            `<li class="product-item flex gap-2 items-center sin-img">
+
+                <p class="product-subtotal ms-auto text-nowrap">
+                    ${formatPrice(item.total_price * item.quantity)}
+                </p>
+            </li>
+            `
+            : `
+            <li class="product-item flex gap-2 items-center sin-img">
                 <div class="flex relative w-fit">
                     <div class="h-16 w-16 flex items-center justify-center">
-                        <span class="product-badge bg-black text-white rounded px-2 py-0.5 text-xs text-bold">${item.cantidad}</span>
-                        <span> &nbsp;x </span>
+                        <span class="product-badge bg-black text-white rounded px-2 py-0.5 text-xs text-bold">
+                            ${item.quantity}
+                        </span>
+                        <span>&nbsp;x</span>
                     </div>
                 </div>
+
                 <div>
                     <p class="product-name">${item.nombre}</p>
-                    <p class="product-price text-gray-700">${formatPrice(item.precio)}</p>
+                    ${variantes}
+                    <p class="product-price text-gray-700">
+                        ${formatPrice(item.total_price)}
+                    </p>
                 </div>
-                <p class="product-subtotal ms-auto text-nowrap">${formatPrice(item.precio * item.cantidad)}</p>
-            </li>`;
-    }).join('');
+
+                <p class="product-subtotal ms-auto text-nowrap">
+                    ${formatPrice(item.total_price * item.quantity)}
+                </p>
+            </li>
+            `;
+    })
+    .join("");
 
     // checkoutDom.resumenPedido.innerHTML = html;
     checkoutDom.orderSummaryItems.innerHTML = html;
 
     // Cálculo matemático
     const subtotal = computeTotal(items);
-	const shipping = getShipping(items);
-	const grandTotal = Number(subtotal) + Number(shipping);
+    const shipping = getShipping(items);
+    const grandTotal = Number(subtotal) + Number(shipping);
 
     checkoutDom.orderSummaryProductsTotal.textContent = `${formatPrice(subtotal)}`;
 
     if (isNaN(valorEntrega)) {
-        checkoutDom.orderSummaryShipping.textContent = "El costo de envío se paga al domiciliario";
-    }
-    else {
+        checkoutDom.orderSummaryShipping.textContent =
+            "El costo de envío se paga al domiciliario";
+    } else {
         checkoutDom.orderSummaryShipping.textContent = `${formatPrice(shipping)}`;
     }
 
@@ -563,9 +628,13 @@ export const renderResumen = () => {
 
     // Opcional: Mostrar/Ocultar contenedor de envío según el tipo
     if (isDomicilio) {
-        checkoutDom.orderSummaryShipping?.parentElement?.classList.remove("visually-hidden");
+        checkoutDom.orderSummaryShipping?.parentElement?.classList.remove(
+            "visually-hidden",
+        );
     } else {
-        checkoutDom.orderSummaryShipping?.parentElement?.classList.add("visually-hidden");
+        checkoutDom.orderSummaryShipping?.parentElement?.classList.add(
+            "visually-hidden",
+        );
     }
 
     // if (tipoEntrega === "domicilio") {
@@ -577,7 +646,7 @@ export const renderResumen = () => {
     //     checkoutDom.envioPedidoContainer.classList.add("oculto");    }
     //     total = Number(totalProductos);
     //     checkoutDom.totalPedido.textContent = `$${total.toLocaleString()}`;
-}
+};
 
 const renderForm = () => {
     renderNombreCliente();
@@ -586,9 +655,9 @@ const renderForm = () => {
     renderMetodoPago();
     renderNotas();
     validarFormulario();
-}
+};
 
 export const renderCheckout = () => {
     renderForm();
     renderResumen();
-}
+};
