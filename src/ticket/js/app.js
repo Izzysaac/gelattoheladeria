@@ -47,6 +47,7 @@ window.parseMessage = async function() {
                 errors.push(`Producto ${index + 1}: ${validation.errors.join(', ')}`);
             }
         });
+
         if (validItems.length === 0) {
             showMessage('No se encontraron productos válidos en el mensaje', 'error');
             if (errors.length > 0) {
@@ -127,8 +128,7 @@ window.generatePDF = async function() {
 
 /* Inicializa la aplicación cuando el DOM está listo */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🐔 Aplicación de tickets iniciada');
-    
+    console.log('Aplicación de tickets iniciada');
     // Inicializar UI
     initializeUI();
     

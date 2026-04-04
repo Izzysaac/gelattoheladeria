@@ -136,7 +136,23 @@ function parseBlock(block) {
 
     return [item];
 }
+// function matchScore(a, b) {
+//     const wordsA = a.split(' ');
+//     const wordsB = b.split(' ');
+//     return wordsB.filter(w => wordsA.includes(w)).length;
+// }
 
+// let best = null;
+
+// for (const producto of Object.values(PRODUCTOS_CONFIG)) {
+//     const np = normalizeText(producto.nombre);
+
+//     const score = matchScore(normalizedLine, np);
+
+//     if (score > 0 && (!best || score > best.score)) {
+//         best = { nombre: producto.id, score };
+//     }
+// }
 /*
  * Parsea una línea de WhatsApp estilo:
  * "• 1 x Familiar ($43,000)" => { cantidad: 1, producto: "Familiar" }
@@ -165,19 +181,24 @@ function parseLine(line) {
     // Estrategia: buscar el producto más largo cuyo nombre normalizado esté contenido
     const normalizedLine = normalizeText(productPart);
     let best = null;
-    for (const producto of Object.keys(PRODUCTOS_CONFIG)) {
-        const np = normalizeText(producto);
+
+    
+    for (const producto of Object.values(PRODUCTOS_CONFIG)) {
+        const np = normalizeText(producto.nombre); // ✅ usar nombre real
+
         if (normalizedLine.includes(np)) {
             if (!best || np.length > best.np.length) {
-                best = { nombre: producto, np };
+                best = { nombre: producto.id, np }; // guardas el id
             }
         }
     }
 
-    const productoFinal = best ? best.nombre : productPart;
-    const precio = PRODUCTOS_CONFIG?.[productoFinal]?.precio;
+    const productoFinal = best ? best.nombre : null;
+    const precio = productoFinal ? PRODUCTOS_CONFIG[productoFinal].precio : null;
 
     items.push({
+        producto_id: productoFinal, // ✅ clave técnica
+        nombre: PRODUCTOS_CONFIG[productoFinal]?.nombre || productPart, // ✅ fallback
         producto: productoFinal,
         cantidad,
         precio: typeof precio === 'number' ? precio : 0,
@@ -212,18 +233,6 @@ export function parseWhatsAppMessage(message) {
             allItems.push(...parsed);
         });
 
-        // for (const line of lines) {
-        //     // Saltar líneas que parecen saludos o despedidas
-        //     const normalized = normalizeText(line);
-        //     if (normalized.match(/^(hola|buenos|buenas|gracias|saludos|hasta|chao|bye)/)) {
-        //         continue;
-        //     }
-            
-        //     const lineItems = parseLine(line);
-        //     allItems.push(...lineItems);
-        // }
-        
-        // Consolidar productos duplicados
         const consolidated = {};
         allItems.forEach(item => {
             const key = normalizeText(item.producto) + "|" + JSON.stringify(item.variants || []);
@@ -235,7 +244,7 @@ export function parseWhatsAppMessage(message) {
         });
         
         const finalItems = Object.values(consolidated);
-        console.log(finalItems);
+        // console.log(finalItems);
         if (finalItems.length === 0) {
             return {
                 success: false,
@@ -264,11 +273,20 @@ export function parseWhatsAppMessage(message) {
 /* Valida y limpia un item de pedido */
 export function validateOrderItem(item) {
     const errors = [];
-    
-    if (!item.producto || typeof item.producto !== 'string') {
+
+    const productoId = item.producto || item.producto_id;
+
+    const productoConfig = PRODUCTOS_CONFIG[productoId];
+
+    // 🔹 Validaciones básicas
+    if (!productoId || typeof productoId !== 'string') {
         errors.push('Producto requerido');
     }
-    
+
+    if (!productoConfig) {
+        errors.push(`Producto no existe: ${productoId}`);
+    }
+
     if (!item.cantidad || isNaN(item.cantidad) || item.cantidad <= 0) {
         errors.push('Cantidad debe ser un número mayor a 0');
     }
@@ -277,30 +295,82 @@ export function validateOrderItem(item) {
         errors.push('Precio debe ser un número mayor o igual a 0');
     }
 
-    // 🔹 NORMALIZAR VARIANTS (nuevo)
+    // 🔥 NORMALIZAR VARIANTS (CLAVE)
     let variants = [];
 
-    if (Array.isArray(item.variants)) {
-        variants = item.variants
-            .filter(v => v && v.grupo) // limpieza básica
-            .map(v => ({
-                grupo: String(v.grupo).trim(),
-                opciones: Array.isArray(v.opciones)
-                    ? v.opciones.map(o => String(o).trim()).filter(Boolean)
-                    : []
-            }));
+    if (Array.isArray(item.variants) && productoConfig?.groups) {
+
+        variants = item.variants.map(v => {
+            if (!v || !v.grupo) return null;
+
+            const grupoNombre = String(v.grupo).trim().toLowerCase();
+
+            // 🔹 encontrar grupo en config
+            const group = productoConfig.groups.find(g =>
+                g.nombre.toLowerCase() === grupoNombre
+            );
+
+            if (!group) {
+                errors.push(`Grupo no válido: ${v.grupo}`);
+                return null;
+            }
+
+            // 🔹 mapear opciones
+            const option_ids = (Array.isArray(v.opciones) ? v.opciones : [])
+                .map(opNombre => {
+                    const opNorm = String(opNombre).trim().toLowerCase();
+
+                    const option = group.options.find(o =>
+                        o.nombre.toLowerCase() === opNorm
+                    );
+
+                    if (!option) {
+                        errors.push(`Opción inválida "${opNombre}" en grupo "${group.nombre}"`);
+                        return null;
+                    }
+
+                    return option.option_id;
+                })
+                .filter(Boolean);
+
+            return {
+                group_id: group.id,
+                option_ids
+            };
+        }).filter(Boolean);
     }
+    // 🔥 VALIDAR reglas de grupo (min/max/required)
+    // if (productoConfig?.groups) {
+    //     for (const group of productoConfig.groups) {
+    //         const selected = variants.find(v => v.group_id === group.id);
+
+    //         const count = selected?.option_ids?.length || 0;
+
+    //         if (group.required && count === 0) {
+    //             errors.push(`Grupo requerido: ${group.nombre}`);
+    //         }
+
+    //         if (group.min && count < group.min) {
+    //             errors.push(`Mínimo ${group.min} en ${group.nombre}`);
+    //         }
+
+    //         if (group.max && count > group.max) {
+    //             errors.push(`Máximo ${group.max} en ${group.nombre}`);
+    //         }
+    //     }
+    // }
 
     return {
         isValid: errors.length === 0,
-        errors: errors,
+        errors,
         item: {
-            producto: String(item.producto).trim(),
-            cantidad: parseFloat(item.cantidad) || 0,
-            unidad: 'unidad',
-            precio: parseFloat(item.precio) || 0,
+            producto_id: productoId,
+            nombre: productoConfig?.nombre || null,
 
-            // 🔥 NUEVO
+            cantidad: Number(item.cantidad) || 0,
+            precio: Number(item.precio) || 0,
+            unidad: 'unidad',
+
             variants
         }
     };

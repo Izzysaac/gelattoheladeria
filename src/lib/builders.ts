@@ -48,7 +48,7 @@ export const buildEventosPageData = ({ tenant, info, eventos, estilos }) => {
 export const buildTicketPageData = ({ tenant, info, menu, menuMap }) => {
     return {
         menu: buildTicket(menu, info),
-        menuMap: menuMap,
+        menuMap: buildTicketMap(menuMap, info),
     };
 };
 
@@ -351,6 +351,12 @@ const buildTicket = (menu, info) => {
         return acc;
     }, {valorEntrega});
 };
+
+const buildTicketMap = (menuMap, info) => {
+    const valorEntrega = info.valorEntrega;
+    return valorEntrega ? { ...menuMap, valorEntrega } : menuMap;
+};
+
 
 const buildCategorias = (menu) => {
     const categorias = new Set();

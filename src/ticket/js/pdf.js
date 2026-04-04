@@ -1,5 +1,8 @@
 // pdf.js - Generador de PDF usando html2pdf.js
 
+// Importar configuración real de productos
+import { PRODUCTOS_CONFIG } from "../products-import.js";
+
 
 /* ====== HELPERS ====== */
 async function loadHtml2Pdf() {
@@ -38,6 +41,31 @@ function formatDate(date) {
         hour: '2-digit',
         minute: '2-digit'
     }).format(date);
+}
+
+/* Calcula el precio total de un item incluyendo variantes */
+function calculateItemPrice(item) {
+    const productoConfig = PRODUCTOS_CONFIG[item.producto_id];
+    if (!productoConfig) return item.precio || 0;
+
+    let totalPrice = productoConfig.precio || 0;
+
+    // Sumar precio_extra de variantes seleccionadas
+    if (item.variants && productoConfig.groups) {
+        item.variants.forEach(variant => {
+            const group = productoConfig.groups.find(g => g.id === variant.group_id);
+            if (group && variant.option_ids) {
+                variant.option_ids.forEach(optionId => {
+                    const option = group.options.find(o => o.option_id === optionId);
+                    if (option && option.precio_extra) {
+                        totalPrice += option.precio_extra;
+                    }
+                });
+            }
+        });
+    }
+
+    return totalPrice;
 }
 
 /* ====== TEMPLATE LOADER ====== */
@@ -95,16 +123,41 @@ async function loadAndPopulateTemplate(orderData) {
         tbody.innerHTML = ''; // Clear existing content
         
         orderData.items.forEach((item) => {
-            const subtotal = item.cantidad * item.precio;
+            const itemPrice = calculateItemPrice(item);
+            const subtotal = item.cantidad * itemPrice;
             const row = doc.createElement('tr');
+        
+            // Construir el nombre del producto con variantes
+            let productDisplay = item.nombre || item.producto || '';
+            
+            if (item.variants && item.variants.length) {
+                const productoConfig = PRODUCTOS_CONFIG[item.producto_id];
+                if (productoConfig?.groups) {
+                    const variantLines = item.variants.map(variant => {
+                        const group = productoConfig.groups.find(g => g.id === variant.group_id);
+                        if (group && variant.option_ids) {
+                            const optionNames = variant.option_ids.map(optionId => {
+                                const option = group.options.find(o => o.option_id === optionId);
+                                return option ? option.nombre : optionId;
+                            }).filter(Boolean);
+                            return `${group.nombre}: ${optionNames.join(', ')}`;
+                        }
+                        return '';
+                    }).filter(Boolean);
+                    
+                    if (variantLines.length) {
+                        productDisplay += `<br><small>${variantLines.join('<br>')}</small>`;
+                    }
+                }
+            }
         
             row.innerHTML = `
                 <td class="cantidad">${item.cantidad}</td>
-                <td class="product-name">${item.producto.toUpperCase()}${item.variants && item.variants.length ? `<br><small style="color: #666;">${item.variants.map(v => `${v.grupo}: ${v.opciones.join(', ')}`).join('<br>')}</small>` : ''}</td>
+                <td class="product-name">${productDisplay.toUpperCase()}</td>
                 <td class="precio-unitario">
                     <div>
                         <span>$</span>
-                        <span>${formatCurrency(item.precio)}</span>
+                        <span>${formatCurrency(itemPrice)}</span>
                     </div>
                 </td>
                 <td class="subtotal">
@@ -116,7 +169,6 @@ async function loadAndPopulateTemplate(orderData) {
             `;
             
             tbody.appendChild(row);
-            console.log(tbody);
         });
         
         // Populate totals
