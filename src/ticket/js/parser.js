@@ -22,7 +22,8 @@ function serializeVariants(variants) {
         .join(';');
 }
 
-
+/* Detecta si una línea es una línea de producto (comienza con •) */
+function isProductLine(line) {
     return line.trim().startsWith("•");
 }
 
@@ -149,9 +150,9 @@ function parseLine(line) {
     items.push({
         producto_id: productoFinal, // ✅ clave técnica
         nombre: PRODUCTOS_CONFIG[productoFinal]?.nombre || productPart, // ✅ fallback
-        producto: productoFinal,
         cantidad,
         precio: typeof precio === 'number' ? precio : 0,
+        variants: [] // 🔹 inicializar array vacío
     });
 
     return items;
@@ -183,13 +184,18 @@ export function parseWhatsAppMessage(message) {
             allItems.push(...parsed);
         });
 
+        // 🔥 Consolidar items con mismo producto_id y variantes idénticas
         const consolidated = {};
         allItems.forEach(item => {
-            const key = (item.producto_id || '') + "|" + serializeVariants(item.variants);
+            const variantKey = serializeVariants(item.variants || []);
+            const key = `${item.producto_id}|${variantKey}`;
             if (consolidated[key]) {
                 consolidated[key].cantidad += item.cantidad;
             } else {
-                consolidated[key] = { ...item };
+                consolidated[key] = { 
+                    ...item,
+                    variants: item.variants || []
+                };
             }
         });
         
@@ -328,11 +334,9 @@ export function validateOrderItem(item) {
 
 /* Obtiene configuración de productos disponibles */
 export function getAvailableProducts() {
-    return Object.keys(PRODUCTOS_CONFIG).map(producto => ({
-        nombre: producto,
-        precio: PRODUCTOS_CONFIG[producto].precio
+    return Object.values(PRODUCTOS_CONFIG).map(producto => ({
+        id: producto.id,
+        nombre: producto.nombre,
+        precio: producto.precio
     }));
 }
-
-// Exportar para uso en tests
-export { PRODUCTOS_CONFIG, normalizeText };
