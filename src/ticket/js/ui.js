@@ -1,7 +1,7 @@
 
 // ui.js - Manejo de interfaz de usuario para tabla editable y cálculos
-import { DeliveryAction } from "@cloudinary/url-gen/actions/delivery/DeliveryAction";
 import { PRODUCTOS_CONFIG, DELIVERY } from "../products-import.js";
+import { formatCurrency, calculateItemPrice, escapeHtml } from "./calculations.js";
 
 let currentOrder = {
     items: [],
@@ -36,16 +36,6 @@ export function clearMessages() {
     document.getElementById('messages').innerHTML = '';
 }
 
-/* ========== FORMATEO DE DATOS ========== */
-/* Formatea número como moneda colombiana */
-function formatCurrency(amount) {
-    return new Intl.NumberFormat('es-CO', {
-        // style: 'currency',
-        currency: 'COP',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-    }).format(amount);
-}
 
 function getDeliveryType() {
     return document.getElementById('clientDeliveryType').value;
@@ -63,38 +53,6 @@ function displayDelivery(boolean, envio) {
     }
 }
 
-document.getElementById('clientDeliveryType').addEventListener('change', function() {
-    calculateTotals();
-});
-
-document.getElementById('envio').addEventListener('change', function() {
-    calculateTotals();
-});
-
-/* Calcula el precio total de un item incluyendo variantes */
-function calculateItemPrice(item) {
-    const productoConfig = PRODUCTOS_CONFIG[item.producto_id];
-    if (!productoConfig) return item.precio || 0;
-
-    let totalPrice = productoConfig.precio || 0;
-
-    // Sumar precio_extra de variantes seleccionadas
-    if (item.variants && productoConfig.groups) {
-        item.variants.forEach(variant => {
-            const group = productoConfig.groups.find(g => g.id === variant.group_id);
-            if (group && variant.option_ids) {
-                variant.option_ids.forEach(optionId => {
-                    const option = group.options.find(o => o.option_id === optionId);
-                    if (option && option.precio_extra) {
-                        totalPrice += option.precio_extra;
-                    }
-                });
-            }
-        });
-    }
-
-    return totalPrice;
-}
 
 /* Calcula totales del pedido */
 function calculateTotals() {
@@ -132,13 +90,13 @@ function renderGroupCheckboxTable(group, selectedVariant, rowIndex) {
 
     return `
         <div class="variant-group" data-group-id="${group.id}">
-            <small>${group.nombre}</small>
+            <small>${escapeHtml(group.nombre)}</small>
             ${group.options.filter(o => o.activo).map(opt => `
                 <label>
                     <input type="checkbox"
                         value="${opt.option_id}"
                         ${selectedIds.includes(opt.option_id) ? 'checked' : ''}/>
-                    ${opt.nombre}
+                    ${escapeHtml(opt.nombre)}
                 </label>
             `).join('')}
         </div>
@@ -150,14 +108,14 @@ function renderGroupSingleTable(group, selectedVariant, rowIndex) {
     const selectedId = selectedVariant?.option_ids?.[0];
     return `
         <div class="variant-group">
-            <small>${group.nombre}</small>
+            <small>${escapeHtml(group.nombre)}</small>
             ${group.options.filter(o => o.activo).map(opt => `
                 <label>
                     <input type="radio"
                         name="group-${group.id}-${rowIndex}"
                         value="${opt.option_id}"
                         ${selectedId === opt.option_id ? 'checked' : ''}/>
-                    ${opt.nombre}
+                    ${escapeHtml(opt.nombre)}
                 </label>
             `).join('')}
         </div>
@@ -177,7 +135,7 @@ function renderGroupSelectTable(group, selectedVariant, rowIndex) {
                     value="${opt.option_id}" 
                     ${selectedId === opt.option_id ? 'selected' : ''}
                 >
-                    ${opt.nombre}
+                    ${escapeHtml(opt.nombre)}
                 </option>
             `).join('');
 
@@ -194,7 +152,7 @@ function renderGroupSelectTable(group, selectedVariant, rowIndex) {
 
     return `
         <div class="variant-group">
-            <small>${group.nombre}</small>
+            <small>${escapeHtml(group.nombre)}</small>
             ${selectsHTML}
         </div>
     `;
@@ -216,7 +174,7 @@ function createTableRow(item, index) {
     // 🔹 Select de productos (ID correcto)
     const productOptions = Object.values(PRODUCTOS_CONFIG).map(p => `
         <option value="${p.id}" ${item.producto_id === p.id ? 'selected' : ''}>
-            ${p.nombre}
+            ${escapeHtml(p.nombre)}
         </option>
     `).join('');
 
@@ -624,6 +582,13 @@ export function initializeUI() {
     }
     // Envio
     document.getElementById('envio').value = DELIVERY;
+    // Recalcular totales al cambiar tipo de entrega o valor de envío
+    document.getElementById('clientDeliveryType').addEventListener('change', function() {
+        calculateTotals();
+    });
+    document.getElementById('envio').addEventListener('change', function() {
+        calculateTotals();
+    });
 }
 
 /* Obtiene el pedido actual para exportar */

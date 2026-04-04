@@ -66,8 +66,8 @@ window.parseMessage = async function() {
         const phoneMatch = message.match(/\*Tel[eé]fono:?\*\s*([^\n\r]*)/i);
         const notesMatch = message.match(/\*Notas:?\*\s*([^\n\r]*)/i);
         if (paymentMatch) document.getElementById('clientPayment').value = paymentMatch[1].trim();
-        if (deliveryType[1] == "Domicilio") document.getElementById('clientDeliveryType').value = "Domicilio";
-        if (deliveryType[1] == "Recogida en local") document.getElementById('clientDeliveryType').value = "Recogida en local";
+        if (deliveryType?.[1] == "Domicilio") document.getElementById('clientDeliveryType').value = "Domicilio";
+        if (deliveryType?.[1] == "Recogida en local") document.getElementById('clientDeliveryType').value = "Recogida en local";
         if (addressMatch) document.getElementById('clientAddress').value = addressMatch[1].trim();
         if (nameMatch) document.getElementById('clientName').value = nameMatch[1].trim();
         if (phoneMatch) document.getElementById('clientPhone').value = phoneMatch[1].trim();
