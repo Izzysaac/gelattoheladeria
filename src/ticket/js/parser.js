@@ -12,68 +12,17 @@ function normalizeText(text) {
         .trim();
 }
 
-/* Convierte números escritos en texto a dígitos */
-function textToNumber(text) {
-    const numberWords = {
-        'un': 1, 'una': 1, 'uno': 1,
-        'dos': 2, 'tres': 3, 'cuatro': 4, 'cinco': 5,
-        'seis': 6, 'siete': 7, 'ocho': 8, 'nueve': 9, 'diez': 10,
-        'once': 11, 'doce': 12, 'trece': 13, 'catorce': 14, 'quince': 15,
-        'dieciseis': 16, 'diecisiete': 17, 'dieciocho': 18, 'diecinueve': 19, 'veinte': 20
-    };
-    
-    const normalized = normalizeText(text);
-    return numberWords[normalized] || null;
+
+/* Serializa variantes de forma determinista para clave de consolidación */
+function serializeVariants(variants) {
+    if (!variants || !variants.length) return '';
+    return variants
+        .map(v => `${v.group_id}:${(v.option_ids || []).sort().join(',')}`)
+        .sort()
+        .join(';');
 }
 
-/* Extrae números del texto (dígitos o palabras) */
-function extractNumbers(text) {
-    const numbers = [];
-    
-    // Buscar números en dígitos (incluyendo decimales)
-    const digitMatches = text.match(/\d+(?:[.,]\d+)?/g);
-    if (digitMatches) {
-        digitMatches.forEach(match => {
-            const num = parseFloat(match.replace(',', '.'));
-            if (!isNaN(num)) {
-                numbers.push({
-                    value: num,
-                    original: match,
-                    position: text.indexOf(match)
-                });
-            }
-        });
-    }
-    
-    // Buscar números en palabras
-    const words = text.split(/\s+/);
-    words.forEach((word, index) => {
-        const num = textToNumber(word);
-        if (num !== null) {
-            numbers.push({
-                value: num,
-                original: word,
-                position: text.indexOf(word),
-                isWord: true
-            });
-        }
-    });
-    
-    return numbers.sort((a, b) => a.position - b.position);
-}
 
-/* Identifica el producto basado en coincidencia exacta de nombre (ignorando mayúsculas/minúsculas y acentos) */
-function identifyProduct(text) {
-    const normalized = normalizeText(text);
-    for (const producto of Object.keys(PRODUCTOS_CONFIG)) {
-        if (normalizeText(producto) === normalized) {
-            return producto;
-        }
-    }
-    return null;
-}
-
-function isProductLine(line) {
     return line.trim().startsWith("•");
 }
 
@@ -193,8 +142,9 @@ function parseLine(line) {
         }
     }
 
-    const productoFinal = best ? best.nombre : null;
-    const precio = productoFinal ? PRODUCTOS_CONFIG[productoFinal].precio : null;
+    if (!best) return items; // No agregar items sin producto válido
+    const productoFinal = best.nombre;
+    const precio = PRODUCTOS_CONFIG[productoFinal]?.precio ?? 0;
 
     items.push({
         producto_id: productoFinal, // ✅ clave técnica
@@ -235,7 +185,7 @@ export function parseWhatsAppMessage(message) {
 
         const consolidated = {};
         allItems.forEach(item => {
-            const key = normalizeText(item.producto) + "|" + JSON.stringify(item.variants || []);
+            const key = (item.producto_id || '') + "|" + serializeVariants(item.variants);
             if (consolidated[key]) {
                 consolidated[key].cantidad += item.cantidad;
             } else {
@@ -385,4 +335,4 @@ export function getAvailableProducts() {
 }
 
 // Exportar para uso en tests
-export { PRODUCTOS_CONFIG, normalizeText, extractNumbers, identifyProduct };
+export { PRODUCTOS_CONFIG, normalizeText };

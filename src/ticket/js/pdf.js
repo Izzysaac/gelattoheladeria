@@ -2,6 +2,7 @@
 
 // Importar configuración real de productos
 import { PRODUCTOS_CONFIG } from "../products-import.js";
+import { formatCurrency, calculateItemPrice, escapeHtml } from "./calculations.js";
 
 
 /* ====== HELPERS ====== */
@@ -24,14 +25,6 @@ async function loadHtml2Pdf() {
     });
 }
 
-function formatCurrency(amount) {
-    return new Intl.NumberFormat('es-CO', {
-        // style: 'currency',
-        currency: 'COP',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-    }).format(amount);
-}
 
 function formatDate(date) {
     return new Intl.DateTimeFormat('es-CO', {
@@ -41,31 +34,6 @@ function formatDate(date) {
         hour: '2-digit',
         minute: '2-digit'
     }).format(date);
-}
-
-/* Calcula el precio total de un item incluyendo variantes */
-function calculateItemPrice(item) {
-    const productoConfig = PRODUCTOS_CONFIG[item.producto_id];
-    if (!productoConfig) return item.precio || 0;
-
-    let totalPrice = productoConfig.precio || 0;
-
-    // Sumar precio_extra de variantes seleccionadas
-    if (item.variants && productoConfig.groups) {
-        item.variants.forEach(variant => {
-            const group = productoConfig.groups.find(g => g.id === variant.group_id);
-            if (group && variant.option_ids) {
-                variant.option_ids.forEach(optionId => {
-                    const option = group.options.find(o => o.option_id === optionId);
-                    if (option && option.precio_extra) {
-                        totalPrice += option.precio_extra;
-                    }
-                });
-            }
-        });
-    }
-
-    return totalPrice;
 }
 
 /* ====== TEMPLATE LOADER ====== */
@@ -128,7 +96,7 @@ async function loadAndPopulateTemplate(orderData) {
             const row = doc.createElement('tr');
         
             // Construir el nombre del producto con variantes
-            let productDisplay = item.nombre || item.producto || '';
+            let productDisplay = escapeHtml(item.nombre || item.producto || '');
             
             if (item.variants && item.variants.length) {
                 const productoConfig = PRODUCTOS_CONFIG[item.producto_id];
@@ -138,9 +106,9 @@ async function loadAndPopulateTemplate(orderData) {
                         if (group && variant.option_ids) {
                             const optionNames = variant.option_ids.map(optionId => {
                                 const option = group.options.find(o => o.option_id === optionId);
-                                return option ? option.nombre : optionId;
+                                return option ? escapeHtml(option.nombre) : optionId;
                             }).filter(Boolean);
-                            return `${group.nombre}: ${optionNames.join(', ')}`;
+                            return `${escapeHtml(group.nombre)}: ${optionNames.join(', ')}`;
                         }
                         return '';
                     }).filter(Boolean);
