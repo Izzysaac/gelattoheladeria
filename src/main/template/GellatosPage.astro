@@ -1,0 +1,97 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import HeaderRouter from "@headers/HeaderRouter.astro";
+
+import InfoIcon from "@assets/information.svg";
+import Informacion from "@components/sections/Informacion.astro";
+
+import Footer from "@layoutsFooter.astro";
+import ButtonList from "@components/sections/ButtonList.astro";
+import Reviews from "@features/Reviews.astro";
+import { getCldImageUrl } from "node_modules/astro-cloudinary/src/helpers/getCldImageUrl";
+
+const { tenant, head, styles, header, buttonsList, footer, reviews } =
+    Astro.props;
+
+const {
+    titulo,
+    descripcion,
+    logo,
+    banner,
+    background,
+    auxiliarImg,
+    horario,
+    socials,
+    direccion,
+    telefono,
+    correo,
+} = header;
+
+
+
+const bg = getCldImageUrl({ src: background });
+---
+
+<BaseLayout head={head} styles={styles}>
+    <header
+    id="mainHeader"
+    class="m-auto mb-2 flex min-h-full max-w-125 flex-col items-center text-(--main-text) background-image"
+    >
+        <img src={auxiliarImg} class="w-9/12 self-start" alt={`Logotipo de ${titulo}`} />
+        <h1 id="titulo" class="visually-hidden">{titulo}</h1>
+        <img src={logo.logo} class="w-11/12"/>
+        <div class="w-full mt-4 flex items-center flex-col">
+            <ButtonList {...buttonsList} pagina="main" />
+            <div>
+                <p class="flex w-full px-2.5 items-center text-xs uppercase text-(--brand) text-semibold">
+                    <span id="statusLight"
+                class="block h-4.5 w-4.5 rounded-full border-3 border-(--color-background) animate-pulse"></span>
+                    <span id="statusMsg"
+                    data-horario={JSON.stringify(horario)}
+                    class="">Cargando ...</span>
+                </p>
+            </div>
+        </div>
+        <Informacion {horario} {socials} {direccion} {telefono} {correo} />
+
+        <img src={auxiliarImg} class="w-9/12 self-end rotate-180 mt-auto" alt={`Logotipo de ${titulo}`} />
+    </header>
+    {
+        tenant.features.reviews && reviews.userRatingCount > 0 && (
+            <Reviews {...reviews} />
+        )
+    }
+    <!-- <Footer {...footer} class:list={"mt-26"} /> -->
+
+    <script src="../../scripts/modal.js"></script>
+    <script src="../../headers/scripts/information.js"></script>
+    <script src="../../headers/scripts/status/index.js"></script>
+</BaseLayout>
+
+<style define:vars={{bg}}>
+    @import "tailwindcss";
+
+    .background-image {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+
+    .open {
+        @apply bg-green-500;
+    }
+    .closed {
+        @apply bg-red-500;
+    }
+    .closing-soon {
+        @apply bg-orange-500;
+    }
+    .opening-soon {
+        @apply bg-blue-500;
+    }
+    /* Status light on logo */
+    .anchor-img {
+        anchor-name: --logo-image;
+    }
+</style>

@@ -8,7 +8,7 @@ import { toSlugPage } from "@scripts/utils.js";
 {
     pagina === "main" &&
         
-        <nav class="w-full max-w-125 m-auto mb-6 mt-6 px-2.5 text-(--main-buttons-text)">
+        <nav class="w-11/12 max-w-125 m-auto mb-6 mt-6 px-2.5 text-(--main-buttons-text)">
             <ul class="flex flex-col justify-center gap-4">
                 {
                     botones.map((boton) => (
@@ -16,7 +16,7 @@ import { toSlugPage } from "@scripts/utils.js";
                             <a
                                 href={boton.url}
                                 rel="noopener noreferrer"
-                                class="text-bold block w-full rounded-lg bg-(--main-buttons) px-3 py-4 text-center active:opacity-80 btn-list"
+                                class="text-bold block w-full rounded-full bg-(--main-buttons) px-3 py-4 text-center active:opacity-80 btn-list"
                             >
                                 {boton.valor}
                             </a>
@@ -25,7 +25,7 @@ import { toSlugPage } from "@scripts/utils.js";
                 }
                 <li>
                             <button id="btnListInfo"
-                                class="text-bold block w-full rounded-lg bg-(--main-buttons) px-3 py-4 text-center active:opacity-80 btn-list"
+                                class="text-bold block w-full rounded-full bg-(--main-buttons) px-3 py-4 text-center active:opacity-80 btn-list"
                             >
                                 Información
                             </button>

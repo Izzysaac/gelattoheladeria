@@ -102,20 +102,23 @@ const { userRatingCount, rating, reviewsUrl, reviews, style } = Astro.props;
     {
         (style == "classic") && 
             <header id="google-reviews" class="pointer-events-auto mb-2 flex flex-col items-center border-b-2 border-b-(--brand) pb-2">
-                <h2 class="text-xl">Reseñas</h2>
-                <p class="h-fit flex gap-1 items-center justify-center text-center">
+                <h2 class="text-xl flex flex-col items-center justify-center text-center">
+                    <span class="text-title text-white text-4xl">Nuestras</span>
+                    <span class="text-(--accent) text-bold text-2xl"> Reseñas </span>
+                </h2>
+                <p class="h-fit flex gap-1 items-center justify-center text-center text-(--accent)">
                     <span class="text-bold">{rating}</span>
                     <span class="flex gap-0.5">
                         <RenderStars rating={rating} width="18" height="18" style="one-classic"/>
                     </span>
-                    <span class=""> {userRatingCount} opiniones</span>
+                    <span class="text-semibold"> {userRatingCount} opiniones</span>
                 </p>
             </header>
         
             <div class="wrapper flex w-full max-w-125 snap-x snap-mandatory gap-5 overflow-x-scroll">
                 {
                     reviews.map((review: any, i) => (
-                        <article class="card snap-center w-12/12 max-w-125 shrink-0 box-border flex flex-col text-left items-start gap-5 rounded-lg px-8 py-4 bg-(--brand) text-[13px] h-fit">
+                        <article class="card snap-center w-12/12 max-w-125 shrink-0 box-border flex flex-col text-left items-start gap-5 rounded-lg px-8 py-4 bg-(--accent) text-[13px] h-fit text-white">
                             <header class="contents">
                                 <div class="order-last flex flex-col justify-center gap-0.5 items-center">
                                     <p class="flex flex-col">

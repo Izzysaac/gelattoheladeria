@@ -1,8 +1,10 @@
 html[data-theme="gelattospitalito"] {
 
     /* Base */
-    --brand: #bc4e96;
-    --accent: #def2f5;
+    --brand: #9A0BE1;
+    --accent: rgba(245, 117, 204, 0.86);
+    --background-color: #6DE2E9;
+    --buttons: #9A0BE1;
 
     --neutral-0: #f3f3f3;
     --neutral-500: #292929;
@@ -10,11 +12,11 @@ html[data-theme="gelattospitalito"] {
 
     /* Main */
     --main-text: var(--neutral-900);
-    --main-buttons: var(--brand);
+    --main-buttons: var(--buttons);
     --main-buttons-text: var(--neutral-0);
 
     /* App */
-    --color-background: var(--accent);
+    --color-background: var(--background-color);
     --color-text: var(--neutral-900);
     --color-border: hsl(from var(--brand) h s 50%);
 

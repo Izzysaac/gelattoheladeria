@@ -1,12 +1,14 @@
 ---
 import MainDefault from "@main/template/MainPage.astro";
 import MainBgImage from "@main/template/BgImgPage.astro";
+import MainGellatos from "@main/template/GellatosPage.astro";
 
 const { tenant, data } = Astro.props;
 
 const mains = {
     default: MainDefault,
-    "bg-image": MainBgImage
+    "bg-image": MainBgImage,
+    "gellatos": MainGellatos
 };
 
 const TenantMain = mains[tenant.layout.mainLayout] ?? MainDefault;
