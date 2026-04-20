@@ -11,7 +11,7 @@ const { menuPorCategoria, modo } = Astro.props;
     {
         Object.entries(menuPorCategoria).map(([categoria, items]) => (
             <div class="grupo" id={categoria}>
-                <h2 class="mt-6 text-xl text-bold">{categoria}</h2>
+                <h2 class="mt-6 text-xl text-bold text-(--text-brand)">{categoria}</h2>
                 <ul>
                     {(items as any)
                         .filter((item) => item.activo)
@@ -27,7 +27,7 @@ const { menuPorCategoria, modo } = Astro.props;
                                 >
                                     <div class="informacion flex w-full flex-col self-stretch">
                                         <div class="flex justify-between gap-2">
-                                            <h3 class="text-semibold">{item.nombre}</h3>
+                                            <h3 class="text-semibold text-(--text-brand)">{item.nombre}</h3>
                                             <p class="mr-2 text-nowrap">
                                                 {formatPrice(item.precio)}
                                             </p>
@@ -101,7 +101,7 @@ const { menuPorCategoria, modo } = Astro.props;
 <style>
     @import "tailwindcss";
     .grupo {
-        scroll-margin-top: 5rem; /* altura del nav */
+        scroll-margin-top: 108px; /* altura del nav */
     }
     button {
         @apply px-1.5 py-1.5 cursor-pointer rounded-full active:bg-(--color-active-secondary);

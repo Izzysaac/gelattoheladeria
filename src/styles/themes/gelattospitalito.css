@@ -3,10 +3,14 @@ html[data-theme="gelattospitalito"] {
     /* Base */
     --brand: #9A0BE1;
     --accent: rgba(245, 117, 204, 0.86);
-    --background-color: #6DE2E9;
+    --text-brand: #933E7B;
+    /* --background-color: #6DE2E9; */
+    --background-color: #def2f5;
+
     --buttons: #9A0BE1;
 
     --neutral-0: #f3f3f3;
+    --neutral-200: #292929c2;
     --neutral-500: #292929;
     --neutral-900: #090909;
 
@@ -14,22 +18,23 @@ html[data-theme="gelattospitalito"] {
     --main-text: var(--neutral-900);
     --main-buttons: var(--buttons);
     --main-buttons-text: var(--neutral-0);
+    --main-background: #6DE2E9;
 
     /* App */
     --color-background: var(--background-color);
     --color-text: var(--neutral-900);
-    --color-border: hsl(from var(--brand) h s 50%);
+    --color-border: hsl(from var(--text-brand) h s 50%);
 
     /* Acciones */
     --color-primary: var(--brand);
     --color-on-primary: var(--neutral-0);
-    --color-secondary: oklch(from var(--brand) calc(l + 0.25) c h);
+    --color-secondary: var(--accent);
     /* --color-on-secondary: color de iconos */
     --color-active-secondary: oklch(from var(--brand) calc(l + 0.15) c h);
 
     /* Menu Navigation */
     --color-navmenu-category: var(--neutral-900);
-    --color-navmenu-active:  var(--neutral-500);
+    --color-navmenu-active:  var(--text-brand);
 
     /* Badges */
     --bg-badge: var(--accent);

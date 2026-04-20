@@ -3,19 +3,21 @@
 
 ---
 
-<dialog id="variants-dialog">
-    <div>
+<dialog id="variants-dialog" class="text-white mx-auto mt-auto max-w-125 bg-transparent">
+    <div class="mt-auto bg-(--text-brand) rounded-t-3xl p-2.5 flex flex-col gap-4">
         <img id="variants-product-image" src="" alt="">
         <div>
-            <h2 id="variants-product-name"></h2>
-            <p id="variants-product-description"></p>
-            <p id="variants-product-price"></p>
+            <p class="flex justify-between font-bold">
+                <span id="variants-product-name" class="block"></span>
+                <span id="variants-product-price" class="block"></span>
+            </p>
+            <p id="variants-product-description" class="text-sm"></p>
         </div>
         <form id="variants-form">
         </form>
-        <div>
+        <div class="font-bold flex justify-center gap-4 mb-4">
             <button id="variants-back-button"
-                class="border border-pink-900"
+                class="border border-(--accent"
             
             >Volver</button>
             <button id="variants-add-button"
@@ -36,7 +38,7 @@
     @import "tailwindcss";
 
     button{
-        @apply px-4 py-2 rounded-lg bg-pink-900 text-white;
+        @apply px-5 py-1 rounded-full bg-(--accent) text-white;
     }
 
 </style>

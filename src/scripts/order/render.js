@@ -272,6 +272,7 @@ export const renderModal = () => {
         // 🔹 variantes
         const variantsEl = row.querySelector(".variantes");
         if (variantsEl) {
+            console.log(item)
             if (item.groups.length > 0) {
                 variantsEl.textContent = item.groups
                     .map(

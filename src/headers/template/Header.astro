@@ -1,6 +1,7 @@
 ---
 import InfoIcon from "@assets/information.svg";
 import Informacion from "@components/sections/Informacion.astro";
+import BannerWave from "@assets/shapes/banner-wave.svg";
 
 const {
     titulo,
@@ -21,7 +22,7 @@ const {
     class="m-auto flex max-w-120 flex-col items-center text-(--main-text) mb-2"
 >
     <button id="infoBtn"
-        class="fixed top-3 right-3 rounded-full group"
+        class="fixed top-3 right-3 rounded-full group z-10"
         aria-label="Más información"
     >
         <InfoIcon
@@ -33,25 +34,27 @@ const {
             aria-label="Más información"
         />
     </button>
-    <img
-        id="banner"
-        src={banner}
-        alt=`Imagen de presentacion de ${titulo}`
-        fetchpriority="high"
-        loading="eager"
-        width="820"
-        height="462"
-    />
-
-    <div id="anchorContainer" class="flex w-full p-2.5">
-        <a id="logo" href="/" class="relative">
+    <div class="w-full text-(--background-color) relative">
+        <img
+            id="banner"
+            src={banner}
+            alt=`Imagen de presentacion de ${titulo}`
+            fetchpriority="high"
+            loading="eager"
+            width="820"
+            height="462"
+        />
+        <BannerWave class="w-full h-auto absolute -bottom-2" />
+    </div>
+    <div id="anchorContainer" class="flex w-full p-2.5 -mt-8 z-10">
+        <a id="logo" href="/" class="relative bg-white rounded-full p-0.5 flex items-center w-17.5 h-17.5 shrink-0">
             <img
                 id="logoImg"
                 src={logo.logo}
                 alt={logo.titulo}
                 width="70px"
                 height="70px"
-                class="anchor-img pointer-events-none rounded-full"
+                class="anchor-img pointer-events-none"
                 fetchpriority="high"
                 loading="eager"
             />
