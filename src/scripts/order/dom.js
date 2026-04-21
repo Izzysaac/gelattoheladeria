@@ -33,6 +33,7 @@ export const dom = {
     variantsProductImage: document.getElementById("variants-product-image"),
     variantsProductPrice: document.getElementById("variants-product-price"),
     variantsForm: document.getElementById("variants-form"),
+    variantsCloseButton: document.getElementById("variants-close-button"),
     variantsBackButton: document.getElementById("variants-back-button"),
     variantsAddButton: document.getElementById("variants-add-button"),
 };

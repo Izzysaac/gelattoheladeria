@@ -74,6 +74,7 @@ export const bindEventosVariants = () => {
         if (e.target === dom.variantsDialog) dom.variantsDialog.close();
     });
     dom.variantsBackButton.addEventListener("click", (e) => dom.variantsDialog.close());
+    dom.variantsCloseButton.addEventListener("click", (e) => dom.variantsDialog.close());
 };
 
 export const bindEventosCart = () => {

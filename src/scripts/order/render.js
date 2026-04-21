@@ -185,7 +185,8 @@ export const renderSingleModal = (productId) => {
         // 🔹 imagen
         const imgEl = row.querySelector(".imagen-producto");
         if (item.imagen) {
-            imgEl.src = item.imagen;
+            const imageUrl = getCloudinaryImageUrl(item.imagen, "w_200,h_200,c_fill");
+            imgEl.src = imageUrl;
             imgEl.alt = item.nombre;
         } else {
             row.querySelector("figure")?.remove();
@@ -272,7 +273,6 @@ export const renderModal = () => {
         // 🔹 variantes
         const variantsEl = row.querySelector(".variantes");
         if (variantsEl) {
-            console.log(item)
             if (item.groups.length > 0) {
                 variantsEl.textContent = item.groups
                     .map(
@@ -288,7 +288,8 @@ export const renderModal = () => {
         // 🔹 imagen
         const imgEl = row.querySelector(".imagen-producto");
         if (item.imagen) {
-            imgEl.src = item.imagen;
+            const imageUrl = getCloudinaryImageUrl(item.imagen, { w: 480, h: 480});
+            imgEl.src = imageUrl;
             imgEl.alt = item.nombre;
         } else {
             row.querySelector("figure")?.remove();
@@ -350,8 +351,8 @@ const renderGroupSelect = (group) => {
     // 🔹 contenedor del grupo
     return `
         <div class="variant-group">
-            <h3>${nombre} ${required ? "*" : ""}</h3>
-            <div class="variant-options">
+            <h3 class="variant-group-title">${nombre} ${required ? "*" : ""}</h3>
+            <div class="variant-options-select">
                 ${selectsHTML}
             </div>
         </div>
@@ -385,7 +386,7 @@ const renderGroupSingle = (group) => {
 
     return `
         <div class="variant-group">
-            <h3>${nombre} ${required ? "*" : ""}</h3>
+            <h3 class="variant-group-title">${nombre} ${required ? "*" : ""}</h3>
             <div class="variant-options">
                 ${optionsHTML}
             </div>
@@ -425,10 +426,10 @@ const renderGroupCheckbox = (group) => {
             data-max="${max}"
             data-required="${required}"
         >
-            <h3>
+            <h3 class="variant-group-title">
                 ${nombre} 
                 ${required ? "*" : ""}
-                ${max ? `(máx ${max})` : ""}
+                ${max > 1 ? `(máx ${max})` : ""}
             </h3>
 
             <div class="variant-options">
@@ -480,7 +481,12 @@ export const renderVariantModal = (product) => {
     /* Información del producto*/
     dom.variantsProductName.textContent = product.nombre;
     dom.variantsProductDescription.textContent = product.descripcion;
-    dom.variantsProductImage.src = getCloudinaryImageUrl(product.imagen);
+    if (product.imagen) {
+        dom.variantsProductImage.removeAttribute("hidden");
+        dom.variantsProductImage.src = getCloudinaryImageUrl(product.imagen);
+    }else {
+        dom.variantsProductImage.setAttribute("hidden", "true");
+    }
     dom.variantsProductPrice.textContent = `$${product.precio.toLocaleString()}`;
     dom.variantsAddButton.dataset.productid = product.id;
 

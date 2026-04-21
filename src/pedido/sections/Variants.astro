@@ -1,31 +1,36 @@
 ---
-
+import CrossIcon from "@assets/cross.svg";
 
 ---
 
-<dialog id="variants-dialog" class="text-white mx-auto mt-auto max-w-125 bg-transparent">
-    <div class="mt-auto bg-(--text-brand) rounded-t-3xl p-2.5 flex flex-col gap-4">
-        <img id="variants-product-image" src="" alt="">
-        <div>
-            <p class="flex justify-between font-bold">
-                <span id="variants-product-name" class="block"></span>
-                <span id="variants-product-price" class="block"></span>
-            </p>
+<dialog id="variants-dialog" class="text-white mt-auto max-w-125 bg-transparent">
+    <div class="h-fit bg-(--text-brand) rounded-t-3xl py-2.5 flex flex-col gap-4">
+        <button id="variants-close-button" class="w-fit p-0! bg-(--accent) rounded-full ml-2.5">
+            <CrossIcon
+                width={30}
+                height={30}
+                fill="bg-(--color-text)"
+                class:list={"pointer-events-none group-active:fill-(--color-active-secondary)"}
+            />
+        </button>
+        <img id="variants-product-image" src="" alt="" class="bg-(--accent) pb-3">
+        <div class="flex flex-col gap-2 px-2.5">
+            <p id="variants-product-name" class="font-bold"></p>
             <p id="variants-product-description" class="text-sm"></p>
+            <p id="variants-product-price" class="font-bold text-end"></p>
         </div>
-        <form id="variants-form">
+        <form id="variants-form" class="px-2.5">
         </form>
-        <div class="font-bold flex justify-center gap-4 mb-4">
+        <div class="font-bold flex justify-center gap-4 my-4 px-2.5">
             <button id="variants-back-button"
-                class="border border-(--accent"
-            
+                class="variant-button"
             >Volver</button>
             <button id="variants-add-button"
                 aria-label="Añadir al carrito"
                 data-productid=""
                 type="submit" 
                 form="variants-form"  
-                class="disabled:opacity-50"
+                class="disabled:opacity-50 variant-button"
                 disabled
             >Añadir</button>
         </div>
@@ -34,11 +39,34 @@
 
 <script src="../../scripts/order/variants.js"></script>
 
-<style>
+<style is:global>
     @import "tailwindcss";
-
-    button{
+    option{
+        @apply text-black;
+    }
+    .variant-button{
         @apply px-5 py-1 rounded-full bg-(--accent) text-white;
+    }
+    #variants-form{
+        @apply flex flex-col gap-4;
+    }
+    .variant-group{
+        @apply flex flex-col gap-2;
+    }
+    .variant-group-title{
+        @apply px-3 py-0.5 rounded-full bg-(--accent) text-white w-fit font-bold;
+    }
+    .variant-options{
+        @apply flex gap-8;
+    }
+    .variant-option{
+        @apply flex gap-3 items-center;
+    }
+    .variant-options-select{
+        @apply grid grid-cols-2 gap-2;
+        div select {
+            @apply w-full rounded-full border border-gray-300 py-1 px-2 text-sm;
+        }
     }
 
 </style>
