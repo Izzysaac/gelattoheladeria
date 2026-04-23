@@ -7,7 +7,7 @@ html[data-theme="gelattospitalito"] {
     /* --background-color: #6DE2E9; */
     --background-color: #ACE8EB;
 
-    --buttons: #9A0BE1;
+    --buttons: #E284D0;
 
     --neutral-0: #f3f3f3;
     --neutral-200: #292929c2;
@@ -16,7 +16,7 @@ html[data-theme="gelattospitalito"] {
 
     /* Main */
     --main-text: var(--neutral-900);
-    --main-buttons: var(--buttons);
+    --main-buttons: var(--accent);
     --main-buttons-text: var(--neutral-0);
     --main-background: #6DE2E9;
 
@@ -26,10 +26,10 @@ html[data-theme="gelattospitalito"] {
     --color-border: hsl(from var(--text-brand) h s 50%);
 
     /* Acciones */
-    --color-primary: var(--brand);
+    --color-primary: var(--accent);
     --color-on-primary: var(--neutral-0);
     --color-secondary: var(--accent);
-    /* --color-on-secondary: color de iconos */
+    --color-on-secondary: var(--neutral-0);
     --color-active-secondary: oklch(from var(--brand) calc(l + 0.15) c h);
 
     /* Menu Navigation */
