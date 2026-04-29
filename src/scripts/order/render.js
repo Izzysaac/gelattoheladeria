@@ -441,6 +441,41 @@ const renderGroupCheckbox = (group) => {
     `;
 };
 
+const renderIngredients = (group) => {
+    const { id, nombre, options } = group;
+
+    const optionsHTML = options
+        .filter((opt) => opt.activo)
+        .map(
+            (opt) => `
+            <label class="variant-ingredient-option">
+                <input 
+                    name="group-${id}"
+                    type="checkbox"
+                    value="${opt.option_id}"
+                    data-group-id="${id}"
+                    data-precio="${opt.precio_extra}"
+                    checked
+                />
+                <span>
+                    ${opt.nombre}
+                    ${opt.precio_extra ? ` (+$${opt.precio_extra})` : ""}
+                </span>
+            </label>
+        `,
+        )
+        .join("");
+        //  ${opt.precio_extra ? ` (+$${opt.precio_extra})` : ""}
+    return `
+        <div class="variant-group" data-group-id="${id}">
+            <h3 class="variant-group-title">${nombre}</h3>
+            <div class="variant-ingredients">
+                ${optionsHTML}
+            </div>
+        </div>
+    `;
+};
+
 const renderGroup = (group) => {
     const tipo = group.tipo;
     switch (tipo) {
@@ -452,6 +487,9 @@ const renderGroup = (group) => {
             break;
         case "checkbox":
             return renderGroupCheckbox(group);
+            break;
+        case "ingredients":
+            return renderIngredients(group);
             break;
         default:
             return "";
