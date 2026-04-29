@@ -36,8 +36,7 @@ const { menuPorCategoria, modo } = Astro.props;
                                             {item.descripcion}
                                         </p>
                                         {modo !== "menu" && (    
-                                            <div class="controles mt-auto flex w-fit items-center self-end rounded-full bg-(--color-secondary) select-none">
-
+                                            <div class="controles mt-auto flex w-fit items-center self-end rounded-full bg-(--color-secondary) text-(--color-on-secondary) select-none">
                                                 <button data-action="remove-product"
                                                     class="remove"
                                                     aria-label="Quitar del pedido"

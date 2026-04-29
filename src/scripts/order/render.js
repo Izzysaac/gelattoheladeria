@@ -480,12 +480,12 @@ const buildOptionsMap = (product) => {
 export const renderVariantModal = (product) => {
     /* Información del producto*/
     dom.variantsProductName.textContent = product.nombre;
-    dom.variantsProductDescription.textContent = product.descripcion;
-    if (product.imagen) {
-        dom.variantsProductImage.removeAttribute("hidden");
+        dom.variantsProductDescription.textContent = product.descripcion;
+        if (product.imagen) {
+        dom.variantsProductFigure.removeAttribute("hidden");
         dom.variantsProductImage.src = getCloudinaryImageUrl(product.imagen);
     }else {
-        dom.variantsProductImage.setAttribute("hidden", "true");
+        dom.variantsProductFigure.setAttribute("hidden", "true");
     }
     dom.variantsProductPrice.textContent = `$${product.precio.toLocaleString()}`;
     dom.variantsAddButton.dataset.productid = product.id;

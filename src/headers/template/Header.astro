@@ -22,15 +22,15 @@ const {
     class="m-auto flex max-w-120 flex-col items-center text-(--main-text) mb-2"
 >
     <button id="infoBtn"
-        class="fixed top-3 right-3 rounded-full group z-10"
+        class="fixed top-3 right-3 rounded-full group z-10 text-(--color-on-secondary)"
         aria-label="Más información"
     >
         <InfoIcon
             width={35}
             height={35}
-            fill="var(--color-background)"
+            fill="var(--color-secondary)"
             stroke="var(--color-text)"
-            class:list={"pointer-events-none group-active:fill-(--color-active-secondary)"}
+            class:list={"pointer-events-none group-active:fill-(--text-brand)"}
             aria-label="Más información"
         />
     </button>

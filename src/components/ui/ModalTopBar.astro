@@ -9,7 +9,7 @@ const { mode } = Astro.props
 { mode == "pedido" && (
 
 <div class="sticky top-0 flex items-center justify-between bg-(--color-background) py-2.5">
-    <button id="btn-cerrar-modal" class="w-fit self-end rounded-full bg-(--color-secondary) p-2"
+    <button id="btn-cerrar-modal" class="w-fit self-end rounded-full bg-(--color-secondary) text-(--color-on-secondary) p-2"
         aria-label="Volver a menu"
     >
         <ArrowLeftIcon
@@ -34,7 +34,7 @@ const { mode } = Astro.props
 <div class="sticky top-0 flex items-center bg-(--color-background) py-2.5">
     <button
         id="btn-cerrar-checkout"
-        class="w-fit rounded-full bg-(--color-secondary) p-2"
+        class="w-fit rounded-full bg-(--color-secondary) text-(--color-on-secondary) p-2"
         aria-label="Volver a pedido"
     >
         <ArrowLeftIcon
@@ -52,7 +52,7 @@ const { mode } = Astro.props
 <div class="sticky top-0 flex items-center bg-(--color-background) py-2.5">
     <a
         id="btn-cerrar-reserva"
-        class="w-fit rounded-full bg-(--color-secondary) p-2"
+        class="w-fit rounded-full bg-(--color-secondary) text-(--color-on-secondary) p-2"
         aria-label="Volver a pedido"
         href="/"
     >

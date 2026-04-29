@@ -30,6 +30,7 @@ export const dom = {
     variantsDialog: document.getElementById("variants-dialog"),
     variantsProductName: document.getElementById("variants-product-name"),
     variantsProductDescription: document.getElementById("variants-product-description"),
+    variantsProductFigure: document.getElementById("variants-product-figure"),
     variantsProductImage: document.getElementById("variants-product-image"),
     variantsProductPrice: document.getElementById("variants-product-price"),
     variantsForm: document.getElementById("variants-form"),
