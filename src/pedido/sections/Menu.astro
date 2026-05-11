@@ -4,6 +4,7 @@ import Plus from "@assets/plus-svgrepo-com.svg";
 import Minus from "@assets/minus-svgrepo-com.svg";
 import Variants from "./Variants.astro";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
+import { getCloudinaryImageUrl } from "@scripts/imgHelper.js";
 import { left } from "@cloudinary/url-gen/qualifiers/textAlignment";
 const { menuPorCategoria, modo } = Astro.props;
 ---
@@ -68,11 +69,7 @@ const { menuPorCategoria, modo } = Astro.props;
                                     {item.imagen && (
                                         <figure class="order-first shrink-0">
                                             <img
-                                                src={getCldImageUrl({
-                                                    src: item.imagen,
-                                                    width: 480,
-                                                    height: 480,
-                                                })}
+                                                src={getCloudinaryImageUrl(item.imagen, { w: 480, h: 480, c: "limit" })}
                                                 width={160}
                                                 height={160}
                                                 data-image={getCldImageUrl({

@@ -9,7 +9,7 @@ import {
     getProductById,
     getTotalQuantityByProductId,
 } from "./actions.js";
-import { getCloudinaryImageUrl } from "../imgHelper.js";
+import { getCloudinaryImageUrl, getCloudinaryImageUrlSameMenu } from "../imgHelper.js";
 
 const formatPrice = (value) => {
     try {
@@ -185,7 +185,7 @@ export const renderSingleModal = (productId) => {
         // 🔹 imagen
         const imgEl = row.querySelector(".imagen-producto");
         if (item.imagen) {
-            const imageUrl = getCloudinaryImageUrl(item.imagen, "w_200,h_200,c_fill");
+            const imageUrl = getCloudinaryImageUrlSameMenu(item.imagen, {h: 480, w: 480, c: "limit"});
             imgEl.src = imageUrl;
             imgEl.alt = item.nombre;
         } else {
@@ -288,7 +288,7 @@ export const renderModal = () => {
         // 🔹 imagen
         const imgEl = row.querySelector(".imagen-producto");
         if (item.imagen) {
-            const imageUrl = getCloudinaryImageUrl(item.imagen, { w: 480, h: 480});
+            const imageUrl = getCloudinaryImageUrl(item.imagen, { w: 480, h: 480 , c: "fill"});
             imgEl.src = imageUrl;
             imgEl.alt = item.nombre;
         } else {
@@ -520,7 +520,7 @@ export const renderVariantModal = (product) => {
         dom.variantsProductDescription.textContent = product.descripcion;
         if (product.imagen) {
         dom.variantsProductFigure.removeAttribute("hidden");
-        dom.variantsProductImage.src = getCloudinaryImageUrl(product.imagen);
+        dom.variantsProductImage.src = getCloudinaryImageUrlSameMenu(product.imagen, { w: 480, h: 480, c: "limit" });
     }else {
         dom.variantsProductFigure.setAttribute("hidden", "true");
     }
