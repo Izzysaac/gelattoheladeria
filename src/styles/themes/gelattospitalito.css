@@ -10,6 +10,9 @@ html[data-theme="gelattospitalito"] {
     --buttons: #E284D0;
 
     --neutral-0: #f3f3f3;
+    --neutral-10: #ffffffdf;
+    --neutral-20: #ffffff80;
+
     --neutral-200: #292929c2;
     --neutral-500: #292929;
     --neutral-900: #090909;
@@ -33,8 +36,8 @@ html[data-theme="gelattospitalito"] {
     --color-active-secondary: oklch(from var(--brand) calc(l + 0.15) c h);
 
     /* Menu Navigation */
-    --color-navmenu-category: var(--neutral-900);
-    --color-navmenu-active:  var(--text-brand);
+    --color-navmenu-category: var(--neutral-10);
+    --color-navmenu-active:  var(--neutral-0);
 
     /* Badges */
     --bg-badge: var(--accent);

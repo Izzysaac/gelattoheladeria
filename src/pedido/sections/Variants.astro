@@ -52,7 +52,7 @@ import { getCldImageUrl } from "astro-cloudinary/helpers";
         @apply px-5 py-1 rounded-full bg-(--accent) text-white;
     }
     #variants-form{
-        @apply flex flex-col gap-4;
+        @apply flex flex-col gap-6;
     }
     .variant-group{
         @apply flex flex-col gap-2;
@@ -77,6 +77,9 @@ import { getCldImageUrl } from "astro-cloudinary/helpers";
     }
     .variant-ingredient-option{
         @apply flex gap-1 items-center;
+    }
+    .variant-ingredient-option input[type="checkbox"]{
+        @apply w-4 h-4 rounded border-gray-300 text-(--accent);
     }
 
 </style>

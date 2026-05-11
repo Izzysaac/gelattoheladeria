@@ -455,7 +455,6 @@ const renderIngredients = (group) => {
                     value="${opt.option_id}"
                     data-group-id="${id}"
                     data-precio="${opt.precio_extra}"
-                    checked
                 />
                 <span>
                     ${opt.nombre}

@@ -30,9 +30,9 @@ const categoriasFiltradas = categorias.filter(cat =>
 
 ---
 
-<div id="menuGroupsContainer" class="sticky top-0 z-10 bg-(--color-background) pt-2.5">
+<div id="menuGroupsContainer" class="sticky top-0 z-10 bg-(--text-brand)">
 <!-- 🔘 Botones de grupo -->
-    <div class="menu-groups flex gap-4 items-center justify-center" >
+    <div class="menu-groups flex items-center justify-center text-lg" >
         <button data-group="bebidas" class="group-btn active">
             Helados y Bebidas
         </button>
@@ -87,7 +87,7 @@ const categoriasFiltradas = categorias.filter(cat =>
         overflow: scroll;
         scroll-snap-type: x mandatory;
         scroll-behavior: smooth;
-        padding: 0.25rem 0rem;
+        padding: 0rem 0rem 0.25rem 0rem;
         list-style: none;
     }
     .category-nav ul::-webkit-scrollbar {
@@ -99,6 +99,7 @@ const categoriasFiltradas = categorias.filter(cat =>
         padding: 0.5rem 0.75rem;
         white-space: nowrap;
         text-decoration: none;
+        color: var(--neutral-10);
     }
 
     .category-nav button:focus-visible {
@@ -113,7 +114,7 @@ const categoriasFiltradas = categorias.filter(cat =>
     .linea {
         position: relative;
         height: 3px;
-        background-color: var(--neutral-900);
+        background-color: var(--neutral-20);
     }
 
     .linea-activa:after {
@@ -131,17 +132,32 @@ const categoriasFiltradas = categorias.filter(cat =>
         font-weight: 700;
     }
 
-    .group-btn {
+    /* .group-btn {
         padding: 6px 12px;
         border: 2px solid var(--text-brand);
         border-radius: 9999px;
         background: none;
         cursor: pointer;
         font-size: 1rem;
-    }
-    .group-btn.active {
+    } */
+
+    .menu-groups {
+        padding: 12px 4px 0px 4px;
         background-color: var(--text-brand);
         color: white;
+    }
+
+    .group-btn {
+        padding: 8px 0px;
+        width: 100%;
+        border: 2px solid var(--text-brand);
+        border-radius: 9999px;
+        background: none;
+        cursor: pointer;
+    }
+    .group-btn.active {
+        background-color: white;
+        color: var(--text-brand);
     }
 </style>
 

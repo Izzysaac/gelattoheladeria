@@ -67,33 +67,39 @@ const textoParaMostrarValorEntrega = formatEntrega(valorEntrega);
     class="badges mb-3 flex w-[calc(100%-20px)] max-w-125 items-end justify-around rounded-2xl py-3 px-1 text-sm select-none gap-8"
 >
     <p>
-        <StarIcon
-            width={20}
-            height={20}
-            fill="var(--color-background)"
-            class:list={"inline text-center"}
-        />
+        <span class="icon-bg">
+            <StarIcon
+                width={20}
+                height={20}
+                fill="var(--color-background)"
+                class:list={"inline text-center"}
+            />
+        </span>
         <span>{rating} ({userRatingCount})</span>
         <span>Valoración</span>
     </p>
     <p>
-        <DeliveryTimeIcon
-            width={20}
-            height={20}
-            fill="var(--color-background)"
-            class:list={"inline text-center"}
-        />
+        <span class="icon-bg">
+            <DeliveryTimeIcon
+                width={20}
+                height={20}
+                fill="var(--color-background)"
+                class:list={"inline text-center"}
+            />
+        </span>
         <span>{tiempoEntrega}</span>
         <span>Entrega</span>
     </p>
     <p>
-        <DeliveryIcon
-            width={25}
-            height={25}
-            fill="var(--color-background)"
-            class:list={"inline text-center"}
-        />
-        <span id="valor-entrega" class="mt-1!">
+        <span class="icon-bg-moto">
+            <DeliveryIcon
+                width={25}
+                height={25}
+                fill="var(--color-background)"
+                class:list={"inline text-center"}
+            />
+        </span>
+        <span id="valor-entrega" class="mt-0.5!">
             {textoParaMostrarValorEntrega}
             <button id="info-btn" class={`relative ${pagoExterno ? '' : 'visually-hidden'}`} aria-label="Información de envío">
                 ⓘ
@@ -133,9 +139,16 @@ const textoParaMostrarValorEntrega = formatEntrega(valorEntrega);
 <style>
     @import "tailwindcss";
     p {
-        @apply w-full text-center bg-(--accent) rounded-full aspect-square flex flex-col justify-center items-center text-white uppercase font-medium;
+        @apply w-full text-center bg-(--accent) rounded-full aspect-square flex flex-col justify-center items-center text-white uppercase font-medium pt-1.5;
     }
     span {
-        @apply block not-last:mt-2 last:text-xs;
+        @apply block not-last:mt-0.5 last:text-xs last:mb-2;
+    }
+
+    .icon-bg {
+        @apply bg-(--neutral-0) p-1.5 rounded-full;
+    }
+    .icon-bg-moto {
+        @apply bg-(--neutral-0) p-1 rounded-full;
     }
 </style>
