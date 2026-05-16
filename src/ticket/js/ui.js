@@ -158,6 +158,24 @@ function renderGroupSelectTable(group, selectedVariant, rowIndex) {
     `;
 }
 
+function renderGroupIngredientsTable(group, selectedVariant, rowIndex) {
+    const selectedIds = selectedVariant?.option_ids || [];
+
+    return `
+        <div class="variant-group" data-group-id="${group.id}">
+            <small>${escapeHtml(group.nombre)}</small>
+            ${group.options.filter(o => o.activo).map(opt => `
+                <label>
+                    <input type="checkbox"
+                        value="${opt.option_id}"
+                        ${selectedIds.includes(opt.option_id) ? 'checked' : ''}/>
+                    ${escapeHtml(opt.nombre)}
+                </label>
+            `).join('')}
+        </div>
+    `;
+}
+
 function createTableRow(item, index) {
     const row = document.createElement('tr');
     row.dataset.index = index;
@@ -234,6 +252,10 @@ function renderVariants(row, item, rowIndex) {
 
             if (group.tipo === 'checkbox') {
                 return renderGroupCheckboxTable(group, selectedVariant, rowIndex);
+            }
+
+            if (group.tipo === 'ingredients') {
+                return renderGroupIngredientsTable(group, selectedVariant, rowIndex);
             }
 
             return '';
@@ -441,6 +463,7 @@ export const clearAll = function() {
     currentOrder.items = [];
     document.getElementById('whatsappMessage').value = '';
     document.getElementById('orderSection').style.display = 'none';
+    document.getElementById('envio').value = DELIVERY;
     // Limpiar campos de cliente
     const clientFields = ['clientName', 'clientPhone', 'clientAddress', 'clientDeliveryType', 'clientPayment', 'clientNotes'];
     clientFields.forEach(id => {
