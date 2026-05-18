@@ -108,13 +108,13 @@ async function loadAndPopulateTemplate(orderData) {
                                 const option = group.options.find(o => o.option_id === optionId);
                                 return option ? escapeHtml(option.nombre) : optionId;
                             }).filter(Boolean);
-                            return `${escapeHtml(group.nombre)}: ${optionNames.join(', ')}`;
+                            return `<span style="font-size: 26px;">${escapeHtml(group.nombre)}:</span><br>${optionNames.join(', ')}`;
                         }
                         return '';
                     }).filter(Boolean);
                     
                     if (variantLines.length) {
-                        productDisplay += `<br><p style="font-size: 30px;">${variantLines.join('<br>')}</p>`;
+                        productDisplay += `<br><p style="font-size: 28px;">${variantLines.join('<br>')}</p>`;
                     }
                 }
             }
@@ -175,7 +175,7 @@ export async function generateOrderPDF(orderData) {
         
         // Configure html2pdf options
         const options = {
-            // margin: [15, 15, 15, 15], // top, right, bottom, left (in mm)
+            //margin: [15, 15, 15, 15], // top, right, bottom, left (in mm)
             margin: [0, 0, 0, 0], 
             filename: `pedido_${orderNumber}_${new Date().toISOString().slice(0, 10)}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
