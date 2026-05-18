@@ -16,8 +16,9 @@ function normalizeText(text) {
 /* Serializa variantes de forma determinista para clave de consolidación */
 function serializeVariants(variants) {
     if (!variants || !variants.length) return '';
+    // console.log("variants fn", variants);
     return variants
-        .map(v => `${v.group_id}:${(v.option_ids || []).sort().join(',')}`)
+        .map(v => `${v.grupo}:${(v.opciones || []).sort().join(',')}`)
         .sort()
         .join(';');
 }
@@ -186,9 +187,14 @@ export function parseWhatsAppMessage(message) {
 
         // 🔥 Consolidar items con mismo producto_id y variantes idénticas
         const consolidated = {};
+
+        // console.log(allItems);
         allItems.forEach(item => {
+            // console.log("item:", item);
             const variantKey = serializeVariants(item.variants || []);
+            // console.log("variantKey", variantKey);
             const key = `${item.producto_id}|${variantKey}`;
+            // console.log("key", key);
             if (consolidated[key]) {
                 consolidated[key].cantidad += item.cantidad;
             } else {
@@ -199,8 +205,10 @@ export function parseWhatsAppMessage(message) {
             }
         });
         
-        const finalItems = Object.values(consolidated);
-        // console.log(finalItems);
+        const finalItems = Object.values(consolidated).sort((a, b) =>
+            String(a.producto_id).localeCompare(String(b.producto_id))
+        );
+        
         if (finalItems.length === 0) {
             return {
                 success: false,

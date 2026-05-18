@@ -95,6 +95,9 @@ window.parseMessage = async function() {
 window.generatePDF = async function() {
     const currentOrder = getCurrentOrder();
     
+    //console.log(currentOrder);
+    // return;
+
     if (!currentOrder.items || currentOrder.items.length === 0) {
         showMessage('No hay productos en el pedido para generar PDF', 'error');
         return;

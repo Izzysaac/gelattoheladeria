@@ -114,7 +114,7 @@ async function loadAndPopulateTemplate(orderData) {
                     }).filter(Boolean);
                     
                     if (variantLines.length) {
-                        productDisplay += `<br><small>${variantLines.join('<br>')}</small>`;
+                        productDisplay += `<br><p style="font-size: 30px;">${variantLines.join('<br>')}</p>`;
                     }
                 }
             }
