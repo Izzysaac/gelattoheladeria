@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket de Pedido</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
     <style>
         /* Reset */
         * {
@@ -100,10 +103,17 @@
 
         .cantidad {
             text-align: center;
+            font-size: 44px;
+            font-family: 'Google Sans Flex', Arial, sans-serif;
         }
 
         .products-table .product-name {
             text-transform: capitalize;
+        }
+
+        .product-name{
+            font-size: 44px;
+            font-family: 'Google Sans Flex', Arial, sans-serif;
         }
 
         .precio-unitario div,
@@ -146,7 +156,8 @@
             font-weight: bold;
 
             & div:first-child {
-                width: 30%;
+                width: 12ch;
+                min-width: 12ch;
             }
 
             & div:last-child {
@@ -162,12 +173,24 @@
 
         .metodo {
             & div:first-child {
-                width: 45%;
+                width: fit-content;
             }
         }
 
         .variants-ticket {
-            font-size: 20px;
+            font-size: 40px;
+        }
+        .product-variants {
+            font-size: 40px;
+            font-family: 'Google Sans Flex', Arial, sans-serif;
+            padding-bottom: 30px !important;
+            padding-top: 0 !important;
+        }
+
+
+        #client-notes {
+            font-size: 44px;
+            font-family: 'Google Sans Flex', Arial, sans-serif;
         }
     </style>
 </head>
@@ -183,10 +206,10 @@
         <table class="products-table">
             <thead>
                 <tr>
-                    <th style="width: 5%; padding: 12px 1px; font-size: 18px;">CANT.</th>
-                    <th style="width: 57%;">PRODUCTO</th>
-                    <th style="width: 18%;">VALOR U.</th>
-                    <th style="width: 20%;">SUBTOTAL</th>
+                    <th style="width: 7%; padding: 12px 1px; font-size: 20px;">CANT.</th>
+                    <th style="width: 60%;">PRODUCTO</th>
+                    <th style="width: 15.5%; font-size: 24px; padding: 12px 4px;">VALOR U.</th>
+                    <th style="width: 17.5%; font-size: 24px; padding: 12px 4px;">SUBTOTAL</th>
                 </tr>
             </thead>
             <tbody id="products-tbody">

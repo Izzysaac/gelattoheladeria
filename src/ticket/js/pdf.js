@@ -94,11 +94,36 @@ async function loadAndPopulateTemplate(orderData) {
             const itemPrice = calculateItemPrice(item);
             const subtotal = item.cantidad * itemPrice;
             const row = doc.createElement('tr');
+            const rowVariants = doc.createElement('tr');
         
             // Construir el nombre del producto con variantes
-            let productDisplay = escapeHtml(item.nombre || item.producto || '');
+            // let productDisplay = escapeHtml(item.nombre || item.producto || '');
+            let productDisplay = '';
+
             
-            if (item.variants && item.variants.length) {
+            // if (item.variants && item.variants.length) {
+            //     const productoConfig = PRODUCTOS_CONFIG[item.producto_id];
+            //     if (productoConfig?.groups) {
+            //         const variantLines = item.variants.map(variant => {
+            //             const group = productoConfig.groups.find(g => g.id === variant.group_id);
+            //             if (group && variant.option_ids) {
+            //                 const optionNames = variant.option_ids.map(optionId => {
+            //                     const option = group.options.find(o => o.option_id === optionId);
+            //                     return option ? escapeHtml(option.nombre) : optionId;
+            //                 }).filter(Boolean);
+            //                 return `<span style="font-size: 30px;">${escapeHtml(group.nombre)}:</span><br>${optionNames.join(', ')}`;
+            //             }
+            //             return '';
+            //         }).filter(Boolean);
+                    
+            //         if (variantLines.length) {
+            //             productDisplay += `<br><p style="font-size: 38px;">${variantLines.join('<br>')}</p>`;
+            //         }
+            //     }
+            // }
+
+
+             if (item.variants && item.variants.length) {
                 const productoConfig = PRODUCTOS_CONFIG[item.producto_id];
                 if (productoConfig?.groups) {
                     const variantLines = item.variants.map(variant => {
@@ -108,20 +133,36 @@ async function loadAndPopulateTemplate(orderData) {
                                 const option = group.options.find(o => o.option_id === optionId);
                                 return option ? escapeHtml(option.nombre) : optionId;
                             }).filter(Boolean);
-                            return `<span style="font-size: 26px;">${escapeHtml(group.nombre)}:</span><br>${optionNames.join(', ')}`;
+                            return `<span style="font-size: 30px;">${escapeHtml(group.nombre)}: </span>${optionNames.join(', ')}`;
                         }
                         return '';
                     }).filter(Boolean);
                     
                     if (variantLines.length) {
-                        productDisplay += `<br><p style="font-size: 28px;">${variantLines.join('<br>')}</p>`;
+                        productDisplay += `<p style="font-size: 38px;">${variantLines.join('<br>')}</p>`;
                     }
                 }
             }
-        
+
+            // row.innerHTML = `
+            //     <td class="cantidad">${item.cantidad}</td>
+            //     <td class="product-name">${productDisplay.toUpperCase()}</td>
+            //     <td class="precio-unitario">
+            //         <div>
+            //             <span>$</span>
+            //             <span>${formatCurrency(itemPrice)}</span>
+            //         </div>
+            //     </td>
+            //     <td class="subtotal">
+            //         <div>
+            //             <span>$</span>
+            //             <span>${formatCurrency(subtotal)}</span>
+            //         </div>
+            //     </td>
+            // `;
             row.innerHTML = `
                 <td class="cantidad">${item.cantidad}</td>
-                <td class="product-name">${productDisplay.toUpperCase()}</td>
+                <td class="product-name">${item.nombre.toUpperCase()}</td>
                 <td class="precio-unitario">
                     <div>
                         <span>$</span>
@@ -137,6 +178,9 @@ async function loadAndPopulateTemplate(orderData) {
             `;
             
             tbody.appendChild(row);
+            rowVariants.innerHTML = `<td colspan="4" class="product-variants">${productDisplay.toUpperCase()}</td>`;
+            tbody.appendChild(rowVariants);
+
         });
         
         // Populate totals
