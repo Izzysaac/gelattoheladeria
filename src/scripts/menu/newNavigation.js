@@ -8,7 +8,7 @@ const grupos = {
     comidas: [
         "Hamburgesas",
         "Patacones",
-        "Salchichapapas",
+        "Salchipapas",
         "Hot Dog",
         "Sandwiches",
         "Picadas",
