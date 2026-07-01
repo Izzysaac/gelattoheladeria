@@ -2,7 +2,7 @@
 
 import { parseWhatsAppMessage, validateOrderItem } from './parser.js';
 import { renderOrderTable, showMessage, clearMessages, initializeUI, getCurrentOrder, addProduct, clearAll } from './ui.js';
-import { generateOrderPDF, downloadPDF, previewPDF } from './pdf.js';
+import { generateOrderPDF,generateOrderPDF2, downloadPDF, previewPDF } from './pdf.js';
 
 
 /* Parsea el mensaje de WhatsApp y actualiza la UI */
@@ -109,6 +109,43 @@ window.generatePDF = async function() {
         
         // Generar PDF
         const result = await generateOrderPDF(currentOrder);
+        
+        if (!result.success) {
+            showMessage(result.error, 'error');
+            return;
+        }
+        
+        // Previsualizar PDF
+        const previewed = previewPDF(result.pdfBytes);
+        if (previewed) {
+            showMessage('PDF abierto en nueva ventana', 'success');
+        } else {
+            showMessage('Error al abrir previsualización. Verifique que no esté bloqueando ventanas emergentes.', 'error');
+        }
+        
+    } catch (error) {
+        console.error('Error generando PDF:', error);
+        showMessage(`Error al generar PDF: ${error.message}`, 'error');
+    }
+};
+
+window.generatePDF2 = async function() {
+    const currentOrder = getCurrentOrder();
+    
+    //console.log(currentOrder);
+    // return;
+
+    if (!currentOrder.items || currentOrder.items.length === 0) {
+        showMessage('No hay productos en el pedido para generar PDF', 'error');
+        return;
+    }
+    
+    try {
+        // Mostrar indicador de carga
+        showMessage('Generando PDF...', 'info');
+        
+        // Generar PDF
+        const result = await generateOrderPDF2(currentOrder);
         
         if (!result.success) {
             showMessage(result.error, 'error');

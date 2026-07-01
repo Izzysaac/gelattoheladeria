@@ -31,6 +31,9 @@ const { tenant, head, menu, menuMap } = Astro.props;
                         <button class="btn btn-success w-full" onclick="generatePDF()">
                             📋 Ticket <br> Ctrl + Enter
                         </button>
+                        <button class="btn btn-yellow w-full" onclick="generatePDF2()">
+                            📋 NUEVO TICKET
+                        </button>
                     </div>
                     <textarea
                         id="whatsappMessage"
@@ -266,6 +269,14 @@ const { tenant, head, menu, menuMap } = Astro.props;
 
     .btn-success:hover {
         background: #229954;
+    }
+
+    .btn-yellow {
+        background: #f39c12;
+    }
+
+    .btn-yellow:hover {
+        background: #e67e22;
     }
 
     .btn-danger {

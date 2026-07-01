@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket de Pedido</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #000000;
+            text-transform: uppercase;
+        }
+
+        .ticket {
+            width: 80mm;
+            max-width: 80mm;
+            margin: 0 auto;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid black;
+
+            & h1,
+            .order-date {
+                font-weight: bold;
+            }
+
+        }
+
+        /* Client info */
+        .client-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .client-info .field {
+            display: block;
+
+            & strong {
+                font-size: 16px;
+                display: inline;
+            }
+
+            & span {
+                display: inline-block;
+                text-align: right;
+                width: 8ch;
+            }
+        }
+
+        /* Order type*/
+        .order-type {
+            display: flex;
+            flex-direction: column;
+            & strong {
+                font-size: 14px;
+                display: inline-block;
+            }
+        }
+
+
+        /* Products table */
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        .products-table th {
+            padding: 4px 2px;
+            text-align: left;
+            font-size: 10px;
+            font-weight: bold;
+            border: 1px solid black;
+            box-sizing: border-box;
+        }
+
+        .products-table td {
+            padding: 4px 2px;
+            font-weight: bold;
+            border: 1px solid black;
+            vertical-align: text-top;
+        }
+
+        .cantidad {
+            text-align: center;
+            font-size: 16px;
+            font-family: 'Google Sans Flex', Arial, sans-serif;
+        }
+
+        .products-table .product-name {
+            text-transform: capitalize;
+        }
+
+        .product-name{
+            font-size: 16px;
+            font-family: 'Google Sans Flex', Arial, sans-serif;
+        }
+
+        .precio-unitario div,
+        .subtotal div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Totals section */
+        .totals-section {
+            border: 1px solid black;
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+            margin-top: 16px;
+            margin-bottom: 24px;
+            & div {
+                
+                display: flex;
+                flex-grow: 1;
+                & div {
+                    border: 1px solid black;
+                    padding: 10px 8px;
+                }
+
+                & div:last-child {
+                    flex-grow: 0;
+                    width: 20.6%;
+                    border: none;
+                    display: flex;
+                    justify-content: space-between;
+                    border: 1px solid black;
+                }
+            }
+        }
+
+        /* Key value*/
+        .key-value {
+            display: flex;
+            font-weight: bold;
+
+            & div:first-child {
+                width: 12ch;
+                min-width: 12ch;
+            }
+
+            & div:last-child {
+                flex-grow: 1;
+                text-align: end;
+            }
+
+            & div {
+                padding: 6px 4px;
+                border: 1px solid black;
+            }
+        }
+
+        .metodo {
+            & div:first-child {
+                width: fit-content;
+            }
+        }
+
+        .variants-ticket {
+            font-size: 16px;
+        }
+        .product-variants {
+            font-size: 16px;
+            font-family: 'Google Sans Flex', Arial, sans-serif;
+            padding-bottom: 30px !important;
+            padding-top: 0 !important;
+        }
+
+
+        #client-notes {
+            font-size: 16px;
+            font-family: 'Google Sans Flex', Arial, sans-serif;
+        }
+    </style>
+</head>
+
+    <div class="ticket" id="ticket">
+        <!-- Header -->
+        <div class="header">
+            <h1>GELATTOS HELADERÍA</h1>
+            <div class="order-date"><span id="order-date">viernes 2, de marzo de 2026</span></div>
+        </div>
+
+        <!-- Products Table -->
+        <table class="products-table">
+            <thead>
+                <tr>
+                    <th style="width: 7%; font-size: 10px;">CANT.</th>
+                    <th style="width: 60%; font-size: 12px;">PRODUCTO</th>
+                    <th style="width: 16%; font-size: 9px;">VALOR U.</th>
+                    <th style="width: 17%; font-size: 10px;">SUBTOTAL</th>
+                </tr>
+            </thead>
+            <tbody id="products-tbody">
+                <tr>
+                    <td class="cantidad">80</td>
+                    <td class="product-name">3 ALAS SALSA + GASEOSA</td>
+                    <td class="precio-unitario">
+                        <div>
+                            <span>$</span>
+                            <span>12.345</span>
+                        </div>
+                    </td>
+                    <td class="subtotal">
+                        <div>
+                            <span>$</span>
+                            <span>12.345</span>
+                        </div>
+                    </td>
+                </tr>
+                <!-- Products will be inserted here dynamically -->
+            </tbody>
+        </table>
+
+        <!-- Totals -->
+        <div class="totals-section">
+            <div class="subtotal-total">
+                <div style="display: block; text-align: right;">SUBTOTAL</div>
+                <div>
+                    <span>$</span>
+                    <span id="subtotal-amount"></span>
+                </div>
+            </div>
+            <div class="envio-total">
+                <div style="flex-grow: 0;">ENTREGA</div>
+                <div id="client-delivery-type"></div>
+                <div>
+                    <span>$</span>
+                    <span id="delivery-amount"></span>
+                </div>
+            </div>
+            <div class="total-total">
+                <div style="display: block; text-align: right;">TOTAL</div>
+                <div >
+                    <span>$</span>
+                    <span id="total-amount"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="key-value metodo">
+            <div>MÉTODO DE PAGO</div>
+            <div id="client-payment"></div>
+        </div>
+        <div class="key-value">
+            <div>DIRECCIÓN</div>
+            <div id="client-address"></div>
+        </div>
+        <div class="key-value">
+            <div>CLIENTE</div>
+            <div id="client-name"></div>
+        </div>
+        <div class="key-value">
+            <div>TELÉFONO</div>
+            <div id="client-phone"></div>
+        </div>
+        <div class="key-value">
+            <div>NOTAS</div>
+            <div id="client-notes"></div>
+        </div>
+    </div>
+</body>
+
+</html>
