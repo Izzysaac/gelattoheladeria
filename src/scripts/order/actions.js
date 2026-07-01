@@ -151,7 +151,7 @@ export const updateCartItemQuantity = (id, delta) => {
 
 export const addToCart = (cartItem, delta = 1) => {
     const existingItem = state.items[cartItem.id];
-    console.log("Agregando al carrito:", cartItem, "Delta:", delta, "Existente:", existingItem);
+    // console.log("Agregando al carrito:", cartItem, "Delta:", delta, "Existente:", existingItem);
     // 🔹 1. Si ya existe → modificar cantidad
     if (existingItem) {
         const newQuantity = existingItem.quantity + delta;
@@ -177,7 +177,7 @@ export const addToCart = (cartItem, delta = 1) => {
 
     // 🔹 4. Persistir
     guardarState();
-    console.log("Carrito actualizado:", state.items);
+    // console.log("Carrito actualizado:", state.items);
     // 🔹 5. Renderizar
     // 🔥 5. Resolver productId de forma segura
     const productId =

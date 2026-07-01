@@ -13,27 +13,34 @@ import { variantsState } from "./render.js";
 const normalizeVariantSelections = (raw, currentSelections = []) => {
     const fromRaw = Object.create(null);
 
-    for (const [key, value] of Object.entries(raw || {})) {
-        // 🔹 CASO 1: select indexado
-        let match = key.match(/^group-(.+?)-option-(\d+)$/);
+    for (const [key, rawValue] of Object.entries(raw || {})) {
+        const values = Array.isArray(rawValue) ? rawValue : [rawValue];
 
-        if (match) {
-            const [, group_id, idxStr] = match;
-            const idx = Number(idxStr);
+        values.forEach((value) => {
+            if (value == null || value === "") return;
 
-            if (!fromRaw[group_id]) fromRaw[group_id] = [];
-            fromRaw[group_id][idx] = value;
-            continue;
-        }
+            // 🔹 CASO 1: select indexado
+            let match = key.match(/^group-(.+?)-option-(\d+)$/);
 
-        // 🔹 CASO 2: radio / single
-        match = key.match(/^group-(.+)$/);
+            if (match) {
+                const [, group_id, idxStr] = match;
+                const idx = Number(idxStr);
 
-        if (match) {
-            const [, group_id] = match;
+                if (!fromRaw[group_id]) fromRaw[group_id] = [];
+                fromRaw[group_id][idx] = value;
+                return;
+            }
 
-            fromRaw[group_id] = [value]; // 👈 SIEMPRE array
-        }
+            // 🔹 CASO 2: radio / single / checkboxes
+            match = key.match(/^group-(.+)$/);
+
+            if (match) {
+                const [, group_id] = match;
+
+                if (!fromRaw[group_id]) fromRaw[group_id] = [];
+                fromRaw[group_id].push(value);
+            }
+        });
     }
 
     // 🔹 limpiar y convertir
@@ -100,11 +107,22 @@ dom.variantsForm.addEventListener("change", (e) => {
 dom.variantsForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const formData = new FormData(dom.variantsForm);
-    const selectionsRaw = Object.fromEntries(formData.entries());
-    const selections = normalizeVariantSelections(selectionsRaw);
+    const data = {};
+    // FormData.getAll() obtiene todos los valores con el mismo name
+    formData.forEach((value, key) => {
+        if (!data[key]) {
+            data[key] = [];
+        }
+        data[key].push(value);
+    });
+    
+    const selections = normalizeVariantSelections(data);
+    
+    // const selections = normalizeVariantSelections(selectionsRaw);
     const product = getProductById(dom.variantsAddButton.dataset.productid);
-
+    // console.log("selections", selections, "product", product);
     const cartItem = buildCartItemWithVariants(product, selections);
+    console.log("cartItem", cartItem);
     addToCart(cartItem);
     dom.variantsDialog.close();
 });
