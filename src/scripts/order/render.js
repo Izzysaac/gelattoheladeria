@@ -611,6 +611,9 @@ export const renderResumen = () => {
     .map((item) => {
         const hasImage = item.imagen && item.imagen.trim() !== "";
 
+        if (hasImage) {
+            item.imageSrc = getCloudinaryImageUrlSameMenu(item.imagen, { w: 480, h: 480, c: "limit" });
+        }
         // 🔥 variantes
         const variantes = item.groups?.length
             ? `<p class="product-variants text-sm text-gray-500">
@@ -625,7 +628,7 @@ export const renderResumen = () => {
             <li class="product-item flex gap-2 items-center con-img">
                 <div class="flex relative w-fit">
                     <figure class="h-16 w-16 aspect-square">
-                        <img src="${item.imagen}" alt="${item.nombre}" class="rounded object-cover h-full w-full"/>
+                        <img src="${item.imageSrc}" alt="${item.nombre}" class="rounded object-cover h-full w-full"/>
                     </figure>
                     <span class="product-badge absolute -top-1 -right-1 bg-black text-white rounded px-2 py-0.5 text-xs text-bold">
                         ${item.quantity}
