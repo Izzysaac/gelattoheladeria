@@ -619,7 +619,7 @@ export const renderResumen = () => {
             ? `<p class="product-variants text-sm text-gray-500">
                 ${item.groups
                     .map(g => `${g.nombre}: ${g.selections.map(s => s.nombre).join(", ")}`)
-                    .join(" • ")}
+                    .join(" <br /> ")}
                </p>`
             : "";
 
