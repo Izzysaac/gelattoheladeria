@@ -7,6 +7,7 @@ import {
     computeTotal,
     validarFormulario,
     getProductById,
+    getGroupByProductId,
     getTotalQuantityByProductId,
 } from "./actions.js";
 import { getCloudinaryImageUrl, getCloudinaryImageUrlSameMenu } from "../imgHelper.js";
@@ -174,7 +175,7 @@ export const renderSingleModal = (productId) => {
                 variantsEl.textContent = item.groups
                     .map(
                         (g) =>
-                            `${g.nombre}: ${g.selections.map((s) => s.nombre).join(", ")}`,
+                            `${g.nombre}: ${g.selections.length !== 0 ? g.selections.map((s) => s.nombre).join(", ") : getGroupByProductId(item.product_id, g.group_id).disallow_required}`,
                     )
                     .join(" • ");
             } else {
@@ -277,7 +278,7 @@ export const renderModal = () => {
                 variantsEl.textContent = item.groups
                     .map(
                         (g) =>
-                            `${g.nombre}: ${g.selections.map((s) => s.nombre).join(", ")}`,
+                            `${g.nombre}: ${g.selections.length !== 0 ? g.selections.map((s) => s.nombre).join(", ") : getGroupByProductId(item.product_id, g.group_id).disallow_required}`,
                     )
                     .join(" • ");
             } else {
@@ -313,8 +314,7 @@ export const renderModal = () => {
 
 // ===== VARIANTES ===== //
 const renderGroupSelect = (group) => {
-    const { id, nombre, min, max, required, allow_repetition, options } = group;
-
+    const { id, nombre, min, max, required, allow_repetition, disallow_required, options } = group;
     // 🔹 construir options HTML una sola vez
     const optionsHTML = options
         .filter((opt) => opt.activo)
@@ -351,7 +351,18 @@ const renderGroupSelect = (group) => {
     // 🔹 contenedor del grupo
     return `
         <div class="variant-group">
-            <h3 class="variant-group-title">${nombre} ${required ? "*" : ""}</h3>
+            <div>
+                <h3 class="variant-group-title">${nombre} ${required ? "*" : ""}</h3>
+                ${disallow_required ? 
+                    `<label>
+                        <input 
+                            name="group-${id}"
+                            type="checkbox"
+                            data-action="disallow-required"
+                        />
+                        <span>${disallow_required}</span>
+                </label>` : ""}
+            </div>
             <div class="variant-options-select">
                 ${selectsHTML}
             </div>
@@ -618,7 +629,7 @@ export const renderResumen = () => {
         const variantes = item.groups?.length
             ? `<p class="product-variants text-sm text-gray-500">
                 ${item.groups
-                    .map(g => `${g.nombre}: ${g.selections.map(s => s.nombre).join(", ")}`)
+                    .map(g => `${g.nombre}: ${g.selections.length !== 0 ? g.selections.map((s) => s.nombre).join(", ") : getGroupByProductId(item.product_id, g.group_id).disallow_required}`)
                     .join(" <br /> ")}
                </p>`
             : "";

@@ -27,9 +27,10 @@ export const buildMenuPageData = ({ tenant, info, menu, menuMap, reviews, estilo
     };
 };
 
-export const buildCheckoutPageData = ( {tenant, info, estilos}) => {
+export const buildCheckoutPageData = ( {tenant, info, menuMap, estilos}) => {
     return {
         head: buildHead(info),
+        menuMap: menuMap,
         styles: buildStyles(estilos),
         contact: buildContact(info),
         metodosPago: buildMetodosPago(info),

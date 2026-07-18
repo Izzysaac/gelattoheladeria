@@ -153,6 +153,16 @@ function renderGroupSelectTable(group, selectedVariant, rowIndex) {
     return `
         <div class="variant-group">
             <small>${escapeHtml(group.nombre)}</small>
+            ${group.disallow_required ? 
+                    `<label>
+                        <input 
+                            type="checkbox"
+                            data-action="disallow-required"
+                            value="${group.disallow_required}";
+                            ${group.disallow_required == selectedVariant.option_ids[0] ? 'checked' : ''}
+                        />
+                        <span>${group.disallow_required}</span>
+                </label>` : ""}
             ${selectsHTML}
         </div>
     `;

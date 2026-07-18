@@ -96,6 +96,26 @@ const updateVariantPriceUI = (product, form, optionsMap) => {
 
 // Validar en change
 dom.variantsForm.addEventListener("change", (e) => {
+
+
+    if (e.target.dataset.action == "disallow-required") {
+
+        const requiredFields = dom.variantsForm.querySelectorAll(`[name*="${e.target.name}"]:not([name="${e.target.name}"])`)
+
+        if (e.target.checked) {
+            requiredFields.forEach(field => {
+                field.required = false;
+                field.disabled = true;
+            })
+        }else {
+            requiredFields.forEach(field => {
+                field.required = true;
+                field.disabled = false;
+            })
+        }
+
+
+    }
     // 🔹 1. validación
     dom.variantsAddButton.disabled = !dom.variantsForm.checkValidity();
     // 🔹 2. precio dinámico
@@ -122,7 +142,7 @@ dom.variantsForm.addEventListener("submit", (e) => {
     const product = getProductById(dom.variantsAddButton.dataset.productid);
     // console.log("selections", selections, "product", product);
     const cartItem = buildCartItemWithVariants(product, selections);
-    console.log("cartItem", cartItem);
+    // console.log("cartItem", cartItem);
     addToCart(cartItem);
     dom.variantsDialog.close();
 });

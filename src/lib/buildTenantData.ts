@@ -13,7 +13,7 @@ const PAGE_BUILDERS: Record<PageType, (params: any) => any> = {
         buildMenuPageData({ tenant, info, menu, menuMap, reviews, estilos }),
     pedido: ({ tenant, info, menu, menuMap, reviews, estilos }) =>
         buildMenuPageData({ tenant, info, menu, menuMap, reviews, estilos }),
-    checkout: ({ tenant, info, estilos }) => buildCheckoutPageData({ tenant, info, estilos }),
+    checkout: ({ tenant, info, menuMap, estilos }) => buildCheckoutPageData({ tenant, info, menuMap, estilos }),
     eventos: ({ tenant, info, eventos, estilos  }) =>
         buildEventosPageData({ tenant, info, eventos, estilos }),
     ticket: ({ tenant, info, menu, menuMap  }) =>

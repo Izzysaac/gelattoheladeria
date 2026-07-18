@@ -92,6 +92,7 @@ type Group = {
     max: number;
     required: boolean;
     allow_repetition: boolean;
+    disallow_required: string;
 };
 
 type Option = {
@@ -148,6 +149,7 @@ export function normalizeProducts(
                         max: Number(g.max),
                         required: Boolean(g.required),
                         allow_repetition: Boolean(g.allow_repetition),
+                        disallow_required: g.disallow_required,
                         options: optionsByGroup[g.group_id] || [],
                     };
                 })
@@ -210,6 +212,8 @@ const mapGroups = (groupsRaw: any[]) => {
             required: Boolean(row.required && String(row.required).trim() !== ""),
 
             allow_repetition: Boolean(row.allow_repetition && String(row.allow_repetition).trim() !== ""),
+
+            disallow_required: row.disallow_required?.trim() || "",
 
             // activo: Boolean(row.activo && String(row.activo).trim() !== ""),
         }));

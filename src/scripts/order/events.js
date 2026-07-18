@@ -9,7 +9,8 @@ import {
     setMetodoPago,
     setNotas,
     validarFormulario,
-    updateCartItemQuantity
+    updateCartItemQuantity,
+    getGroupByProductId
 } from "./actions.js";
 import { dom ,  checkoutDom } from "./dom.js";
 import { state } from "../state.js";
@@ -166,7 +167,8 @@ export const generarMensaje = () => {
         // 🔥 variantes (clave)
         if (item.groups?.length > 0) {
             item.groups.forEach((g) => {
-                const opciones = g.selections.map(s => s.nombre).join(", ");
+
+                const opciones = g.selections.length !== 0 ? g.selections.map(s => s.nombre).join(", ") : getGroupByProductId(item.product_id, g.group_id).disallow_required;
                 lineas.push(`  - ${g.nombre}: ${opciones}`);
             });
         }

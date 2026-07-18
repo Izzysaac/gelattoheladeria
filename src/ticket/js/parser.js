@@ -284,16 +284,24 @@ export function validateOrderItem(item) {
                 .map(opNombre => {
                     const opNorm = String(opNombre).trim().toLowerCase();
 
-                    const option = group.options.find(o =>
-                        o.nombre.toLowerCase() === opNorm
-                    );
+                    let option = group.options.find(o => o.nombre.toLowerCase() === opNorm);
+
+                    if (!option && group.disallow_required){
+                        if (opNorm === group.disallow_required.toLowerCase()) {
+                            option = group.disallow_required;
+                        }
+                    }
+
+                    // const option = group.options.find(o =>
+                    //     o.nombre.toLowerCase() === opNorm
+                    // );
 
                     if (!option) {
                         errors.push(`Opción inválida "${opNombre}" en grupo "${group.nombre}"`);
                         return null;
                     }
 
-                    return option.option_id;
+                    return option.option_id || option;
                 })
                 .filter(Boolean);
 

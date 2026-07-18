@@ -17,6 +17,10 @@ export const getProductById = (id) => {
     return PRODUCTS_MAP[id] || null;
 };
 
+export const getGroupByProductId = (p_id, g_id) => {
+    return PRODUCTS_MAP[p_id].groups?.find(group => group.id === g_id) || null;
+}
+
 // consulta en CART
 export const getTotalQuantityByProductId = (productId) => {
     let total = 0;
