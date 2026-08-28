@@ -242,9 +242,34 @@ export const hacerPedido = () => {
     // especiales como #, & o emojis no rompan la URL
     const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(mensaje)}`;
 
+    // guardar datos para tener información para mejorar el programa
+    postToSheet(state);
+
     // 4. Abrir WhatsApp
     window.open(url, "_blank");
 };
+
+export const postToSheet = async () => {
+    const url = "https://script.google.com/macros/s/AKfycbxJLsXisZg6HZNweTtkjE_tRraKQqiQ4QmRlOQhKyQh5jl4wFztTWp0WhDvd3XW9DFYzg/exec";
+    const negocio = import.meta.env.PUBLIC_NAME_ID;
+    // console.log(negocio)
+    // const { items, totalProductos, tipoEntrega, valorEntrega, direccion, metodoPago, notas, nombreCliente, telefono } = state;
+    const { items: productos, nombreCliente: nombre, notas, totalProductos, tipoEntrega, metodoPago, telefono, direccion, valorEntrega } = state;
+
+    const data = {negocio, productos, nombre, notas, totalProductos, tipoEntrega, metodoPago, telefono, direccion, valorEntrega};
+
+    try { 
+        const response = await fetch(url, {
+            method: "POST", 
+            body: JSON.stringify(data) 
+        });
+        const result = await response.json(); 
+        return result; 
+    } catch (error) { 
+        console.error("Error enviando datos a Google Sheets:", error); 
+        return { success: false, error: error.message }; 
+    }
+}
 
 export const bindCheckout = () => {
     checkoutDom.checkoutMain.addEventListener("change", (e) => {
